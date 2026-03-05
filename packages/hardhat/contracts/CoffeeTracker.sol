@@ -90,6 +90,7 @@ contract CoffeeTracker is ERC1155, AccessControl{
         uint256 roastingBeforeWeight;
         uint256 roastingAfterWeight;
         RoastLevel roastLevel;
+        string cuppingNotes;
         uint16 transportTime;
     }
 
@@ -141,6 +142,7 @@ contract CoffeeTracker is ERC1155, AccessControl{
         uint256 roastingBeforeWeight,
         uint256 roastingAfterWeight,
         RoastLevel roastLevel,
+        string cuppingNotes,
         uint16 transportTime
 
     );
@@ -194,6 +196,7 @@ contract CoffeeTracker is ERC1155, AccessControl{
             roastingBeforeWeight: 0,
             roastingAfterWeight: 0,
             roastLevel: RoastLevel.Other,
+            cuppingNotes: "",
             transportTime: 0
         });
 
@@ -262,6 +265,7 @@ contract CoffeeTracker is ERC1155, AccessControl{
         uint256 _roastingBeforeWeight,
         uint256 _roastingAfterWeight,
         RoastLevel _roastLevel,
+        string memory _cuppingNotes,
         uint16 _transportTime
     ) public onlyRole(ROASTER_ROLE) {
         CoffeeBatch storage batch = batches[_batchId];
@@ -279,6 +283,7 @@ contract CoffeeTracker is ERC1155, AccessControl{
         batch.roastingAfterWeight = _roastingAfterWeight;
         batch.roastLevel = _roastLevel;
         batch.transportTime = _transportTime;
+        batch.cuppingNotes = _cuppingNotes;
 
         emit Roasted(
             _batchId,
@@ -287,6 +292,7 @@ contract CoffeeTracker is ERC1155, AccessControl{
             _roastingBeforeWeight,
             _roastingAfterWeight,
             _roastLevel,
+            _cuppingNotes,
             _transportTime
         );
     }

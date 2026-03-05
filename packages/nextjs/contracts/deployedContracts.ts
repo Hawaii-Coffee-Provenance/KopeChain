@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     CoffeeTracker: {
-      address: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
       abi: [
         {
           inputs: [
@@ -367,6 +367,12 @@ const deployedContracts = {
               internalType: "enum CoffeeTracker.RoastLevel",
               name: "roastLevel",
               type: "uint8",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "cuppingNotes",
+              type: "string",
             },
             {
               indexed: false,
@@ -824,6 +830,11 @@ const deployedContracts = {
                   type: "uint8",
                 },
                 {
+                  internalType: "string",
+                  name: "cuppingNotes",
+                  type: "string",
+                },
+                {
                   internalType: "uint16",
                   name: "transportTime",
                   type: "uint16",
@@ -1011,6 +1022,11 @@ const deployedContracts = {
                   internalType: "enum CoffeeTracker.RoastLevel",
                   name: "roastLevel",
                   type: "uint8",
+                },
+                {
+                  internalType: "string",
+                  name: "cuppingNotes",
+                  type: "string",
                 },
                 {
                   internalType: "uint16",
@@ -1247,6 +1263,11 @@ const deployedContracts = {
               type: "uint8",
             },
             {
+              internalType: "string",
+              name: "_cuppingNotes",
+              type: "string",
+            },
+            {
               internalType: "uint16",
               name: "_transportTime",
               type: "uint16",
@@ -1409,7 +1430,7 @@ const deployedContracts = {
         renounceRole: "@openzeppelin/contracts/access/AccessControl.sol",
         revokeRole: "@openzeppelin/contracts/access/AccessControl.sol",
       },
-      deployedOnBlock: 11,
+      deployedOnBlock: 1,
     },
   },
   84532: {
