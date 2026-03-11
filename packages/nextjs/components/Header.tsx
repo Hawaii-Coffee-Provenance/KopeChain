@@ -69,7 +69,7 @@ export const Header = () => {
   });
 
   return (
-    <header className="sticky top-0 z-20 flex items-center justify-between px-4 sm:px-8 h-16 bg-base-100 border-b border-base-300 shadow-none">
+    <header className="sticky top-0 z-20 flex items-center justify-between px-8 h-16 bg-base-100 border-b border-base-300 shadow-none">
       <div className="flex items-center gap-8">
         <Link href="/" className="font-serif text-2xl font-semibold text-base-content tracking-tight">
           Kope<span className="italic text-accent">Chain</span>
