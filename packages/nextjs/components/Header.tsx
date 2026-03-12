@@ -85,7 +85,7 @@ export const Header = () => {
         <RainbowKitCustomConnectButton />
 
         <details className="dropdown dropdown-end lg:hidden" ref={burgerMenuRef}>
-          <summary className="btn btn-ghost btn-sm">
+          <summary className="btn btn-ghost btn-sm btn-borderless hover:border-base-300">
             <Bars3Icon className="h-5 w-5" />
           </summary>
           <ul

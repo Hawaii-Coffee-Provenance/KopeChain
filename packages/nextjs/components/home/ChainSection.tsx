@@ -29,8 +29,8 @@ const STEPS = [
   {
     step: 3,
     title: "Roast",
-    color: "text-[#B07D3A]",
-    borderColor: "border-[#B07D3A]",
+    color: "text-amber",
+    borderColor: "border-amber",
     h1: "Unlocking",
     h2: "the Flavour",
     content:
@@ -67,8 +67,8 @@ export const ChainSection = () => {
       <div className="max-w-7xl mx-auto px-6 lg:px-16">
         <div className="flex items-end justify-between mb-12">
           <div>
-            <span className="text-primary text-xs font-medium tracking-[0.2em] uppercase mb-3 block">How It Works</span>
-            <h2 className="font-serif text-5xl lg:text-6xl font-light leading-[1.08] text-base-content">
+            <span className="text-label text-primary mb-3 block">How It Works</span>
+            <h2 className="heading-section">
               <span className="flex items-center gap-4">
                 <span className="font-semibold">The Supply Chain</span>
                 <span className="w-12 h-0.5 bg-base-content mt-1 flex-shrink-0 opacity-20" />
@@ -101,7 +101,7 @@ export const ChainSection = () => {
               <button
                 onClick={prev}
                 disabled={activeStep === 1}
-                className="btn btn-ghost btn-sm disabled:opacity-80"
+                className="btn btn-ghost btn-borderless btn-sm disabled:opacity-80"
                 aria-label="Previous step"
               >
                 <ChevronUpIcon className="h-4 w-4" />
@@ -112,7 +112,7 @@ export const ChainSection = () => {
               <button
                 onClick={next}
                 disabled={activeStep === STEPS.length}
-                className="btn btn-ghost btn-sm disabled:opacity-80"
+                className="btn btn-ghost btn-borderless btn-sm disabled:opacity-80"
                 aria-label="Next step"
               >
                 <ChevronDownIcon className="h-4 w-4" />
@@ -123,10 +123,10 @@ export const ChainSection = () => {
               key={activeStep}
               className={`h-full bg-base-100 border ${active.borderColor} rounded-xl p-6 lg:p-10 flex flex-col gap-4 lg:gap-6 overflow-hidden animate-[slideIn_0.35s_ease_both]`}
             >
-              <p className={`text-xs font-medium tracking-[0.2em] uppercase ${active.color}`}>
+              <p className={`text-label ${active.color}`}>
                 Step 0{active.step} — {active.title}
               </p>
-              <h3 className={`font-serif text-3xl lg:text-5xl font-light leading-[1.08] ${active.color}`}>
+              <h3 className={`heading-card ${active.color}`}>
                 {active.h1}
                 <br />
                 <span className="font-semibold">{active.h2}</span>

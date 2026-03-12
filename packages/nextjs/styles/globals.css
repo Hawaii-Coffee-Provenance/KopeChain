@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "maplibre-gl/dist/maplibre-gl.css";
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
@@ -8,6 +9,8 @@
 
   --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-cormorant), ui-serif, Georgia, serif;
+
+  --color-amber: #b07d3a;
 }
 
 @plugin "daisyui" {
@@ -102,8 +105,61 @@
   @apply shadow-md;
 }
 
+.ghost-surface {
+  background-color: var(--color-base-100);
+  border-color: var(--color-base-300);
+}
+
+.ghost-surface:hover {
+  background-color: var(--color-base-200);
+}
+
 .btn.btn-ghost {
-  @apply shadow-none;
+  @apply shadow-none bg-base-100 border-base-300;
+}
+
+.btn.btn-ghost:hover {
+  @apply bg-base-200;
+}
+
+.btn.btn-ghost.btn-borderless {
+  border-color: transparent;
+}
+
+.btn.btn-ghost.btn-borderless:hover {
+  border-color: var(--color-base-300);
+}
+
+.text-label {
+  @apply text-xs font-medium tracking-[0.2em] uppercase;
+}
+
+.text-col-header {
+  @apply text-[0.65rem] font-medium tracking-[0.2em] uppercase;
+}
+
+.text-muted {
+  @apply text-xs text-secondary;
+}
+
+.text-hint {
+  @apply text-xs text-secondary tracking-wide;
+}
+
+.text-nav-link {
+  @apply text-xs font-medium tracking-wide;
+}
+
+.heading-hero {
+  @apply font-serif text-5xl lg:text-7xl font-light leading-[1.08] text-base-content;
+}
+
+.heading-section {
+  @apply font-serif text-5xl lg:text-6xl font-light leading-[1.08] text-base-content;
+}
+
+.heading-card {
+  @apply font-serif text-3xl lg:text-5xl font-light leading-[1.08];
 }
 
 .link {
@@ -123,4 +179,22 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.maplibregl-ctrl-group {
+  background: var(--color-base-100) !important;
+  border: 1px solid var(--color-base-300) !important;
+  box-shadow: none !important;
+}
+
+.maplibregl-ctrl-group button {
+  background: var(--color-base-100) !important;
+}
+
+.maplibregl-ctlr-group button:hover {
+  background: var(--color-base-200) !important;
+}
+
+.maplibregl-ctrl-bottom-right .maplibregl-ctrl {
+  margin: 0 1rem 1rem 0;
 }

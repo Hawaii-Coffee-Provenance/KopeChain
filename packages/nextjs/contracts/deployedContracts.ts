@@ -698,6 +698,156 @@ const deployedContracts = {
           type: "function",
         },
         {
+          inputs: [],
+          name: "getAllBatches",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "uint256",
+                  name: "batchId",
+                  type: "uint256",
+                },
+                {
+                  internalType: "string",
+                  name: "batchNumber",
+                  type: "string",
+                },
+                {
+                  internalType: "bool",
+                  name: "verified",
+                  type: "bool",
+                },
+                {
+                  internalType: "uint256",
+                  name: "mintTimestamp",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "farmer",
+                  type: "address",
+                },
+                {
+                  internalType: "string",
+                  name: "farmName",
+                  type: "string",
+                },
+                {
+                  internalType: "enum CoffeeTracker.Region",
+                  name: "region",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.Variety",
+                  name: "variety",
+                  type: "uint8",
+                },
+                {
+                  internalType: "uint16",
+                  name: "elevation",
+                  type: "uint16",
+                },
+                {
+                  internalType: "uint256",
+                  name: "harvestWeight",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "harvestDate",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "processor",
+                  type: "address",
+                },
+                {
+                  internalType: "enum CoffeeTracker.ProcessingMethod",
+                  name: "processingMethod",
+                  type: "uint8",
+                },
+                {
+                  internalType: "uint256",
+                  name: "processingBeforeWeight",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "processingAfterWeight",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint8",
+                  name: "moistureContent",
+                  type: "uint8",
+                },
+                {
+                  internalType: "uint8",
+                  name: "scaScore",
+                  type: "uint8",
+                },
+                {
+                  internalType: "uint8",
+                  name: "humidity",
+                  type: "uint8",
+                },
+                {
+                  internalType: "uint16",
+                  name: "dryTemperature",
+                  type: "uint16",
+                },
+                {
+                  internalType: "address",
+                  name: "roaster",
+                  type: "address",
+                },
+                {
+                  internalType: "enum CoffeeTracker.RoastingMethod",
+                  name: "roastingMethod",
+                  type: "uint8",
+                },
+                {
+                  internalType: "uint256",
+                  name: "roastingBeforeWeight",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "roastingAfterWeight",
+                  type: "uint256",
+                },
+                {
+                  internalType: "enum CoffeeTracker.RoastLevel",
+                  name: "roastLevel",
+                  type: "uint8",
+                },
+                {
+                  internalType: "string",
+                  name: "cuppingNotes",
+                  type: "string",
+                },
+                {
+                  internalType: "uint16",
+                  name: "transportTime",
+                  type: "uint16",
+                },
+                {
+                  internalType: "address",
+                  name: "distributor",
+                  type: "address",
+                },
+              ],
+              internalType: "struct CoffeeTracker.CoffeeBatch[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
           inputs: [
             {
               internalType: "uint256",
@@ -839,10 +989,197 @@ const deployedContracts = {
                   name: "transportTime",
                   type: "uint16",
                 },
+                {
+                  internalType: "address",
+                  name: "distributor",
+                  type: "address",
+                },
               ],
               internalType: "struct CoffeeTracker.CoffeeBatch",
               name: "",
               type: "tuple",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "_batchNumber",
+              type: "string",
+            },
+          ],
+          name: "getBatchByNumber",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "uint256",
+                  name: "batchId",
+                  type: "uint256",
+                },
+                {
+                  internalType: "string",
+                  name: "batchNumber",
+                  type: "string",
+                },
+                {
+                  internalType: "bool",
+                  name: "verified",
+                  type: "bool",
+                },
+                {
+                  internalType: "uint256",
+                  name: "mintTimestamp",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "farmer",
+                  type: "address",
+                },
+                {
+                  internalType: "string",
+                  name: "farmName",
+                  type: "string",
+                },
+                {
+                  internalType: "enum CoffeeTracker.Region",
+                  name: "region",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.Variety",
+                  name: "variety",
+                  type: "uint8",
+                },
+                {
+                  internalType: "uint16",
+                  name: "elevation",
+                  type: "uint16",
+                },
+                {
+                  internalType: "uint256",
+                  name: "harvestWeight",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "harvestDate",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "processor",
+                  type: "address",
+                },
+                {
+                  internalType: "enum CoffeeTracker.ProcessingMethod",
+                  name: "processingMethod",
+                  type: "uint8",
+                },
+                {
+                  internalType: "uint256",
+                  name: "processingBeforeWeight",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "processingAfterWeight",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint8",
+                  name: "moistureContent",
+                  type: "uint8",
+                },
+                {
+                  internalType: "uint8",
+                  name: "scaScore",
+                  type: "uint8",
+                },
+                {
+                  internalType: "uint8",
+                  name: "humidity",
+                  type: "uint8",
+                },
+                {
+                  internalType: "uint16",
+                  name: "dryTemperature",
+                  type: "uint16",
+                },
+                {
+                  internalType: "address",
+                  name: "roaster",
+                  type: "address",
+                },
+                {
+                  internalType: "enum CoffeeTracker.RoastingMethod",
+                  name: "roastingMethod",
+                  type: "uint8",
+                },
+                {
+                  internalType: "uint256",
+                  name: "roastingBeforeWeight",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "roastingAfterWeight",
+                  type: "uint256",
+                },
+                {
+                  internalType: "enum CoffeeTracker.RoastLevel",
+                  name: "roastLevel",
+                  type: "uint8",
+                },
+                {
+                  internalType: "string",
+                  name: "cuppingNotes",
+                  type: "string",
+                },
+                {
+                  internalType: "uint16",
+                  name: "transportTime",
+                  type: "uint16",
+                },
+                {
+                  internalType: "address",
+                  name: "distributor",
+                  type: "address",
+                },
+              ],
+              internalType: "struct CoffeeTracker.CoffeeBatch",
+              name: "",
+              type: "tuple",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getBatchCount",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getFarmCount",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
             },
           ],
           stateMutability: "view",
@@ -881,6 +1218,19 @@ const deployedContracts = {
               internalType: "bytes32",
               name: "",
               type: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getTransactionCount",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
             },
           ],
           stateMutability: "view",
@@ -1033,10 +1383,178 @@ const deployedContracts = {
                   name: "transportTime",
                   type: "uint16",
                 },
+                {
+                  internalType: "address",
+                  name: "distributor",
+                  type: "address",
+                },
               ],
               internalType: "struct CoffeeTracker.CoffeeBatch[]",
               name: "history",
               type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getVerifiedBatches",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "uint256",
+                  name: "batchId",
+                  type: "uint256",
+                },
+                {
+                  internalType: "string",
+                  name: "batchNumber",
+                  type: "string",
+                },
+                {
+                  internalType: "bool",
+                  name: "verified",
+                  type: "bool",
+                },
+                {
+                  internalType: "uint256",
+                  name: "mintTimestamp",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "farmer",
+                  type: "address",
+                },
+                {
+                  internalType: "string",
+                  name: "farmName",
+                  type: "string",
+                },
+                {
+                  internalType: "enum CoffeeTracker.Region",
+                  name: "region",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.Variety",
+                  name: "variety",
+                  type: "uint8",
+                },
+                {
+                  internalType: "uint16",
+                  name: "elevation",
+                  type: "uint16",
+                },
+                {
+                  internalType: "uint256",
+                  name: "harvestWeight",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "harvestDate",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "processor",
+                  type: "address",
+                },
+                {
+                  internalType: "enum CoffeeTracker.ProcessingMethod",
+                  name: "processingMethod",
+                  type: "uint8",
+                },
+                {
+                  internalType: "uint256",
+                  name: "processingBeforeWeight",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "processingAfterWeight",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint8",
+                  name: "moistureContent",
+                  type: "uint8",
+                },
+                {
+                  internalType: "uint8",
+                  name: "scaScore",
+                  type: "uint8",
+                },
+                {
+                  internalType: "uint8",
+                  name: "humidity",
+                  type: "uint8",
+                },
+                {
+                  internalType: "uint16",
+                  name: "dryTemperature",
+                  type: "uint16",
+                },
+                {
+                  internalType: "address",
+                  name: "roaster",
+                  type: "address",
+                },
+                {
+                  internalType: "enum CoffeeTracker.RoastingMethod",
+                  name: "roastingMethod",
+                  type: "uint8",
+                },
+                {
+                  internalType: "uint256",
+                  name: "roastingBeforeWeight",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "roastingAfterWeight",
+                  type: "uint256",
+                },
+                {
+                  internalType: "enum CoffeeTracker.RoastLevel",
+                  name: "roastLevel",
+                  type: "uint8",
+                },
+                {
+                  internalType: "string",
+                  name: "cuppingNotes",
+                  type: "string",
+                },
+                {
+                  internalType: "uint16",
+                  name: "transportTime",
+                  type: "uint16",
+                },
+                {
+                  internalType: "address",
+                  name: "distributor",
+                  type: "address",
+                },
+              ],
+              internalType: "struct CoffeeTracker.CoffeeBatch[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getVerifiedCount",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
             },
           ],
           stateMutability: "view",

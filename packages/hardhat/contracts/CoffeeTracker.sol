@@ -11,7 +11,9 @@ contract CoffeeTracker is ERC1155, AccessControl {
     bytes32 public constant ROASTER_ROLE = keccak256("ROASTER_ROLE");
     bytes32 public constant DISTRIBUTOR_ROLE = keccak256("DISTRIBUTOR_ROLE");
 
-    uint256 private _nextBatchId = 1;
+    uint256 private _batchIdCounter = 1;
+    uint256 private _transactionCount;
+    uint256 private _farmCount;
 
     enum Region {
         Kona,
@@ -90,10 +92,13 @@ contract CoffeeTracker is ERC1155, AccessControl {
         RoastLevel roastLevel;
         string cuppingNotes;
         uint16 transportTime;
+        // Distributing
+        address distributor;
     }
 
     mapping(uint256 => CoffeeBatch) private batches;
     mapping(address => uint256[]) private userBatches;
+    mapping(string => bool) private registeredFarms;
 
     constructor(address admin, address farmer, address processor, address roaster, address distributor) ERC1155("") {
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
@@ -151,7 +156,7 @@ contract CoffeeTracker is ERC1155, AccessControl {
         uint256 _harvestWeight,
         uint256 _harvestDate
     ) public onlyRole(FARMER_ROLE) {
-        uint256 _batchId = _nextBatchId;
+        uint256 _batchId = _batchIdCounter;
 
         batches[_batchId] = CoffeeBatch({
             batchId: _batchId,
@@ -179,7 +184,8 @@ contract CoffeeTracker is ERC1155, AccessControl {
             roastingAfterWeight: 0,
             roastLevel: RoastLevel.Other,
             cuppingNotes: "",
-            transportTime: 0
+            transportTime: 0,
+            distributor: address(0)
         });
 
         emit Harvested(
@@ -194,11 +200,17 @@ contract CoffeeTracker is ERC1155, AccessControl {
             _harvestDate
         );
 
+        if (!registeredFarms[_farmName]) {
+            registeredFarms[_farmName] = true;
+            _farmCount++;
+        }
+
         userBatches[msg.sender].push(_batchId);
 
         _mint(msg.sender, _batchId, 1, "");
 
-        _nextBatchId++;
+        _batchIdCounter++;
+        _transactionCount++;
     }
 
     function processBatch(
@@ -242,6 +254,8 @@ contract CoffeeTracker is ERC1155, AccessControl {
             _humidity,
             _dryTemperature
         );
+
+        _transactionCount++;
     }
 
     function roastBatch(
@@ -283,6 +297,8 @@ contract CoffeeTracker is ERC1155, AccessControl {
             _cuppingNotes,
             _transportTime
         );
+
+        _transactionCount++;
     }
 
     function distributeBatch(uint256 _batchId) public onlyRole(DISTRIBUTOR_ROLE) {
@@ -290,7 +306,11 @@ contract CoffeeTracker is ERC1155, AccessControl {
         require(batch.batchId != 0, "This coffee batch doesn't exist!");
         require(batch.roaster != address(0), "This coffee batch must be roasted before distribution!");
 
+        batch.distributor = msg.sender;
+
         emit Distributed(_batchId, msg.sender);
+
+        _transactionCount++;
     }
 
     function verifyBatch(uint256 _batchId) public onlyRole(DEFAULT_ADMIN_ROLE) {
@@ -301,11 +321,69 @@ contract CoffeeTracker is ERC1155, AccessControl {
         batch.verified = true;
 
         emit Verified(_batchId, msg.sender);
+
+        _transactionCount++;
+    }
+
+    function getBatchCount() public view returns (uint256) {
+        return _batchIdCounter - 1;
+    }
+
+    function getVerifiedCount() public view returns (uint256) {
+        uint256 count = 0;
+
+        for (uint256 i = 1; i < _batchIdCounter; i++) {
+            if (batches[i].verified) count++;
+        }
+
+        return count;
+    }
+
+    function getTransactionCount() public view returns (uint256) {
+        return _transactionCount;
+    }
+
+    function getFarmCount() public view returns (uint256) {
+        return _farmCount;
     }
 
     function getBatch(uint256 _batchId) public view returns (CoffeeBatch memory) {
-        require(batches[_batchId].batchId != 0, "This coffee batch doesn't exist!");
+        require(_batchId >= 1 && _batchId < _batchIdCounter, "This coffee batch doesn't exist!");
         return batches[_batchId];
+    }
+
+    function getBatchByNumber(string memory _batchNumber) public view returns (CoffeeBatch memory) {
+        for (uint256 i = 1; i < _batchIdCounter; i++) {
+            if (keccak256(bytes(batches[i].batchNumber)) == keccak256(bytes(_batchNumber))) {
+                return batches[i];
+            }
+        }
+        revert("Batch not found");
+    }
+
+    function getAllBatches() public view returns (CoffeeBatch[] memory) {
+        CoffeeBatch[] memory allBatches = new CoffeeBatch[](_batchIdCounter - 1);
+
+        for (uint256 i = 1; i < _batchIdCounter; i++) {
+            allBatches[i - 1] = batches[i];
+        }
+        return allBatches;
+    }
+
+    function getVerifiedBatches() public view returns (CoffeeBatch[] memory) {
+        uint256 count = 0;
+
+        for (uint256 i = 1; i < _batchIdCounter; i++) {
+            if (batches[i].verified) count++;
+        }
+
+        CoffeeBatch[] memory verifiedBatches = new CoffeeBatch[](count);
+
+        uint256 _idx = 0;
+        for (uint256 i = 1; i < _batchIdCounter; i++) {
+            if (batches[i].verified) verifiedBatches[_idx++] = batches[i];
+        }
+        return verifiedBatches;
     }
 
     function getUserBatches(address user) public view returns (string memory userRole, CoffeeBatch[] memory history) {

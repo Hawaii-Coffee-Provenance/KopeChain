@@ -58,6 +58,8 @@
     "node": ">=20.18.3"
   },
   "dependencies": {
-    "framer-motion": "^12.35.2"
+    "framer-motion": "^12.35.2",
+    "maplibre-gl": "^5.20.0",
+    "react-map-gl": "^8.1.0"
   }
 }

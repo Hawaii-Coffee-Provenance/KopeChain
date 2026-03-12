@@ -1,39 +1,50 @@
+import { useMemo } from "react";
+import { BatchSearch } from "~~/components/explore/BatchSearch";
+import { useCoffeeTrackerBatches, useCoffeeTrackerMainPageStats } from "~~/hooks/useCoffeeTracker";
+
+const WEEK_IN_SECONDS = 7 * 24 * 60 * 60;
+
 export const DashboardSection = () => {
+  const { batchCount, verifiedCount, transactionCount, farmCount } = useCoffeeTrackerMainPageStats();
+  const { allBatches } = useCoffeeTrackerBatches();
+
+  const newBatchesThisWeek = useMemo(() => {
+    if (!allBatches) return 0;
+
+    const cutoff = BigInt(Math.floor(Date.now() / 1000) - WEEK_IN_SECONDS);
+
+    return allBatches.filter(batch => batch.mintTimestamp >= cutoff).length;
+  }, [allBatches]);
+
   return (
     <div className="flex flex-col justify-center px-8 lg:pr-32 py-20 gap-6">
-      <div className="flex w-full bg-base-100 border border-base-300 rounded-xl overflow-hidden focus-within:ring-1 focus-within:ring-primary transition-all">
-        <input
-          type="text"
-          placeholder="Enter Batch ID..."
-          className="flex-1 bg-transparent px-5 py-4 text-base-content placeholder-secondary/50 outline-none"
-        />
-        <button
-          type="button"
-          className="btn btn-ghost rounded-none border-0 border-l border-base-300 px-7 text-sm tracking-wide h-auto"
-        >
-          Submit
-        </button>
-      </div>
+      <BatchSearch redirectToExplore />
 
       <div className="grid grid-cols-2 gap-px bg-base-300 border border-base-300 rounded-xl overflow-hidden">
-        <div className="bg-base-100 p-7 hover:bg-base-200 transition-colors">
-          <div className="font-serif text-5xl font-light text-base-content leading-none mb-1">---</div>
-          <div className="text-xs text-secondary uppercase tracking-widest">Total Batches</div>
+        <div className="ghost-surface p-7 transition-colors">
+          <div className="font-serif text-5xl font-light text-base-content leading-none mb-1">
+            {batchCount ?? "---"}
+          </div>
+          <div className="text-muted uppercase tracking-[0.2em]">Total Batches</div>
         </div>
 
-        <div className="bg-base-100 p-7 hover:bg-base-200 transition-colors">
-          <div className="font-serif text-5xl font-light text-base-content leading-none mb-1">---</div>
-          <div className="text-xs text-secondary uppercase tracking-widest">Verified Batches</div>
+        <div className="ghost-surface p-7 transition-colors">
+          <div className="font-serif text-5xl font-light text-base-content leading-none mb-1">
+            {verifiedCount ?? "---"}
+          </div>
+          <div className="text-muted uppercase tracking-[0.2em]">Verified Batches</div>
         </div>
 
-        <div className="bg-base-100 p-7 hover:bg-base-200 transition-colors">
-          <div className="font-serif text-5xl font-light text-base-content leading-none mb-1">---</div>
-          <div className="text-xs text-secondary uppercase tracking-widest">AVG SCA Score</div>
+        <div className="ghost-surface p-7 transition-colors">
+          <div className="font-serif text-5xl font-light text-base-content leading-none mb-1">
+            {transactionCount ?? "---"}
+          </div>
+          <div className="text-muted uppercase tracking-[0.2em]">Total Transactions</div>
         </div>
 
-        <div className="bg-base-100 p-7 hover:bg-base-200 transition-colors">
-          <div className="font-serif text-5xl font-light text-base-content leading-none mb-1">---</div>
-          <div className="text-xs text-secondary uppercase tracking-widest">Registered Farms</div>
+        <div className="ghost-surface p-7 transition-colors">
+          <div className="font-serif text-5xl font-light text-base-content leading-none mb-1">{farmCount}</div>
+          <div className="text-muted uppercase tracking-[0.2em]">Registered Farms</div>
         </div>
       </div>
 
@@ -42,7 +53,7 @@ export const DashboardSection = () => {
           <div className="status status-success animate-ping"></div>
           <div className="status status-success"></div>
         </div>
-        - new batches tracked in the past week
+        {newBatchesThisWeek ?? "-"} new batches tracked in the past week
       </div>
     </div>
   );
