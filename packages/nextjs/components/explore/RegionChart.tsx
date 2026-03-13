@@ -5,8 +5,8 @@ import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 
 import { RegionData } from "~~/types/coffee";
 
 export const RegionChart = ({ data }: { data: RegionData }) => {
-  const max = Math.max(...data.map(d => d.count), 1);
   const [hoveredKey, setHoveredKey] = useState<string | null>(null);
+  const max = Math.max(...data.map(d => d.count), 1);
   const barHeight = 8;
   const rowHeight = 36;
   const height = Math.max(data.length * rowHeight, 120);
@@ -18,7 +18,7 @@ export const RegionChart = ({ data }: { data: RegionData }) => {
     return (
       <div className="bg-base-100 border border-base-300 rounded-lg px-3 py-1 text-xs whitespace-nowrap">
         <span className="font-semibold text-base-content">{entry.name}</span>
-        <span className="text-secondary ml-2">{entry.count} batches</span>
+        <span className="text-muted ml-2">{entry.count} batches</span>
       </div>
     );
   };
@@ -33,7 +33,7 @@ export const RegionChart = ({ data }: { data: RegionData }) => {
             type="category"
             dataKey="name"
             width={64}
-            tick={{ fontSize: 12, fontFamily: "Outfit", fill: "#1A0F05", fontWeight: 500 }}
+            tick={{ fontSize: 12, fontFamily: "Outfit", fill: "var(--color-base-content)", fontWeight: 500 }}
             axisLine={false}
             tickLine={false}
           />
@@ -54,6 +54,7 @@ export const RegionChart = ({ data }: { data: RegionData }) => {
         </BarChart>
       </ResponsiveContainer>
 
+      {/* Right Count Label */}
       <div className="absolute top-0 right-0 flex flex-col pointer-events-none" style={{ height }}>
         {data.map((entry, i) => (
           <div
@@ -62,11 +63,11 @@ export const RegionChart = ({ data }: { data: RegionData }) => {
             style={{
               height: rowHeight,
               marginTop: i === 0 ? (rowHeight - barHeight) / 2 : 0,
-              opacity: hoveredKey && hoveredKey !== entry.name ? 0.3 : 1,
               transition: "opacity 0.15s",
               fontSize: 11,
               fontFamily: "Outfit",
-              color: "#7A5C3A",
+              color: "var(--color-base-content)",
+              opacity: hoveredKey && hoveredKey !== entry.name ? 0.3 : 0.8,
             }}
           >
             {entry.count}

@@ -22,7 +22,7 @@ export const HeroSection = ({ onOpenQr }: Props) => {
         <span>to Your Cup</span>
       </h1>
 
-      <p className="text-secondary text-base font-light leading-relaxed max-w-md mb-10">
+      <p className="text-muted text-base font-light leading-relaxed max-w-md mb-10">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer sem erat, finibus non nisl nec, scelerisque
         rutrum ligula. Cras dictum congue ante commodo posuere. Etiam imperdiet eu lacus facilisis ornare. Donec
         eleifend nec quam ac suscipit.
@@ -33,7 +33,7 @@ export const HeroSection = ({ onOpenQr }: Props) => {
           onClick={onOpenQr}
           className="btn btn-primary px-7 text-sm tracking-wide flex-1 min-w-[10rem] text-nowrap"
         >
-          Track Your Coffee
+          Scan Your Coffee
         </button>
         <button
           onClick={() => router.push("/explore")}

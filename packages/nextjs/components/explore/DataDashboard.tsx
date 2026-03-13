@@ -18,7 +18,7 @@ export const DataDashboard = () => {
           {stats.batchesToday} today
         </span>
       ) : (
-        "None today"
+        "0 today"
       ),
     },
     {
@@ -65,17 +65,20 @@ export const DataDashboard = () => {
       <div className="grid grid-cols-6 min-w-[800px] gap-px bg-base-300 border border-base-300 rounded-xl overflow-hidden">
         {statItems.map(({ label, value, sub, trend }) => (
           <div key={label} className="ghost-surface p-7 transition-colors">
-            <div className="text-muted uppercase tracking-[0.2em] mb-3">{label}</div>
             {isLoading ? (
               <>
-                <Skeleton className="h-10 w-16 mb-2" />
-                <Skeleton className="h-3 w-20" />
+                <Skeleton className="h-4 w-16 mb-3" />
+                <Skeleton className="h-10 w-20 mb-2" />
+                <Skeleton className="h-3 w-16" />
               </>
             ) : (
               <>
-                <div className="font-serif text-5xl font-light text-base-content leading-none mb-1">{value ?? "—"}</div>
+                <div className="text-hint uppercase tracking-[0.2em] mb-3">{label}</div>
+                <div className="font-serif text-3xl xl:text-5xl font-light text-base-content leading-none mb-1">
+                  {value ?? "—"}
+                </div>
                 <p
-                  className={`text-xs mt-1 ${trend === "up" ? "text-primary" : trend === "down" ? "text-accent" : "text-secondary"}`}
+                  className={`text-xs mt-2 ${trend === "up" ? "text-primary" : trend === "down" ? "text-accent" : "text-muted"}`}
                 >
                   {sub}
                 </p>

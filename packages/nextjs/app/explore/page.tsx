@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import type { NextPage } from "next";
-import { QrModal } from "~~/components/QrModal";
 import { BatchFilterBar } from "~~/components/explore/BatchFilterBar";
 import { BatchTable } from "~~/components/explore/BatchTable";
 import { ChartDashboard } from "~~/components/explore/ChartDashboard";
@@ -20,7 +19,6 @@ const BlockExplorer: NextPage = () => {
   const allBatches = stats?.allBatches;
   const [filters, setFilters] = useState<BatchFilterState>(DEFAULT_FILTERS);
   const [searchQuery, setSearchQuery] = useState(searchParams.get("q") ?? "");
-  const [qrOpen, setQrOpen] = useState(false);
 
   const batches = useMemo(() => {
     let list = [...((allBatches as unknown as CoffeeBatch[]) ?? [])];
@@ -62,7 +60,6 @@ const BlockExplorer: NextPage = () => {
         {...filters}
         onChange={setFilters}
         onSearch={setSearchQuery}
-        onScanQr={() => setQrOpen(true)}
         pageSize={pageSize}
         onPageSizeChange={setPageSize}
         onClear={() => {
@@ -70,7 +67,6 @@ const BlockExplorer: NextPage = () => {
           setSearchQuery("");
         }}
       />
-      <QrModal isOpen={qrOpen} onClose={() => setQrOpen(false)} />
 
       <BatchTable
         batches={isLoading ? undefined : paginatedItems}

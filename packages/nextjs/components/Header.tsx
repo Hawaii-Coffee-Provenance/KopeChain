@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bars3Icon } from "@heroicons/react/24/outline";
+import { Bars3Icon, QrCodeIcon } from "@heroicons/react/24/outline";
+import { QrModal } from "~~/components/QrModal";
 import { SwitchTheme } from "~~/components/SwitchTheme";
 import { RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
@@ -50,7 +51,7 @@ export const HeaderMenuLinks = () => {
               passHref
               className={`
                 text-xs font-medium tracking-[0.1em] uppercase px-2 py-1.5 transition-colors 
-                  ${isActive ? "text-base-content" : "text-secondary hover:text-base-content"}
+                  ${isActive ? "text-base-content" : "text-muted hover:text-base-content"}
               `}
             >
               {label}
@@ -64,6 +65,8 @@ export const HeaderMenuLinks = () => {
 
 export const Header = () => {
   const burgerMenuRef = useRef<HTMLDetailsElement>(null);
+  const [qrOpen, setQrOpen] = useState(false);
+
   useOutsideClick(burgerMenuRef, () => {
     burgerMenuRef?.current?.removeAttribute("open");
   });
@@ -81,6 +84,18 @@ export const Header = () => {
       </div>
 
       <div className="flex items-center gap-2">
+        <div className="flex items-center">
+          <span className="text-xs font-medium tracking-[0.1em] uppercase px-2 py-1.5 text-muted hidden md:inline">
+            Scan QR Code
+          </span>
+          <button
+            onClick={() => setQrOpen(true)}
+            className="flex items-center justify-center p-2 rounded-full hover:bg-base-content/5 dark:hover:bg-base-content/5 transition-colors hover:cursor-pointer"
+          >
+            <QrCodeIcon className="h-5 w-5" />
+          </button>
+        </div>
+
         <SwitchTheme />
         <RainbowKitCustomConnectButton />
 
@@ -96,6 +111,8 @@ export const Header = () => {
           </ul>
         </details>
       </div>
+
+      <QrModal isOpen={qrOpen} onClose={() => setQrOpen(false)} />
     </header>
   );
 };

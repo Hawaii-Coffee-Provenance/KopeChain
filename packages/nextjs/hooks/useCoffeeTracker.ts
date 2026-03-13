@@ -1,7 +1,15 @@
 import { useMemo } from "react";
 import { zeroAddress } from "viem";
 import { useScaffoldEventHistory, useScaffoldReadContract } from "~~/hooks/scaffold-eth";
-import { CoffeeBatch, REGIONS, REGION_TO_ISLAND, getStage } from "~~/types/coffee";
+import {
+  CoffeeBatch,
+  PROCESSING_METHODS,
+  REGIONS,
+  REGION_TO_ISLAND,
+  ROASTING_METHODS,
+  VARIETIES,
+  getStage,
+} from "~~/types/coffee";
 
 export const useCoffeeTracker = () => {
   // Contract Reads
@@ -41,7 +49,7 @@ export const useCoffeeTracker = () => {
 
     if (batches.length === 0) return null;
 
-    // Calculations
+    // Dashboard Calculations
     const now = BigInt(Math.floor(Date.now() / 1000));
     const weekAgo = now - 7n * 24n * 60n * 60n;
     const dayStart = now - (now % (24n * 60n * 60n));
@@ -97,6 +105,40 @@ export const useCoffeeTracker = () => {
 
     const recentBatches = [...batches].sort((a, b) => Number(b.mintTimestamp) - Number(a.mintTimestamp));
 
+    // Timeline
+    const averageElevation = Math.round(batches.reduce((sum, b) => sum + b.elevation, 0) / totalBatches);
+    const averageYield = Math.round(batches.reduce((sum, b) => sum + Number(b.harvestWeight), 0) / totalBatches);
+    const varietyCount = Object.keys(VARIETIES).length - 1;
+
+    const processedBatches = batches.filter(b => b.moistureContent > 0);
+    const averageMoisture =
+      processedBatches.length > 0
+        ? Math.round((processedBatches.reduce((sum, b) => sum + b.moistureContent, 0) / processedBatches.length) * 10) /
+          10
+        : 0;
+    const processMethodCount = Object.keys(PROCESSING_METHODS).length - 1;
+
+    const roastedBatches = batches.filter(b => b.roastingAfterWeight > 0n && b.roastingBeforeWeight > 0n);
+    const roastMethodCount = Object.keys(ROASTING_METHODS).length - 1;
+    const averageRoastWeightLoss =
+      roastedBatches.length > 0
+        ? Math.round(
+            (roastedBatches.reduce((sum, b) => {
+              const before = Number(b.roastingBeforeWeight);
+              const after = Number(b.roastingAfterWeight);
+              return sum + ((before - after) / before) * 100;
+            }, 0) /
+              roastedBatches.length) *
+              10,
+          ) / 10
+        : 0;
+
+    const distributedBatches = batches.filter(b => b.transportTime > 0);
+    const averageTransportTime =
+      distributedBatches.length > 0
+        ? Math.round(distributedBatches.reduce((sum, b) => sum + b.transportTime, 0) / distributedBatches.length)
+        : 0;
+
     return {
       totalBatches,
       batchesThisWeek,
@@ -116,6 +158,15 @@ export const useCoffeeTracker = () => {
 
       recentBatches,
       allBatches: batches,
+
+      averageElevation,
+      averageYield,
+      varietyCount,
+      averageMoisture,
+      processMethodCount,
+      roastMethodCount,
+      averageRoastWeightLoss,
+      averageTransportTime,
     };
   }, [rawBatches]);
 

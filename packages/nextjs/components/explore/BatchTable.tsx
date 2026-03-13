@@ -24,10 +24,7 @@ export const BatchTable = ({ batches, isLoading = false, onRowClick, txHashMap, 
           <thead>
             <tr>
               {["TX", "Batch", "Region", "Stage", "Verified", "From", "Minted"].map(col => (
-                <th
-                  key={col}
-                  className="px-5 py-3 text-left text-col-header text-base-100 whitespace-nowrap bg-primary"
-                >
+                <th key={col} className="px-5 py-3 text-left text-col-header text-cream whitespace-nowrap bg-primary">
                   {col}
                 </th>
               ))}
@@ -39,7 +36,7 @@ export const BatchTable = ({ batches, isLoading = false, onRowClick, txHashMap, 
               <BatchSkeletonRows />
             ) : rows.length === 0 ? (
               <tr>
-                <td colSpan={7} className="px-5 py-12 text-center text-sm text-secondary">
+                <td colSpan={7} className="px-5 py-12 text-center text-sm text-muted">
                   No batches found
                 </td>
               </tr>

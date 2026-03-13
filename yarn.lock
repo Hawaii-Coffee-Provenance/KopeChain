@@ -10848,12 +10848,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:^12.35.2":
-  version: 12.35.2
-  resolution: "framer-motion@npm:12.35.2"
+"framer-motion@npm:^12.36.0":
+  version: 12.36.0
+  resolution: "framer-motion@npm:12.36.0"
   dependencies:
-    motion-dom: ^12.35.2
-    motion-utils: ^12.29.2
+    motion-dom: ^12.36.0
+    motion-utils: ^12.36.0
     tslib: ^2.4.0
   peerDependencies:
     "@emotion/is-prop-valid": "*"
@@ -10866,7 +10866,7 @@ __metadata:
       optional: true
     react-dom:
       optional: true
-  checksum: a18b6fdbbf86f8f52501760435d8579e5f4ef9aa43af32e9efad3a24800bd66beff81119b7a80677434d2961819e2fa83e80ce615424f66ecc04c17e35c78ccf
+  checksum: 9313c3e32f514b037cb5904080d6ae4960433df7f78da6f5f520a24f3ee2d85c13ef7cd4ce96658b6a21104d2adae3d862989682eb0ab5c5683ec1b5717e20db
   languageName: node
   linkType: hard
 
@@ -14280,19 +14280,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"motion-dom@npm:^12.35.2":
-  version: 12.35.2
-  resolution: "motion-dom@npm:12.35.2"
+"motion-dom@npm:^12.36.0":
+  version: 12.36.0
+  resolution: "motion-dom@npm:12.36.0"
   dependencies:
-    motion-utils: ^12.29.2
-  checksum: db2cc9076e61d83f787b053b01525e37cc7b0be40a2e28e929af484e38f3901923b72fd9dae865412bf85a786238b2daf5ffd39e23cd738e6e4ca77491c8ee78
+    motion-utils: ^12.36.0
+  checksum: d1fbaeb781960f0426a007c3d8a3c4be8a3049f00572f8f1e03b8191121b66a933e171e8483337141ff81a584f5798c8b3fb0b71220c997100a6579f042bf9dc
   languageName: node
   linkType: hard
 
-"motion-utils@npm:^12.29.2":
-  version: 12.29.2
-  resolution: "motion-utils@npm:12.29.2"
-  checksum: 68a44a62dffd9d64e468a586be35f25a26cc0e51664ec97c54cdde208001cd5ff2e351e2e794bde47c9840ddd2c2573f2036e4905588a113697b3f512b8fb891
+"motion-utils@npm:^12.36.0":
+  version: 12.36.0
+  resolution: "motion-utils@npm:12.36.0"
+  checksum: 61b61425101402ab879b7b4cdf9c940009937e18005ce7a52a3b679bde9c73594802188bc14d2b9d2885a6f70015a2cf9173f3f1c8da2a63bf4edaa503a143f1
   languageName: node
   linkType: hard
 
@@ -17086,7 +17086,7 @@ __metadata:
   resolution: "se-2@workspace:."
   dependencies:
     "@types/react-is": ^19
-    framer-motion: ^12.35.2
+    framer-motion: ^12.36.0
     husky: ~9.1.6
     lint-staged: ~13.2.2
     maplibre-gl: ^5.20.0

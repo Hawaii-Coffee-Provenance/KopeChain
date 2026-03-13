@@ -41,7 +41,7 @@ export const BatchSearch = ({
         onChange={e => setValue(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className="flex-1 bg-transparent px-3 py-2 text-base-content placeholder-secondary/50 outline-none text-sm"
+        className="flex-1 bg-transparent px-3 py-2 text-base-content placeholder:text-base-content/50 outline-none text-sm"
       />
       <button
         type="button"

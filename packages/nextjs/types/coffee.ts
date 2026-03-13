@@ -91,10 +91,10 @@ export type RegionData = { name: string; count: number }[];
 export type ScaBucket = { score: string; count: number };
 
 export const PIPELINE_SEGMENTS = [
-  { key: "harvested", label: "Harvested", color: "#4a6741" },
-  { key: "processed", label: "Processed", color: "#c1440e" },
-  { key: "roasted", label: "Roasted", color: "#b07d3a" },
-  { key: "distributed", label: "Distributed", color: "#7a5c3a" },
+  { key: "harvested", label: "Harvested", color: "var(--color-stage-harvest)" },
+  { key: "processed", label: "Processed", color: "var(--color-stage-process)" },
+  { key: "roasted", label: "Roasted", color: "var(--color-stage-roast)" },
+  { key: "distributed", label: "Distributed", color: "var(--color-stage-distribute)" },
 ] as const;
 
 export const SCA_TIERS = [
@@ -135,8 +135,8 @@ export const getStage = (batch: CoffeeBatch): Stage => {
 };
 
 export const STAGE_STYLES: Record<Stage, string> = {
-  Harvested: "bg-primary text-primary-content",
-  Processed: "bg-accent text-accent-content",
-  Roasted: "bg-amber text-white",
-  Distributed: "bg-secondary text-secondary-content",
+  Harvested: "bg-stage-harvest text-cream",
+  Processed: "bg-stage-process text-cream",
+  Roasted: "bg-stage-roast text-cream",
+  Distributed: "bg-stage-distribute text-cream",
 };

@@ -10,7 +10,9 @@ export const PipelineChart = ({ data }: { data: PipelineData }) => {
 
   const renderTooltip = ({ active }: any) => {
     if (!active || !hoveredKey) return null;
+
     const seg = PIPELINE_SEGMENTS.find(s => s.key === hoveredKey);
+
     if (!seg) return null;
 
     return (
@@ -18,7 +20,7 @@ export const PipelineChart = ({ data }: { data: PipelineData }) => {
         <span style={{ color: seg.color }} className="font-semibold">
           {seg.label}
         </span>
-        <span className="text-secondary ml-2">{data[seg.key as keyof PipelineData]} batches</span>
+        <span className="text-muted ml-2">{data[seg.key as keyof PipelineData]} batches</span>
       </div>
     );
   };
@@ -41,7 +43,7 @@ export const PipelineChart = ({ data }: { data: PipelineData }) => {
               onMouseMove={() => setHoveredKey(seg.key)}
               onMouseLeave={() => setHoveredKey(null)}
             >
-              <Cell fill={hoveredKey === seg.key ? seg.color : `${seg.color}cc`} />
+              <Cell fill={seg.color} fillOpacity={hoveredKey === seg.key ? 1 : 0.8} />
             </Bar>
           ))}
         </BarChart>

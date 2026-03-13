@@ -36,10 +36,10 @@ export const AddressInfoDropdown = ({ address, ensAvatar, displayName }: Address
           <div className="bg-white/20 p-[2px] rounded-full">
             <BlockieAvatar address={checkSumAddress} size={20} ensImage={ensAvatar} />
           </div>
-          <span className="ml-1 mr-1">
+          <span className="ml-1 mr-1 hidden md:flex">
             {isENS(displayName) ? displayName : checkSumAddress?.slice(0, 6) + "..." + checkSumAddress?.slice(-4)}
           </span>
-          <ChevronDownIcon className="h-4 w-4 ml-1 sm:ml-0 transition-transform duration-200 group-open:rotate-180" />
+          <ChevronDownIcon className="h-4 w-4 ml-1 sm:ml-0 transition-transform duration-200 group-open:rotate-180 hidden md:flex" />
         </summary>
 
         <ul className="dropdown-content menu p-2 mt-2 bg-base-100 border border-base-300 rounded-xl shadow-lg w-52 list-none gap-1 z-50">

@@ -32,11 +32,11 @@ export const BatchRow = memo(({ batch, txHash, onRowClick }: BatchRowProps) => {
 
       <td className="px-4 py-2">
         <p className="font-semibold text-sm text-base-content leading-none mb-1">{batch.batchNumber}</p>
-        <p className="text-muted">{batch.farmName}</p>
+        <p className="text-xs text-muted">{batch.farmName}</p>
       </td>
 
       <td className="px-4 py-2">
-        <span className="text-muted">{REGIONS[batch.region] ?? "Unknown"}</span>
+        <span className="text-xs text-muted">{REGIONS[batch.region] ?? "Unknown"}</span>
       </td>
 
       <td className="px-4 py-2">
@@ -48,7 +48,7 @@ export const BatchRow = memo(({ batch, txHash, onRowClick }: BatchRowProps) => {
       </td>
 
       <td className="px-4 py-2">
-        <span className={`text-xs font-medium ${batch.verified ? "text-primary" : "text-amber"}`}>
+        <span className={`text-xs font-medium ${batch.verified ? "text-primary" : "text-accent"}`}>
           {batch.verified ? "Verified" : "Pending"}
         </span>
       </td>
