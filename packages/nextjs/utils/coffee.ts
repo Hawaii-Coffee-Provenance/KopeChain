@@ -1,13 +1,14 @@
 import { zeroAddress } from "viem";
-import { CoffeeBatch, Coordinates, Stage } from "~~/types/coffee";
+import { CoffeeBatch, Coordinates, STAGES, Stage } from "~~/types/coffee";
+
+export { STAGES };
+export type { Stage, CoffeeBatch, Coordinates };
 
 export const COORD_SCALE = 1_000_000;
 
 export const formatCoordinates = (c?: Coordinates | null): string => {
   if (!c || c.latitude === undefined || c.longitude === undefined) return "—";
-  const lat = (Number(c.latitude) / 1e6).toFixed(6);
-  const lon = (Number(c.longitude) / 1e6).toFixed(6);
-  return `${lat}, ${lon}`;
+  return `${Number(c.latitude).toFixed(6)}, ${Number(c.longitude).toFixed(6)}`;
 };
 
 export const REGIONS: Record<number, string> = {
@@ -17,19 +18,35 @@ export const REGIONS: Record<number, string> = {
   3: "Hamakua",
   4: "Maui",
   5: "Kauai",
-  6: "Other",
+  6: "Molokai",
+  7: "Oahu",
+  8: "Other",
 };
 
+export const REGION_COLORS: Record<string, string> = {
+  Kona: "#6F4E37", // Coffee Brown
+  "Ka'ū": "#A84632", // Volcanic Red
+  Puna: "#D46A2A", // Lava/Sunset Orange
+  Hamakua: "#4A7856", // Tropical Emerald
+  Maui: "#E2AA46", // Haleakalā Gold
+  Kauai: "#37887E", // Na Pali Teal
+  Molokai: "#9E5D4B", // Red Earth
+  Oahu: "#395E8B", // Pacific Blue
+  Other: "#A3A3A3", // Neutral Cool Gray
+};
+
+export const getRegionColor = (name: string) => REGION_COLORS[name] ?? REGION_COLORS["Other"];
+
 export const VARIETIES: Record<number, string> = {
-  0: "Arabica",
+  0: "Typica",
   1: "Geisha",
-  2: "Typica",
-  3: "Caturra",
-  4: "Catuai",
-  5: "Maui Mokka",
-  6: "Bourbon",
-  7: "Peaberry",
-  8: "Maragogype",
+  2: "Caturra",
+  3: "Catuai",
+  4: "Maui Mokka",
+  5: "Bourbon",
+  6: "Peaberry",
+  7: "Maragogype",
+  8: "Mundo Novo",
   9: "Other",
 };
 
@@ -56,12 +73,25 @@ export const ROAST_LEVELS: Record<number, string> = {
   3: "Other",
 };
 
-export const PIPELINE_SEGMENTS = [
-  { key: "harvested", label: "Harvested", color: "var(--color-stage-harvest)" },
-  { key: "processed", label: "Processed", color: "var(--color-stage-process)" },
-  { key: "roasted", label: "Roasted", color: "var(--color-stage-roast)" },
-  { key: "distributed", label: "Distributed", color: "var(--color-stage-distribute)" },
-] as const;
+export const STAGE_COLORS = {
+  Harvested: "var(--color-stage-harvest)",
+  Processed: "var(--color-stage-process)",
+  Roasted: "var(--color-stage-roast)",
+  Distributed: "var(--color-stage-distribute)",
+} as const;
+
+export const STAGE_STYLES: Record<Stage, string> = {
+  Harvested: "bg-stage-harvest text-cream",
+  Processed: "bg-stage-process text-cream",
+  Roasted: "bg-stage-roast text-cream",
+  Distributed: "bg-stage-distribute text-cream",
+};
+
+export const PIPELINE_SEGMENTS = STAGES.map(stage => ({
+  key: stage.toLowerCase() as Lowercase<Stage>,
+  label: stage,
+  color: STAGE_COLORS[stage],
+}));
 
 export const SCA_TIERS = [
   { min: 90, label: "Excellent", color: "#4a6741", qualityClass: "text-primary" },
@@ -79,23 +109,16 @@ export const REGION_TO_ISLAND: Record<number, string> = {
   3: "Hawai'i Island",
   4: "Maui",
   5: "Kauai",
-  6: "Unknown",
+  6: "Molokai",
+  7: "Oahu",
+  8: "Unknown",
 };
-
-export const STAGES: Stage[] = ["Harvested", "Processed", "Roasted", "Distributed"];
 
 export const getStage = (batch: CoffeeBatch): Stage => {
   if (batch.distributor !== zeroAddress) return "Distributed";
   if (batch.roastingAfterWeight > 0n) return "Roasted";
   if (batch.processingAfterWeight > 0n) return "Processed";
   return "Harvested";
-};
-
-export const STAGE_STYLES: Record<Stage, string> = {
-  Harvested: "bg-stage-harvest text-cream",
-  Processed: "bg-stage-process text-cream",
-  Roasted: "bg-stage-roast text-cream",
-  Distributed: "bg-stage-distribute text-cream",
 };
 
 export const mapNestedToBatch = (nested: any): CoffeeBatch => ({

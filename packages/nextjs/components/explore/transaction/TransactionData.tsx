@@ -45,21 +45,13 @@ const TransactionData = ({ txHash, title }: { txHash: Hash; title?: string }) =>
     fetchTx();
   }, [client, txHash]);
 
-  if (isLoading || !txData) {
-    return (
-      <div className="flex flex-col gap-3 p-2 animate-pulse w-full">
-        <div className="h-6 bg-base-300 rounded w-full"></div>
-        <div className="h-6 bg-base-300 rounded w-full"></div>
-        <div className="h-6 bg-base-300 rounded w-full"></div>
-      </div>
-    );
-  }
+  if (isLoading || !txData) return null;
 
   const { tx: txDecoded, receipt } = txData;
 
   return (
     <div className="flex flex-col w-full text-base-content pb-6">
-      <div className="text-label mb-3 mt-2">{title || "Blockchain Data"}</div>
+      <div className="text-label text-base! mb-2 mt-2">{title || "Blockchain Data"}</div>
 
       <DataRow title="TX Hash">
         <TxHashLink txHash={txDecoded.hash} disableTruncation={true} />

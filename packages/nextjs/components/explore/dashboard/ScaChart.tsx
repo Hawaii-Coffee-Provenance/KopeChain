@@ -1,5 +1,6 @@
 "use client";
 
+import { ChartTooltip } from "./ChartTooltip";
 import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { ScaBucket } from "~~/types/coffee";
 import { getScaTier } from "~~/utils/coffee";
@@ -11,13 +12,13 @@ export const ScaChart = ({ data }: { data: ScaBucket[] }) => {
     const tier = getScaTier(Number(label));
 
     return (
-      <div className="bg-base-100 border border-base-300 rounded-lg px-3 py-1 text-xs whitespace-nowrap">
-        <span className="font-semibold text-base-content">
-          SCA {label}–{Number(label) + 2}
-        </span>
-        <span className="text-muted ml-2">{payload[0].value} batches</span>
-        <div className={`${tier.qualityClass} mt-0.5`}>{tier.label}</div>
-      </div>
+      <ChartTooltip
+        active={active}
+        label={`SCA ${label}–${Number(label) + 2}`}
+        value={payload[0].value}
+        subtitle={tier.label}
+        subtitleClassName={tier.qualityClass}
+      />
     );
   };
 

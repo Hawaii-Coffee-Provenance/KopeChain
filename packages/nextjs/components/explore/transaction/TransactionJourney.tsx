@@ -8,6 +8,7 @@ import {
   REGIONS,
   ROASTING_METHODS,
   ROAST_LEVELS,
+  STAGE_COLORS,
   VARIETIES,
   formatCoordinates,
 } from "~~/utils/coffee";
@@ -21,7 +22,9 @@ const TransactionJourney = ({ batch }: { batch: any }) => {
 
   return (
     <div className="flex flex-col w-full text-base-content pb-6">
-      <h3 className="text-label mb-3 mt-2 text-[var(--color-stage-harvest)]">Harvest</h3>
+      <h3 className="text-label text-base! mb-3 mt-2" style={{ color: STAGE_COLORS.Harvested }}>
+        Harvest
+      </h3>
       <DataRow title="Farm Name" value={batch?.farmName ?? "—"} />
       <DataRow title="Region" value={batch?.region !== undefined ? REGIONS[batch.region] : "—"} />
       <DataRow title="Variety" value={batch?.variety !== undefined ? VARIETIES[batch.variety] : "—"} />
@@ -39,7 +42,9 @@ const TransactionJourney = ({ batch }: { batch: any }) => {
 
       {hasProcessed && (
         <>
-          <h3 className="text-label mb-3 mt-8 text-[var(--color-stage-process)]">Process</h3>
+          <h3 className="text-label text-base! mb-3 mt-8" style={{ color: STAGE_COLORS.Processed }}>
+            Process
+          </h3>
           <DataRow
             title="Method"
             value={batch?.processingMethod !== undefined ? PROCESSING_METHODS[batch.processingMethod] : "—"}
@@ -70,7 +75,9 @@ const TransactionJourney = ({ batch }: { batch: any }) => {
 
       {hasRoasted && (
         <>
-          <h3 className="text-label mb-3 mt-8 text-[var(--color-stage-roast)]">Roast</h3>
+          <h3 className="text-label text-base! mb-3 mt-8" style={{ color: STAGE_COLORS.Roasted }}>
+            Roast
+          </h3>
           <DataRow
             title="Method"
             value={batch?.roastingMethod !== undefined ? ROASTING_METHODS[batch.roastingMethod] : "—"}
@@ -99,7 +106,9 @@ const TransactionJourney = ({ batch }: { batch: any }) => {
 
       {hasDistributed && (
         <>
-          <h3 className="text-label mb-3 mt-8 text-[var(--color-stage-distribute)]">Distribute</h3>
+          <h3 className="text-label text-base! mb-2 mt-8" style={{ color: STAGE_COLORS.Distributed }}>
+            Distribute
+          </h3>
           <DataRow title="Bag Count" value={batch?.bagCount ? `${batch.bagCount}` : "—"} />
           <DataRow title="Weight" value={batch?.distributionWeight ? `${Number(batch.distributionWeight)} kg` : "—"} />
           <DataRow title="Destination" value={batch?.destination ?? "—"} />

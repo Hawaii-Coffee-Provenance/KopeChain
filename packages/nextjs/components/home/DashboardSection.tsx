@@ -1,4 +1,4 @@
-import { BatchSearch } from "~~/components/explore/BatchSearch";
+import { BatchSearch } from "~~/components/explore/table/BatchSearch";
 import { useCoffeeTracker } from "~~/hooks/useCoffeeTracker";
 
 export const DashboardSection = () => {
@@ -9,30 +9,30 @@ export const DashboardSection = () => {
   const newBatchesThisWeek = stats?.batchesThisWeek;
 
   return (
-    <div className="flex flex-col justify-center px-8 lg:pr-32 py-20 gap-6">
+    <div className="flex flex-col justify-center section-padding lg:pr-32 py-20 gap-6">
       <BatchSearch redirectToExplore />
 
       <div className="grid grid-cols-2 gap-px bg-base-300 border border-base-300 rounded-xl overflow-hidden">
-        <div className="ghost-surface p-7 transition-colors">
+        <div className="ghost-surface p-7 transition-colors flex flex-col justify-between h-full">
           <div className="font-serif text-5xl font-light text-base-content leading-none mb-1">{batchCount ?? "-"}</div>
           <div className="text-hint uppercase tracking-[0.2em]">Total Batches</div>
         </div>
 
-        <div className="ghost-surface p-7 transition-colors">
+        <div className="ghost-surface p-7 transition-colors flex flex-col justify-between h-full">
           <div className="font-serif text-5xl font-light text-base-content leading-none mb-1">
             {verifiedCount ?? "-"}
           </div>
           <div className="text-hint uppercase tracking-[0.2em]">Verified Batches</div>
         </div>
 
-        <div className="ghost-surface p-7 transition-colors">
+        <div className="ghost-surface p-7 transition-colors flex flex-col justify-between h-full">
           <div className="font-serif text-5xl font-light text-base-content leading-none mb-1">
             {transactionCount ?? "-"}
           </div>
           <div className="text-hint uppercase tracking-[0.2em]">Total Transactions</div>
         </div>
 
-        <div className="ghost-surface p-7 transition-colors">
+        <div className="ghost-surface p-7 transition-colors flex flex-col justify-between h-full">
           <div className="font-serif text-5xl font-light text-base-content leading-none mb-1">{farmCount ?? "-"}</div>
           <div className="text-hint uppercase tracking-[0.2em]">Registered Farms</div>
         </div>

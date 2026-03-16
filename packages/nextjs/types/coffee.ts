@@ -62,7 +62,8 @@ export type RegionData = { name: string; count: number }[];
 
 export type ScaBucket = { score: string; count: number };
 
-export type Stage = "Harvested" | "Processed" | "Roasted" | "Distributed";
+export const STAGES = ["Harvested", "Processed", "Roasted", "Distributed"] as const;
+export type Stage = (typeof STAGES)[number];
 
 export type StageFilter = "All" | Stage | "Verified";
 export type SortOrder = "newest" | "oldest";

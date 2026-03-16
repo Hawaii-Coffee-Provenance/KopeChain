@@ -1,8 +1,18 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { zeroAddress } from "viem";
-import { useScaffoldEventHistory, useScaffoldReadContract } from "~~/hooks/scaffold-eth";
-import { CoffeeBatch } from "~~/types/coffee";
-import { PROCESSING_METHODS, REGIONS, REGION_TO_ISLAND, ROASTING_METHODS, VARIETIES, getStage } from "~~/utils/coffee";
+import { usePublicClient } from "wagmi";
+import { useDeployedContractInfo, useScaffoldEventHistory, useScaffoldReadContract } from "~~/hooks/scaffold-eth";
+import { CoffeeBatch, PipelineData } from "~~/types/coffee";
+import {
+  PROCESSING_METHODS,
+  REGIONS,
+  REGION_TO_ISLAND,
+  ROASTING_METHODS,
+  STAGES,
+  VARIETIES,
+  getScaTier,
+  getStage,
+} from "~~/utils/coffee";
 import { mapNestedToBatch } from "~~/utils/coffee";
 
 export type BatchTxHashes = {
@@ -14,17 +24,53 @@ export type BatchTxHashes = {
 };
 
 export const useCoffeeTracker = () => {
-  // Contract Reads
+  const { data: deployedContract } = useDeployedContractInfo({ contractName: "CoffeeTracker" });
+  const publicClient = usePublicClient();
+
+  const [rawBatches, setRawBatches] = useState<any[]>([]);
+  const [rawBatchesLoading, setRawBatchesLoading] = useState(true);
+
   const { data: batchCount } = useScaffoldReadContract({
     contractName: "CoffeeTracker",
     functionName: "getBatchCount",
   });
 
-  const { data: rawBatches, isLoading: rawBatchesLoading } = useScaffoldReadContract({
-    contractName: "CoffeeTracker",
-    functionName: "getBatches",
-    args: batchCount !== undefined ? [0n, batchCount] : (undefined as unknown as readonly [bigint, bigint]),
-  });
+  // Fetch in chunks to avoid gas limits
+  useEffect(() => {
+    const fetchAllBatches = async () => {
+      if (batchCount === undefined || !deployedContract || !publicClient) return;
+
+      try {
+        setRawBatchesLoading(true);
+        const count = Number(batchCount);
+        if (count === 0) {
+          setRawBatches([]);
+          return;
+        }
+
+        const CHUNK_SIZE = 100;
+        let all: any[] = [];
+
+        for (let i = 0; i < count; i += CHUNK_SIZE) {
+          const chunk = (await publicClient.readContract({
+            address: deployedContract.address,
+            abi: deployedContract.abi,
+            functionName: "getBatches",
+            args: [BigInt(i), BigInt(CHUNK_SIZE)],
+          })) as any[];
+          all = [...all, ...chunk];
+        }
+
+        setRawBatches(all);
+      } catch (e) {
+        console.error("Error fetching batches in chunks:", e);
+      } finally {
+        setRawBatchesLoading(false);
+      }
+    };
+
+    fetchAllBatches();
+  }, [batchCount, deployedContract?.address, deployedContract?.abi, publicClient]);
 
   const { data: transactionCount, isLoading: transactionCountLoading } = useScaffoldReadContract({
     contractName: "CoffeeTracker",
@@ -116,13 +162,8 @@ export const useCoffeeTracker = () => {
       scoredBatches.length > 0
         ? (scoredBatches.reduce((sum, b) => sum + b.scaScore, 0) / scoredBatches.length).toFixed(1)
         : 0;
-    const scaLabel = !averageScaScore
-      ? "No Scores Yet"
-      : Number(averageScaScore) >= 90
-        ? "Excellent Quality"
-        : Number(averageScaScore) >= 85
-          ? "Very Good Quality"
-          : "Specialty Grade";
+    const scaTier = getScaTier(Number(averageScaScore));
+    const scaLabel = !averageScaScore ? "No Scores Yet" : `${scaTier.label} Quality`;
     const highestSca = scoredBatches.length > 0 ? Math.max(...scoredBatches.map(b => b.scaScore)) : 0;
     const lowestSca = scoredBatches.length > 0 ? Math.min(...scoredBatches.map(b => b.scaScore)) : 0;
 
@@ -133,12 +174,14 @@ export const useCoffeeTracker = () => {
     const islandCount = islands.size;
 
     // Analytics
-    const pipeline = {
-      harvested: batches.filter(b => getStage(b) === "Harvested").length,
-      processed: batches.filter(b => getStage(b) === "Processed").length,
-      roasted: batches.filter(b => getStage(b) === "Roasted").length,
-      distributed: batches.filter(b => getStage(b) === "Distributed").length,
-    };
+    const pipeline = STAGES.reduce(
+      (acc: PipelineData, stage) => {
+        const key = stage.toLowerCase() as keyof PipelineData;
+        acc[key] = batches.filter(b => getStage(b) === stage).length;
+        return acc;
+      },
+      { harvested: 0, processed: 0, roasted: 0, distributed: 0 },
+    );
 
     const regionCounters = Object.entries(REGIONS)
       .map(([key, name]) => ({

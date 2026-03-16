@@ -33,13 +33,12 @@ const TransactionPageClient = ({ txHash }: TransactionPageClientProps) => {
 
   return (
     <div className="flex flex-col lg:flex-row w-full min-h-[calc(100vh-4rem)] lg:h-[calc(100vh-4rem)]">
-      <div className="w-full lg:w-1/3 flex flex-col gap-6 px-6 py-6 lg:h-full lg:border-r border-base-300 order-2 lg:order-1">
-        {/* TODO: ZOOM IN MAP AND ADD INDIVIDUAL MARKER */}
+      <div className="w-full lg:w-1/3 flex flex-col gap-6 section-padding py-6 lg:h-full lg:border-r border-base-300 order-2 lg:order-1">
         <div className="flex-1 rounded-3xl overflow-hidden min-h-[350px] relative bg-base-200 aspect-square lg:aspect-auto">
           {isDataLoading ? (
             <Skeleton className="absolute inset-0 w-full h-full rounded-3xl" />
           ) : (
-            <Map3D className="absolute inset-0 w-full h-full" />
+            <Map3D className="absolute inset-0 w-full h-full" batches={[batch]} showJourney />
           )}
         </div>
 
@@ -54,7 +53,7 @@ const TransactionPageClient = ({ txHash }: TransactionPageClientProps) => {
       </div>
 
       <div
-        className="w-full lg:w-2/3 flex flex-col lg:h-full min-h-[600px] lg:min-h-0 order-1 lg:order-2 p-6 lg:p-0"
+        className="w-full lg:w-2/3 flex flex-col lg:h-full min-h-[600px] lg:min-h-0 order-1 lg:order-2 section-padding py-6 lg:p-0"
         style={{ scrollbarWidth: "none" }}
       >
         {isDataLoading ? (

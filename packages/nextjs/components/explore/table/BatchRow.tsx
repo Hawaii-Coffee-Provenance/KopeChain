@@ -1,8 +1,8 @@
 "use client";
 
 import { memo } from "react";
-import { BlockieAddressLink } from "./BlockieAddressLink";
-import { TxHashLink } from "./TxHashLink";
+import { BlockieAddressLink } from "../BlockieAddressLink";
+import { TxHashLink } from "../TxHashLink";
 import { CoffeeBatch } from "~~/types/coffee";
 import { REGIONS, STAGE_STYLES, getStage } from "~~/utils/coffee";
 

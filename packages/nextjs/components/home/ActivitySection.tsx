@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { BatchTable } from "../explore/BatchTable";
+import { BatchTable } from "../explore/table/BatchTable";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { useCoffeeTracker } from "~~/hooks/useCoffeeTracker";
 import { CoffeeBatch } from "~~/types/coffee";
@@ -21,7 +21,7 @@ export const ActivitySection = () => {
 
   return (
     <section className="w-full bg-base-200 py-20 overflow-x-hidden">
-      <div className="max-w-7xl mx-auto px-6 lg:px-16">
+      <div className="max-w-7xl mx-auto section-padding">
         <div className="mb-8">
           <span className="text-label text-primary! mb-3 block">Fresh Off the Chain</span>
           <h2 className="heading-section">

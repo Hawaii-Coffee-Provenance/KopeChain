@@ -43,7 +43,7 @@ export const BatchFilterBar = ({
       </div>
 
       {/* Clear / Page / Region / Sort / Search */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 flex-wrap">
         {onClear && (
           <button
             onClick={onClear}
@@ -90,7 +90,7 @@ export const BatchFilterBar = ({
         </select>
 
         {onSearch && (
-          <div className="w-75">
+          <div className="w-full lg:w-75">
             <BatchSearch onSearch={onSearch} />
           </div>
         )}

@@ -3,10 +3,10 @@
 import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import type { NextPage } from "next";
-import { BatchFilterBar } from "~~/components/explore/BatchFilterBar";
-import { BatchTable } from "~~/components/explore/BatchTable";
-import { ChartDashboard } from "~~/components/explore/ChartDashboard";
-import { DataDashboard } from "~~/components/explore/DataDashboard";
+import { ChartDashboard } from "~~/components/explore/dashboard/ChartDashboard";
+import { DataDashboard } from "~~/components/explore/dashboard/DataDashboard";
+import { BatchFilterBar } from "~~/components/explore/table/BatchFilterBar";
+import { BatchTable } from "~~/components/explore/table/BatchTable";
 import { useBatchPagination } from "~~/hooks/useBatchPagination";
 import { useCoffeeTracker } from "~~/hooks/useCoffeeTracker";
 import { BatchFilterState, CoffeeBatch } from "~~/types/coffee";
@@ -59,7 +59,7 @@ const BlockExplorer: NextPage = () => {
   const { paginatedItems, currentPage, totalPages, pageSize, goToPage, setPageSize } = useBatchPagination(batches);
 
   return (
-    <div className="container mx-auto my-10">
+    <div className="container mx-auto my-10 section-padding">
       <DataDashboard />
       <ChartDashboard />
       <BatchFilterBar

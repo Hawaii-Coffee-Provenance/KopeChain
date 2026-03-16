@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { ChartTooltip } from "./ChartTooltip";
 import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { PipelineData } from "~~/types/coffee";
 import { PIPELINE_SEGMENTS } from "~~/utils/coffee";
 
-export const PipelineChart = ({ data }: { data: PipelineData }) => {
+export const PipelineChart = ({ data, total }: { data: PipelineData; total: number }) => {
   const [hoveredKey, setHoveredKey] = useState<string | null>(null);
   const chartData = [data];
 
@@ -17,20 +18,20 @@ export const PipelineChart = ({ data }: { data: PipelineData }) => {
     if (!seg) return null;
 
     return (
-      <div className="bg-base-100 border border-base-300 rounded-lg px-3 py-1 text-xs whitespace-nowrap">
-        <span style={{ color: seg.color }} className="font-semibold">
-          {seg.label}
-        </span>
-        <span className="text-muted ml-2">{data[seg.key as keyof PipelineData]} batches</span>
-      </div>
+      <ChartTooltip
+        active={active}
+        label={seg.label}
+        value={data[seg.key as keyof PipelineData]}
+        labelColor={seg.color}
+      />
     );
   };
 
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <ResponsiveContainer width="100%" height={48}>
         <BarChart data={chartData} layout="vertical" barSize={16} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
-          <XAxis type="number" hide />
+          <XAxis type="number" hide domain={[0, total]} />
           <YAxis type="category" hide />
           <Tooltip content={renderTooltip} cursor={false} />
           {PIPELINE_SEGMENTS.map((seg, i) => (

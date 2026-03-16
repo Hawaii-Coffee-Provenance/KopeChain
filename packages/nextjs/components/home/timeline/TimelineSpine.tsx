@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useMotionTemplate } from "framer-motion";
+import { STAGES, STAGE_COLORS, STAGE_STYLES } from "~~/utils/coffee";
 
 export const TimelineSpine = ({
   stepsLength,
@@ -27,10 +28,10 @@ export const TimelineSpine = ({
         let dotColorClass = "border-base-300 bg-base-300 text-cream/90";
 
         if (isActive) {
-          if (index === 0) dotColorClass = "border-stage-harvest bg-stage-harvest text-cream";
-          else if (index === 1) dotColorClass = "border-stage-process bg-stage-process text-cream";
-          else if (index === 2) dotColorClass = "border-stage-roast bg-stage-roast text-cream";
-          else if (index === 3) dotColorClass = "border-stage-distribute bg-stage-distribute text-cream";
+          const stage = STAGES[index];
+          if (stage) {
+            dotColorClass = `border-none ${STAGE_STYLES[stage]}`;
+          }
         }
 
         return (
@@ -53,12 +54,12 @@ export const TimelineSpine = ({
         style={{
           clipPath: useMotionTemplate`inset(0 0 calc(100% - ${fillHeight}) 0 round 999px)`,
           backgroundImage: `linear-gradient(to bottom, 
-            var(--color-stage-harvest) 0%, 
-            var(--color-stage-harvest) 33.33%, 
-            var(--color-stage-process) 33.33%, 
-            var(--color-stage-process) 66.66%, 
-            var(--color-stage-roast) 66.66%, 
-            var(--color-stage-roast) 100%
+            ${STAGE_COLORS.Harvested} 0%, 
+            ${STAGE_COLORS.Harvested} 33.33%, 
+            ${STAGE_COLORS.Processed} 33.33%, 
+            ${STAGE_COLORS.Processed} 66.66%, 
+            ${STAGE_COLORS.Roasted} 66.66%, 
+            ${STAGE_COLORS.Roasted} 100%
           )`,
           boxShadow: "0 0 10px rgba(0,0,0,0.1)",
         }}

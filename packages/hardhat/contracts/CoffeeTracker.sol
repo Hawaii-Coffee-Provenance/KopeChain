@@ -21,19 +21,21 @@ contract CoffeeTracker is ERC1155, AccessControl {
         Hamakua,
         Maui,
         Kauai,
+        Molokai,
+        Oahu,
         Other
     }
 
     enum Variety {
-        Arabica,
-        Geisha,
         Typica,
+        Geisha,
         Caturra,
         Catuai,
         MauiMokka,
         Bourbon,
         Peaberry,
         Maragogype,
+        MundoNovo,
         Other
     }
 

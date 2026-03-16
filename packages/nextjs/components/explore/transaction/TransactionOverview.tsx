@@ -8,7 +8,7 @@ const TransactionOverview = ({ batch }: { batch: any }) => {
   return (
     <>
       <div>
-        <div className="text-label mb-3 mt-2">Chain Participants</div>
+        <div className="text-label text-base! mb-2 mt-2">Chain Participants</div>
         <div className="flex flex-col">
           {[
             { role: "Farmer", address: batch.farmer && batch.farmer !== zeroAddress ? batch.farmer : "Pending" },
