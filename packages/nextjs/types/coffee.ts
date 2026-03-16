@@ -1,36 +1,56 @@
 import { zeroAddress } from "viem";
 
+export type Coordinates = {
+  latitude: number;
+  longitude: number;
+};
+
 export type CoffeeBatch = {
   batchId: bigint;
   batchNumber: string;
   verified: boolean;
   mintTimestamp: bigint;
 
-  farmer: string;
-  farmName: string;
+  // HarvestData
   region: number;
   variety: number;
   elevation: number;
-  harvestWeight: bigint;
   harvestDate: bigint;
+  harvestWeight: bigint;
+  farmer: string;
+  farmName: string;
+  harvestLocation: Coordinates;
 
-  processor: string;
+  // ProcessingData
   processingMethod: number;
-  processingBeforeWeight: bigint;
-  processingAfterWeight: bigint;
   moistureContent: number;
   scaScore: number;
   humidity: number;
   dryTemperature: number;
+  processingDate: bigint;
+  processingBeforeWeight: bigint;
+  processingAfterWeight: bigint;
+  processor: string;
+  processingLocation: Coordinates;
 
-  roaster: string;
+  // RoastingData
   roastingMethod: number;
+  roastLevel: number;
+  transportTime: number;
+  roastingDate: bigint;
   roastingBeforeWeight: bigint;
   roastingAfterWeight: bigint;
-  roastLevel: number;
+  roaster: string;
   cuppingNotes: string;
-  transportTime: number;
+  roastingLocation: Coordinates;
+
+  // DistributionData
+  distributionDate: bigint;
+  bagCount: number;
+  distributionWeight: bigint;
   distributor: string;
+  destination: string;
+  distributionLocation: Coordinates;
 };
 
 export const REGIONS: Record<number, string> = {

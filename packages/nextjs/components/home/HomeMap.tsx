@@ -25,10 +25,6 @@ export const HomeMap = () => {
           </div>
         </div>
       </div>
-
-      <p className="text-center text-hint mt-3">
-        Click markers to explore · Scroll to zoom · Left-click drag to pan · Right-click drag to tilt
-      </p>
     </>
   );
 };

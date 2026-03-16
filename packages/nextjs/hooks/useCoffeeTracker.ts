@@ -13,9 +13,15 @@ import {
 
 export const useCoffeeTracker = () => {
   // Contract Reads
+  const { data: batchCount } = useScaffoldReadContract({
+    contractName: "CoffeeTracker",
+    functionName: "getBatchCount",
+  });
+
   const { data: rawBatches, isLoading: rawBatchesLoading } = useScaffoldReadContract({
     contractName: "CoffeeTracker",
-    functionName: "getAllBatches",
+    functionName: "getBatches",
+    args: [0n, batchCount ? BigInt(batchCount) : 100n],
   });
 
   const { data: transactionCount, isLoading: transactionCountLoading } = useScaffoldReadContract({
@@ -81,7 +87,67 @@ export const useCoffeeTracker = () => {
   }, [harvestedEvents, processedEvents, roastedEvents, distributedEvents, verifiedEvents]);
 
   const stats = useMemo(() => {
-    const batches = (rawBatches as CoffeeBatch[] | undefined) ?? [];
+    const rawData = (rawBatches as any[] | undefined) ?? [];
+
+    const batches: CoffeeBatch[] = rawData.map(nested => ({
+      batchId: nested.batchId,
+      batchNumber: nested.batchNumber,
+      verified: nested.verified,
+      mintTimestamp: nested.mintTimestamp,
+
+      // HarvestData
+      region: nested.harvestData.region,
+      variety: nested.harvestData.variety,
+      elevation: nested.harvestData.elevation,
+      harvestDate: nested.harvestData.harvestDate,
+      harvestWeight: nested.harvestData.harvestWeight,
+      farmer: nested.harvestData.farmer,
+      farmName: nested.harvestData.farmName,
+      harvestLocation: {
+        latitude: nested.harvestData.location.latitude,
+        longitude: nested.harvestData.location.longitude,
+      },
+
+      // ProcessingData
+      processingMethod: nested.processingData.processingMethod,
+      moistureContent: nested.processingData.moistureContent,
+      scaScore: nested.processingData.scaScore,
+      humidity: nested.processingData.humidity,
+      dryTemperature: nested.processingData.dryTemperature,
+      processingDate: nested.processingData.processingDate,
+      processingBeforeWeight: nested.processingData.beforeWeight,
+      processingAfterWeight: nested.processingData.afterWeight,
+      processor: nested.processingData.processor,
+      processingLocation: {
+        latitude: nested.processingData.location.latitude,
+        longitude: nested.processingData.location.longitude,
+      },
+
+      // RoastingData
+      roastingMethod: nested.roastingData.roastingMethod,
+      roastLevel: nested.roastingData.roastLevel,
+      transportTime: nested.roastingData.transportTime,
+      roastingDate: nested.roastingData.roastingDate,
+      roastingBeforeWeight: nested.roastingData.beforeWeight,
+      roastingAfterWeight: nested.roastingData.afterWeight,
+      roaster: nested.roastingData.roaster,
+      cuppingNotes: nested.roastingData.cuppingNotes,
+      roastingLocation: {
+        latitude: nested.roastingData.location.latitude,
+        longitude: nested.roastingData.location.longitude,
+      },
+
+      // DistributionData
+      distributionDate: nested.distributionData.distributionDate,
+      bagCount: nested.distributionData.bagCount,
+      distributionWeight: nested.distributionData.distributionWeight,
+      distributor: nested.distributionData.distributor,
+      destination: nested.distributionData.destination,
+      distributionLocation: {
+        latitude: nested.distributionData.location.latitude,
+        longitude: nested.distributionData.location.longitude,
+      },
+    }));
 
     if (batches.length === 0) return null;
 
@@ -230,7 +296,73 @@ export const useCoffeeBatch = (batchNumber: string) => {
     args: [batchNumber],
   });
 
-  return { batch: data as CoffeeBatch | undefined, isLoading };
+  const batch = useMemo(() => {
+    if (!data) return undefined;
+
+    const nested = data as any;
+
+    return {
+      batchId: nested.batchId,
+      batchNumber: nested.batchNumber,
+      verified: nested.verified,
+      mintTimestamp: nested.mintTimestamp,
+
+      // HarvestData
+      region: nested.harvestData.region,
+      variety: nested.harvestData.variety,
+      elevation: nested.harvestData.elevation,
+      harvestDate: nested.harvestData.harvestDate,
+      harvestWeight: nested.harvestData.harvestWeight,
+      farmer: nested.harvestData.farmer,
+      farmName: nested.harvestData.farmName,
+      harvestLocation: {
+        latitude: nested.harvestData.location.latitude,
+        longitude: nested.harvestData.location.longitude,
+      },
+
+      // ProcessingData
+      processingMethod: nested.processingData.processingMethod,
+      moistureContent: nested.processingData.moistureContent,
+      scaScore: nested.processingData.scaScore,
+      humidity: nested.processingData.humidity,
+      dryTemperature: nested.processingData.dryTemperature,
+      processingDate: nested.processingData.processingDate,
+      processingBeforeWeight: nested.processingData.beforeWeight,
+      processingAfterWeight: nested.processingData.afterWeight,
+      processor: nested.processingData.processor,
+      processingLocation: {
+        latitude: nested.processingData.location.latitude,
+        longitude: nested.processingData.location.longitude,
+      },
+
+      // RoastingData
+      roastingMethod: nested.roastingData.roastingMethod,
+      roastLevel: nested.roastingData.roastLevel,
+      transportTime: nested.roastingData.transportTime,
+      roastingDate: nested.roastingData.roastingDate,
+      roastingBeforeWeight: nested.roastingData.beforeWeight,
+      roastingAfterWeight: nested.roastingData.afterWeight,
+      roaster: nested.roastingData.roaster,
+      cuppingNotes: nested.roastingData.cuppingNotes,
+      roastingLocation: {
+        latitude: nested.roastingData.location.latitude,
+        longitude: nested.roastingData.location.longitude,
+      },
+
+      // DistributionData
+      distributionDate: nested.distributionData.distributionDate,
+      bagCount: nested.distributionData.bagCount,
+      distributionWeight: nested.distributionData.distributionWeight,
+      distributor: nested.distributionData.distributor,
+      destination: nested.distributionData.destination,
+      distributionLocation: {
+        latitude: nested.distributionData.location.latitude,
+        longitude: nested.distributionData.location.longitude,
+      },
+    } as CoffeeBatch;
+  }, [data]);
+
+  return { batch, isLoading };
 };
 
 export const useUserBatches = (address: string | undefined) => {
@@ -240,9 +372,75 @@ export const useUserBatches = (address: string | undefined) => {
     args: [address ?? zeroAddress],
   });
 
+  const userBatches = useMemo(() => {
+    if (!data?.[1]) return undefined;
+
+    const rawData = data[1] as any[];
+
+    return rawData.map(nested => ({
+      batchId: nested.batchId,
+      batchNumber: nested.batchNumber,
+      verified: nested.verified,
+      mintTimestamp: nested.mintTimestamp,
+
+      // HarvestData
+      region: nested.harvestData.region,
+      variety: nested.harvestData.variety,
+      elevation: nested.harvestData.elevation,
+      harvestDate: nested.harvestData.harvestDate,
+      harvestWeight: nested.harvestData.harvestWeight,
+      farmer: nested.harvestData.farmer,
+      farmName: nested.harvestData.farmName,
+      harvestLocation: {
+        latitude: nested.harvestData.location.latitude,
+        longitude: nested.harvestData.location.longitude,
+      },
+
+      // ProcessingData
+      processingMethod: nested.processingData.processingMethod,
+      moistureContent: nested.processingData.moistureContent,
+      scaScore: nested.processingData.scaScore,
+      humidity: nested.processingData.humidity,
+      dryTemperature: nested.processingData.dryTemperature,
+      processingDate: nested.processingData.processingDate,
+      processingBeforeWeight: nested.processingData.beforeWeight,
+      processingAfterWeight: nested.processingData.afterWeight,
+      processor: nested.processingData.processor,
+      processingLocation: {
+        latitude: nested.processingData.location.latitude,
+        longitude: nested.processingData.location.longitude,
+      },
+
+      // RoastingData
+      roastingMethod: nested.roastingData.roastingMethod,
+      roastLevel: nested.roastingData.roastLevel,
+      transportTime: nested.roastingData.transportTime,
+      roastingDate: nested.roastingData.roastingDate,
+      roastingBeforeWeight: nested.roastingData.beforeWeight,
+      roastingAfterWeight: nested.roastingData.afterWeight,
+      roaster: nested.roastingData.roaster,
+      cuppingNotes: nested.roastingData.cuppingNotes,
+      roastingLocation: {
+        latitude: nested.roastingData.location.latitude,
+        longitude: nested.roastingData.location.longitude,
+      },
+
+      // DistributionData
+      distributionDate: nested.distributionData.distributionDate,
+      bagCount: nested.distributionData.bagCount,
+      distributionWeight: nested.distributionData.distributionWeight,
+      distributor: nested.distributionData.distributor,
+      destination: nested.distributionData.destination,
+      distributionLocation: {
+        latitude: nested.distributionData.location.latitude,
+        longitude: nested.distributionData.location.longitude,
+      },
+    })) as CoffeeBatch[];
+  }, [data]);
+
   return {
     userRole: data?.[0] as string | undefined,
-    userBatches: data?.[1] as CoffeeBatch[] | undefined,
+    userBatches,
     isLoading,
   };
 };

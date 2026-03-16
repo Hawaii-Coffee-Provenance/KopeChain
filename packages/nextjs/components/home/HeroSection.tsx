@@ -32,25 +32,25 @@ export const HeroSection = ({ onOpenQr }: Props) => {
         eleifend nec quam ac suscipit.
       </p>
 
-      <div className="flex flex-row w-full max-w-sm justify-center gap-3 mb-5 mx-auto">
-        <button onClick={onOpenQr} className="btn btn-primary flex-1 px-2 sm:px-4 text-sm tracking-wide">
+      <div className="flex flex-row w-full max-w-md justify-center gap-3 mb-5 mx-auto">
+        <button onClick={onOpenQr} className="btn btn-primary flex-1 px-2 sm:px-4 text-base tracking-wide">
           Scan Your Coffee
         </button>
         <button
           onClick={() => router.push("/explore")}
-          className="btn btn-ghost border flex-1 px-2 sm:px-4 text-sm tracking-wide"
+          className="btn btn-ghost border flex-1 px-2 sm:px-4 text-base tracking-wide"
         >
           Explore The Chain
         </button>
       </div>
 
-      <div className="flex items-center gap-3 px-2 py-2 bg-base-100 border border-base-300 rounded-full text-sm text-hint">
-        <div className="inline-grid *:[grid-area:1/1]">
-          <div className="status status-success animate-ping"></div>
-          <div className="status status-success"></div>
-        </div>
+      <p className="flex items-center justify-center gap-2 text-center text-hint mt-3 text-sm">
+        <span className="inline-grid *:[grid-area:1/1]">
+          <span className="status status-success animate-ping"></span>
+          <span className="status status-success"></span>
+        </span>
         {newBatchesThisWeek ?? "-"} new batches tracked in the past week
-      </div>
+      </p>
     </div>
   );
 };

@@ -19,10 +19,22 @@ const TransactionJourney = ({ batch }: { batch: any }) => {
       <DataRow title="Region" value={batch?.region !== undefined ? REGIONS[batch.region] : "—"} />
       <DataRow title="Variety" value={batch?.variety !== undefined ? VARIETIES[batch.variety] : "—"} />
       <DataRow title="Elevation" value={batch?.elevation ? `${batch.elevation} ft` : "—"} />
-      <DataRow title="Harvest Weight" value={batch?.harvestWeight ? `${Number(batch.harvestWeight)} kg` : "—"} />
+      <DataRow title="Weight" value={batch?.harvestWeight ? `${Number(batch.harvestWeight)} kg` : "—"} />
       <DataRow
-        title="Harvest Date"
-        value={batch?.harvestDate ? new Date(Number(batch.harvestDate) * 1000).toLocaleDateString() : "—"}
+        title="Date"
+        value={
+          batch?.harvestDate && Number(batch.harvestDate) !== 0
+            ? new Date(Number(batch.harvestDate) * 1000).toLocaleDateString()
+            : "—"
+        }
+      />
+      <DataRow
+        title="Location"
+        value={
+          batch?.harvestLocation?.latitude
+            ? `${(Number(batch.harvestLocation.latitude) / 1e6).toFixed(6)}, ${(Number(batch.harvestLocation.longitude) / 1e6).toFixed(6)}`
+            : "—"
+        }
       />
 
       {hasProcessed && (
@@ -43,6 +55,23 @@ const TransactionJourney = ({ batch }: { batch: any }) => {
           <DataRow title="SCA Score" value={batch?.scaScore ?? "—"} />
           <DataRow title="Moisture" value={batch?.moistureContent ? `${batch.moistureContent}%` : "—"} />
           <DataRow title="Dry Temp" value={batch?.dryTemperature ? `${batch.dryTemperature}°F` : "—"} />
+          <DataRow title="Humidity" value={batch?.humidity ? `${batch.humidity}%` : "—"} />
+          <DataRow
+            title="Date"
+            value={
+              batch?.processingDate && Number(batch.processingDate) !== 0
+                ? new Date(Number(batch.processingDate) * 1000).toLocaleDateString()
+                : "—"
+            }
+          />
+          <DataRow
+            title="Location"
+            value={
+              batch?.processingLocation?.latitude
+                ? `${(Number(batch.processingLocation.latitude) / 1e6).toFixed(6)}, ${(Number(batch.processingLocation.longitude) / 1e6).toFixed(6)}`
+                : "—"
+            }
+          />
         </>
       )}
 
@@ -63,12 +92,47 @@ const TransactionJourney = ({ batch }: { batch: any }) => {
           />
           <DataRow title="Level" value={batch?.roastLevel !== undefined ? ROAST_LEVELS[batch.roastLevel] : "—"} />
           <DataRow title="Transport Time" value={batch?.transportTime ? `${batch.transportTime} hrs` : "—"} />
+          <DataRow
+            title="Date"
+            value={
+              batch?.roastingDate && Number(batch.roastingDate) !== 0
+                ? new Date(Number(batch.roastingDate) * 1000).toLocaleDateString()
+                : "—"
+            }
+          />
+          <DataRow
+            title="Location"
+            value={
+              batch?.roastingLocation?.latitude
+                ? `${(Number(batch.roastingLocation.latitude) / 1e6).toFixed(6)}, ${(Number(batch.roastingLocation.longitude) / 1e6).toFixed(6)}`
+                : "—"
+            }
+          />
         </>
       )}
 
       {hasDistributed && (
         <>
           <h3 className="text-label mb-3 mt-8 text-[var(--color-stage-distribute)]">Distribute</h3>
+          <DataRow title="Bag Count" value={batch?.bagCount ? `${batch.bagCount}` : "—"} />
+          <DataRow title="Weight" value={batch?.distributionWeight ? `${Number(batch.distributionWeight)} kg` : "—"} />
+          <DataRow title="Destination" value={batch?.destination ?? "—"} />
+          <DataRow
+            title="Date"
+            value={
+              batch?.distributionDate && Number(batch.distributionDate) !== 0
+                ? new Date(Number(batch.distributionDate) * 1000).toLocaleDateString()
+                : "—"
+            }
+          />
+          <DataRow
+            title="Location"
+            value={
+              batch?.distributionLocation?.latitude
+                ? `${(Number(batch.distributionLocation.latitude) / 1e6).toFixed(6)}, ${(Number(batch.distributionLocation.longitude) / 1e6).toFixed(6)}`
+                : "—"
+            }
+          />
           <DataRow title="Distributor" hasBorder={true}>
             {batch?.distributor && batch.distributor !== zeroAddress ? (
               <BlockieAddressLink address={batch.distributor} disableTruncation />
