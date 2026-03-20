@@ -16,7 +16,7 @@ type MapPopupProps = {
   onClose: () => void;
 };
 
-export const MapPopup = ({ batch, location, stage, onClose }: MapPopupProps) => {
+const MapPopup = ({ batch, location, stage, onClose }: MapPopupProps) => {
   const { txHashMap } = useCoffeeTracker();
 
   const batchTxHashes = txHashMap[batch.batchId.toString()];
@@ -93,3 +93,5 @@ export const MapPopup = ({ batch, location, stage, onClose }: MapPopupProps) => 
     </Popup>
   );
 };
+
+export default MapPopup;

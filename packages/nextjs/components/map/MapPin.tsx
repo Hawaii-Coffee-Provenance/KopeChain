@@ -3,7 +3,7 @@ type MapPinProps = {
   className?: string;
 };
 
-export const MapPin = ({ color, className = "w-8 h-8" }: MapPinProps) => (
+const MapPin = ({ color, className = "w-8 h-8" }: MapPinProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -22,3 +22,5 @@ export const MapPin = ({ color, className = "w-8 h-8" }: MapPinProps) => (
     <path d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" fill="var(--color-base-100)" />
   </svg>
 );
+
+export default MapPin;

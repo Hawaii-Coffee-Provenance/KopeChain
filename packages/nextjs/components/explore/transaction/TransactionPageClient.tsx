@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
+import TransactionAlbum from "./TransactionAlbum";
 import TransactionInfo from "./TransactionInfo";
 import { Hash } from "viem";
-import { Skeleton } from "~~/components/Skeleton";
-import { Map3D } from "~~/components/map/Map3D";
+import Skeleton from "~~/components/Skeleton";
+import Map3D from "~~/components/map/Map3D";
 import { useCoffeeTracker } from "~~/hooks/useCoffeeTracker";
 
 type TransactionPageClientProps = {
@@ -13,20 +14,17 @@ type TransactionPageClientProps = {
 
 const TransactionPageClient = ({ txHash }: TransactionPageClientProps) => {
   const { stats, txHashMap, isLoading } = useCoffeeTracker();
-  const [batch, setBatch] = useState<any | null>(null);
 
-  useEffect(() => {
-    if (!stats?.allBatches || !txHashMap) return;
+  const batch = useMemo(() => {
+    if (!stats?.allBatches || !txHashMap) return null;
 
-    const found = stats.allBatches.find((b: any) => {
-      const hashes = txHashMap[b.batchId?.toString?.()];
-
-      if (!hashes) return false;
-
-      return Object.values(hashes).includes(txHash);
-    });
-
-    setBatch(found ?? null);
+    return (
+      stats.allBatches.find((b: any) => {
+        const hashes = txHashMap[b.batchId?.toString?.()];
+        if (!hashes) return false;
+        return Object.values(hashes).includes(txHash);
+      }) ?? null
+    );
   }, [stats, txHashMap, txHash]);
 
   const isDataLoading = isLoading || !batch;
@@ -42,12 +40,14 @@ const TransactionPageClient = ({ txHash }: TransactionPageClientProps) => {
           )}
         </div>
 
-        {/* TODO: IMPLEMENT BATCH MEDIA/IPFS/CERTIFICATE */}
         <div className="flex-1 rounded-3xl bg-base-100 border border-base-300 p-8 flex flex-col min-h-[350px] aspect-square lg:aspect-auto relative overflow-hidden">
           {isDataLoading ? (
             <Skeleton className="absolute inset-0 w-full h-full rounded-3xl" />
           ) : (
-            <h2 className="text-label mb-6">Media & Certificates</h2>
+            <>
+              <h2 className="text-label mb-3">Media & Certificates</h2>
+              <TransactionAlbum batch={batch} />
+            </>
           )}
         </div>
       </div>

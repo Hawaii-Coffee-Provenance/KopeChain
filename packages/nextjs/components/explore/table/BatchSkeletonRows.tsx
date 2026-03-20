@@ -1,8 +1,8 @@
-import { Skeleton } from "~~/components/Skeleton";
+import Skeleton from "~~/components/Skeleton";
 
 const SKELETON_ROWS = 10;
 
-export const BatchSkeletonRows = () => (
+const BatchSkeletonRows = () => (
   <>
     {Array.from({ length: SKELETON_ROWS }).map((_, i) => (
       <tr key={i}>
@@ -35,3 +35,5 @@ export const BatchSkeletonRows = () => (
     ))}
   </>
 );
+
+export default BatchSkeletonRows;

@@ -1,7 +1,7 @@
-import { PipelineChart } from "./PipelineChart";
-import { RegionChart } from "./RegionChart";
-import { ScaChart } from "./ScaChart";
-import { Skeleton } from "~~/components/Skeleton";
+import PipelineChart from "./PipelineChart";
+import RegionChart from "./RegionChart";
+import ScaChart from "./ScaChart";
+import Skeleton from "~~/components/Skeleton";
 import { useCoffeeTracker } from "~~/hooks/useCoffeeTracker";
 import { PIPELINE_SEGMENTS, getRegionColor } from "~~/utils/coffee";
 
@@ -174,7 +174,7 @@ const ScaCard = ({ stats, isLoading }: CardProps) => (
   </div>
 );
 
-export const ChartDashboard = () => {
+const ChartDashboard = () => {
   const { stats, isLoading } = useCoffeeTracker();
   return (
     <div className="overflow-x-auto mb-6">
@@ -186,3 +186,5 @@ export const ChartDashboard = () => {
     </div>
   );
 };
+
+export default ChartDashboard;

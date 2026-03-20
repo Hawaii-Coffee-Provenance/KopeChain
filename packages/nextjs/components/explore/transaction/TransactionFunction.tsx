@@ -1,6 +1,6 @@
 import type { DecodedTx } from "./TransactionData";
 
-export const TransactionFunction = ({ tx }: { tx: DecodedTx }) => {
+const TransactionFunction = ({ tx }: { tx: DecodedTx }) => {
   if (tx.functionName && tx.functionName !== "Unknown" && tx.functionName !== "0x") {
     return (
       <div className="flex flex-col overflow-hidden text-left">
@@ -39,3 +39,5 @@ export const TransactionFunction = ({ tx }: { tx: DecodedTx }) => {
     </div>
   );
 };
+
+export default TransactionFunction;

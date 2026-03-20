@@ -1,7 +1,6 @@
 import { Buffer } from "buffer";
 
 const PINATA_JWT = process.env.PINATA_JWT;
-
 export const PINATA_GATEWAY = process.env.NEXT_PUBLIC_PINATA_GATEWAY ?? "https://gateway.pinata.cloud/ipfs";
 
 export type BatchMetadata = {
@@ -14,7 +13,6 @@ export type BatchMetadata = {
     value: string | number;
     display_type?: string;
   }>;
-
   properties: {
     batchNumber: string;
     harvest?: {
@@ -91,15 +89,12 @@ export async function pinJSON(
 
 export async function pinFile(buffer: Buffer, filename: string, contentType: string): Promise<string> {
   const formData = new FormData();
-
   formData.append("file", new Blob([new Uint8Array(buffer)], { type: contentType }), filename);
   formData.append("pinataMetadata", JSON.stringify({ name: filename }));
 
   const res = await fetch("https://api.pinata.cloud/pinning/pinFileToIPFS", {
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${PINATA_JWT}`,
-    },
+    headers: { Authorization: `Bearer ${PINATA_JWT}` },
     body: formData,
   });
 
@@ -109,61 +104,25 @@ export async function pinFile(buffer: Buffer, filename: string, contentType: str
 
 export async function findExistingPin(batchNumber: string): Promise<string | null> {
   const res = await fetch(
-    `https://api.pinata.cloud/data/pinList?metadata[keyvalues][batchNumber]=${encodeURIComponent(batchNumber)}&status=pinned`,
+    `https://api.pinata.cloud/data/pinList?metadata[keyvalues][batchNumber]=${encodeURIComponent(batchNumber)}&status=pinned&pageLimit=10`,
     { headers: { Authorization: `Bearer ${PINATA_JWT}` } },
   );
 
   if (!res.ok) return null;
-
   const data = await res.json();
+  if (!data.rows?.length) return null;
 
-  return data.rows?.length > 0 ? (data.rows[0].ipfs_pin_hash as string) : null;
+  const sorted = [...data.rows].sort((a, b) => new Date(b.date_pinned).getTime() - new Date(a.date_pinned).getTime());
+
+  return sorted[0].ipfs_pin_hash as string;
 }
 
-export async function fetchByCID(cid: string): Promise<BatchMetadata> {
+export async function fetchMetadata(cid: string): Promise<BatchMetadata> {
   const url = `${PINATA_GATEWAY}/ipfs/${cid}`;
-
   const res = await fetch(url);
-
-  if (!res.ok) throw new Error(`IPFS fetch failed for CID ${cid}: ${res.status} — URL: ${url}`);
-
+  if (!res.ok) throw new Error(`IPFS fetch failed for CID ${cid}: ${res.status}`);
   return res.json();
 }
-
-export async function appendAndRepin(
-  currentCID: string,
-  newFields: Partial<BatchMetadata["properties"]>,
-  batchNumber: string,
-  groupId?: string,
-): Promise<string> {
-  const current = await fetchByCID(currentCID);
-
-  const merged: BatchMetadata = {
-    ...current,
-    properties: {
-      ...current.properties,
-      ...newFields,
-      images: {
-        ...current.properties.images,
-        ...newFields.images,
-      },
-    },
-  };
-
-  const newCID = await pinJSON(merged, `batch-${batchNumber}-${Date.now()}`, batchNumber, groupId);
-
-  await fetch(`https://api.pinata.cloud/pinning/unpin/${currentCID}`, {
-    method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${PINATA_JWT}`,
-    },
-  });
-
-  return newCID;
-}
-
-export const ipfsToHTTP = (uri: string) =>
-  uri.startsWith("ipfs://") ? `${PINATA_GATEWAY}/ipfs/${uri.replace("ipfs://", "")}` : uri;
 
 export async function getOrCreateGroup(name: string): Promise<string> {
   const listRes = await fetch("https://api.pinata.cloud/groups?name=" + encodeURIComponent(name), {
@@ -171,7 +130,6 @@ export async function getOrCreateGroup(name: string): Promise<string> {
   });
 
   const listData = await listRes.json();
-
   if (listData.groups?.length > 0) {
     console.log(`Reusing group ${listData.groups[0].id}`);
     return listData.groups[0].id;

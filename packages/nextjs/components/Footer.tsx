@@ -10,7 +10,7 @@ import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 /**
  * Site footer
  */
-export const Footer = () => {
+const Footer = () => {
   const { targetNetwork } = useTargetNetwork();
   const isLocalNetwork = targetNetwork.id === hardhat.id;
   const { price: nativeCurrencyPrice } = useFetchNativeCurrencyPrice();
@@ -71,3 +71,5 @@ export const Footer = () => {
     </div>
   );
 };
+
+export default Footer;

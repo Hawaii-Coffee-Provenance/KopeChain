@@ -1,5 +1,6 @@
+import { BatchMetadata } from "./pinata";
 import { zeroAddress } from "viem";
-import { CoffeeBatch, Coordinates, Stage } from "~~/types/coffee";
+import { CoffeeBatch, Coordinates, RawBatch, Stage } from "~~/types/coffee";
 
 export const STAGES = ["Harvested", "Processed", "Roasted", "Distributed"] as const;
 
@@ -140,63 +141,63 @@ export const REGION_TO_ISLAND: Record<number, string> = {
 
 export const getStage = (batch: CoffeeBatch): Stage => {
   if (batch.distributor !== zeroAddress) return "Distributed";
-  if (batch.roastingAfterWeight > 0n) return "Roasted";
-  if (batch.processingAfterWeight > 0n) return "Processed";
+  if (batch.roaster !== zeroAddress) return "Roasted";
+  if (batch.processor !== zeroAddress) return "Processed";
   return "Harvested";
 };
 
-export const mapNestedToBatch = (nested: any): CoffeeBatch => ({
-  batchId: nested.batchId,
-  batchNumber: nested.batchNumber,
-  verified: nested.verified,
-  mintTimestamp: nested.mintTimestamp,
+export function mapBatch(raw: RawBatch, metadata?: BatchMetadata | null): CoffeeBatch {
+  const h = metadata?.properties?.harvest;
+  const p = metadata?.properties?.processing;
+  const r = metadata?.properties?.roasting;
+  const d = metadata?.properties?.distribution;
 
-  region: nested.harvestData.region,
-  variety: nested.harvestData.variety,
-  elevation: nested.harvestData.elevation,
-  harvestDate: nested.harvestData.harvestDate,
-  harvestWeight: nested.harvestData.harvestWeight,
-  farmer: nested.harvestData.farmer,
-  farmName: nested.harvestData.farmName,
-  harvestLocation: {
-    latitude: nested.harvestData.location.latitude / COORD_SCALE,
-    longitude: nested.harvestData.location.longitude / COORD_SCALE,
-  },
+  const DEFAULT_COORDS: Coordinates = { latitude: 0, longitude: 0 };
 
-  processingMethod: nested.processingData.processingMethod,
-  moistureContent: nested.processingData.moistureContent,
-  scaScore: nested.processingData.scaScore,
-  humidity: nested.processingData.humidity,
-  dryTemperature: nested.processingData.dryTemperature,
-  processingDate: nested.processingData.processingDate,
-  processingBeforeWeight: nested.processingData.beforeWeight,
-  processingAfterWeight: nested.processingData.afterWeight,
-  processor: nested.processingData.processor,
-  processingLocation: {
-    latitude: nested.processingData.location.latitude / COORD_SCALE,
-    longitude: nested.processingData.location.longitude / COORD_SCALE,
-  },
+  return {
+    batchId: raw.batchId,
+    mintTimestamp: BigInt(raw.mintTimestamp),
+    verified: raw.verified,
+    region: Number(raw.region),
+    variety: Number(raw.variety),
+    processingMethod: Number(raw.processingMethod),
+    roastingMethod: Number(raw.roastingMethod),
+    roastLevel: Number(raw.roastLevel),
+    farmer: raw.farmer,
+    processor: raw.processor,
+    roaster: raw.roaster,
+    distributor: raw.distributor,
+    batchNumber: raw.batchNumber,
+    metadataCID: raw.metadataCID,
 
-  roastingMethod: nested.roastingData.roastingMethod,
-  roastLevel: nested.roastingData.roastLevel,
-  transportTime: nested.roastingData.transportTime,
-  roastingDate: nested.roastingData.roastingDate,
-  roastingBeforeWeight: nested.roastingData.beforeWeight,
-  roastingAfterWeight: nested.roastingData.afterWeight,
-  roaster: nested.roastingData.roaster,
-  cuppingNotes: nested.roastingData.cuppingNotes,
-  roastingLocation: {
-    latitude: nested.roastingData.location.latitude / COORD_SCALE,
-    longitude: nested.roastingData.location.longitude / COORD_SCALE,
-  },
+    farmName: h?.farmName ?? "",
+    elevation: h?.elevation ?? 0,
+    harvestWeight: BigInt(h?.harvestWeight ?? 0),
+    harvestDate: BigInt(h?.harvestDate ?? 0),
+    harvestLocation: h?.location ?? DEFAULT_COORDS,
 
-  distributionDate: nested.distributionData.distributionDate,
-  bagCount: nested.distributionData.bagCount,
-  distributionWeight: nested.distributionData.distributionWeight,
-  distributor: nested.distributionData.distributor,
-  destination: nested.distributionData.destination,
-  distributionLocation: {
-    latitude: nested.distributionData.location.latitude / COORD_SCALE,
-    longitude: nested.distributionData.location.longitude / COORD_SCALE,
-  },
-});
+    moistureContent: p?.moistureContent ?? 0,
+    scaScore: p?.scaScore ?? 0,
+    humidity: p?.humidity ?? 0,
+    dryTemperature: p?.dryTemperature ?? 0,
+    processingDate: BigInt(p?.processingDate ?? 0),
+    processingBeforeWeight: BigInt(p?.beforeWeight ?? 0),
+    processingAfterWeight: BigInt(p?.afterWeight ?? 0),
+    processingLocation: p?.location ?? DEFAULT_COORDS,
+
+    cuppingNotes: r?.cuppingNotes ?? "",
+    roastingDate: BigInt(r?.roastingDate ?? 0),
+    transportTime: r?.transportTime ?? 0,
+    roastingBeforeWeight: BigInt(r?.beforeWeight ?? 0),
+    roastingAfterWeight: BigInt(r?.afterWeight ?? 0),
+    roastingLocation: r?.location ?? DEFAULT_COORDS,
+
+    distributionDate: BigInt(d?.distributionDate ?? 0),
+    bagCount: d?.bagCount ?? 0,
+    distributionWeight: BigInt(d?.distributionWeight ?? 0),
+    destination: d?.destination ?? "",
+    distributionLocation: d?.location ?? DEFAULT_COORDS,
+
+    images: metadata?.properties?.images ?? {},
+  };
+}

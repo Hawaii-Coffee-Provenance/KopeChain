@@ -6,7 +6,7 @@ import { isAddress, isHex } from "viem";
 import { hardhat } from "viem/chains";
 import { usePublicClient } from "wagmi";
 
-export const SearchBar = () => {
+const SearchBar = () => {
   const [searchInput, setSearchInput] = useState("");
   const router = useRouter();
 
@@ -47,3 +47,5 @@ export const SearchBar = () => {
     </form>
   );
 };
+
+export default SearchBar;

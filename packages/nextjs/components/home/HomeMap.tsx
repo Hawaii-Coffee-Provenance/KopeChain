@@ -1,10 +1,10 @@
 "use client";
 
 import { useMemo } from "react";
-import { Map3D } from "../map/Map3D";
+import Map3D from "../map/Map3D";
 import { useCoffeeTracker } from "~~/hooks/useCoffeeTracker";
 
-export const HomeMap = () => {
+const HomeMap = () => {
   const { stats } = useCoffeeTracker();
 
   const verifiedBatches = useMemo(() => stats?.allBatches.filter(b => b.verified) ?? [], [stats?.allBatches]);
@@ -17,3 +17,5 @@ export const HomeMap = () => {
     </>
   );
 };
+
+export default HomeMap;

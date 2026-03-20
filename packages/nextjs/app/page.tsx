@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { QrModal } from "../components/QrModal";
-import { ActivitySection } from "../components/home/ActivitySection";
-import { ChainSection } from "../components/home/ChainSection";
-import { HeroSection } from "../components/home/HeroSection";
-import { MapSection } from "../components/home/MapSection";
+import QrModal from "../components/QrModal";
+import ActivitySection from "../components/home/ActivitySection";
+import ChainSection from "../components/home/ChainSection";
+import HeroSection from "../components/home/HeroSection";
+import MapSection from "../components/home/MapSection";
 import type { NextPage } from "next";
 
 const Home: NextPage = () => {

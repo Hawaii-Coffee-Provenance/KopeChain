@@ -1,7 +1,7 @@
-import { BatchSearch } from "~~/components/explore/table/BatchSearch";
+import BatchSearch from "~~/components/explore/table/BatchSearch";
 import { useCoffeeTracker } from "~~/hooks/useCoffeeTracker";
 
-export const DashboardSection = () => {
+const DashboardSection = () => {
   const { stats, transactionCount, farmCount } = useCoffeeTracker();
 
   const batchCount = stats?.totalBatches;
@@ -48,3 +48,5 @@ export const DashboardSection = () => {
     </div>
   );
 };
+
+export default DashboardSection;

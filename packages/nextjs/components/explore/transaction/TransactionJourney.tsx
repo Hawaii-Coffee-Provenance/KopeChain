@@ -1,8 +1,8 @@
 "use client";
 
-import { DataRow } from "./DataRow";
+import DataRow from "./DataRow";
 import { zeroAddress } from "viem";
-import { BlockieAddressLink } from "~~/components/explore/BlockieAddressLink";
+import BlockieAddressLink from "~~/components/explore/BlockieAddressLink";
 import {
   PROCESSING_METHODS,
   REGIONS,

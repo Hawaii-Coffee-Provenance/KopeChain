@@ -3,10 +3,10 @@
 import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import type { NextPage } from "next";
-import { ChartDashboard } from "~~/components/explore/dashboard/ChartDashboard";
-import { DataDashboard } from "~~/components/explore/dashboard/DataDashboard";
-import { BatchFilterBar } from "~~/components/explore/table/BatchFilterBar";
-import { BatchTable } from "~~/components/explore/table/BatchTable";
+import ChartDashboard from "~~/components/explore/dashboard/ChartDashboard";
+import DataDashboard from "~~/components/explore/dashboard/DataDashboard";
+import BatchFilterBar from "~~/components/explore/table/BatchFilterBar";
+import BatchTable from "~~/components/explore/table/BatchTable";
 import { useBatchPagination } from "~~/hooks/useBatchPagination";
 import { useCoffeeTracker } from "~~/hooks/useCoffeeTracker";
 import { BatchFilterState, CoffeeBatch } from "~~/types/coffee";

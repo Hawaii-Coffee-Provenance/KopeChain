@@ -9,11 +9,7 @@ type Props = {
   placeholder?: string;
 };
 
-export const BatchSearch = ({
-  onSearch,
-  redirectToExplore = false,
-  placeholder = "TX Hash, Batch ID, or Name...",
-}: Props) => {
+const BatchSearch = ({ onSearch, redirectToExplore = false, placeholder = "TX Hash, Batch ID, or Name..." }: Props) => {
   const [value, setValue] = useState("");
   const router = useRouter();
 
@@ -53,3 +49,5 @@ export const BatchSearch = ({
     </div>
   );
 };
+
+export default BatchSearch;

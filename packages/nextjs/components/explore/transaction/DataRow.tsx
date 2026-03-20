@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-export const DataRow = ({
+const DataRow = ({
   title,
   value,
   children,
@@ -31,3 +31,5 @@ export const DataRow = ({
     </div>
   );
 };
+
+export default DataRow;

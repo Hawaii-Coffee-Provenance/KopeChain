@@ -5,7 +5,7 @@ type TxHashLinkProps = {
   disableTruncation?: boolean;
 };
 
-export const TxHashLink = ({ txHash, disableTruncation }: TxHashLinkProps) => {
+const TxHashLink = ({ txHash, disableTruncation }: TxHashLinkProps) => {
   if (!txHash) return <span className="text-xs text-base-content/30 font-sans">—</span>;
 
   const short = `${txHash.substring(0, 6)}...${txHash.substring(txHash.length - 4)}`;
@@ -29,3 +29,5 @@ export const TxHashLink = ({ txHash, disableTruncation }: TxHashLinkProps) => {
     </Link>
   );
 };
+
+export default TxHashLink;

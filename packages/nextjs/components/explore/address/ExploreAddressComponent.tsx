@@ -2,7 +2,7 @@
 
 import { Address as AddressType } from "viem";
 
-export const ExploreAddressComponent = ({
+const ExploreAddressComponent = ({
   address,
 }: {
   address: AddressType;
@@ -28,3 +28,5 @@ export const ExploreAddressComponent = ({
     </div>
   );
 };
+
+export default ExploreAddressComponent;

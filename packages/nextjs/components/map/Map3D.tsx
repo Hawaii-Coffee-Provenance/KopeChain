@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { MapMarker } from "./MapMarker";
+import MapMarker from "./MapMarker";
 import { LngLatBounds } from "maplibre-gl";
 import MapGL, { MapRef, NavigationControl as NavControl } from "react-map-gl/maplibre";
-import { Skeleton } from "~~/components/Skeleton";
+import Skeleton from "~~/components/Skeleton";
 import { CoffeeBatch, Coordinates } from "~~/types/coffee";
 import { STAGES, STAGE_COLORS } from "~~/utils/coffee";
 
@@ -76,7 +76,7 @@ const MapLegend = () => {
   );
 };
 
-export const Map3D = ({
+const Map3D = ({
   className,
   batches,
   onBatchClick,
@@ -121,8 +121,8 @@ export const Map3D = ({
 
     setTimeout(() => {
       map.fitBounds(bounds.toArray() as [[number, number], [number, number]], {
-        padding: { top: 60, bottom: 60, left: 60, right: 60 },
-        maxZoom: 14,
+        padding: { top: 100, bottom: 100, left: 100, right: 100 },
+        maxZoom: 25,
         duration: 1000,
       });
       hasFittedMap.current = true;
@@ -219,3 +219,5 @@ export const Map3D = ({
     </div>
   );
 };
+
+export default Map3D;

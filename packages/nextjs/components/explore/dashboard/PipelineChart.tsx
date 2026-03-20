@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { ChartTooltip } from "./ChartTooltip";
+import ChartTooltip from "./ChartTooltip";
 import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { PipelineData } from "~~/types/coffee";
 import { PIPELINE_SEGMENTS } from "~~/utils/coffee";
 
-export const PipelineChart = ({ data, total }: { data: PipelineData; total: number }) => {
+const PipelineChart = ({ data, total }: { data: PipelineData; total: number }) => {
   const [hoveredKey, setHoveredKey] = useState<string | null>(null);
   const chartData = [data];
 
@@ -53,3 +53,5 @@ export const PipelineChart = ({ data, total }: { data: PipelineData; total: numb
     </div>
   );
 };
+
+export default PipelineChart;

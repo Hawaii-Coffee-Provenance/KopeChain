@@ -7,7 +7,7 @@ type BlockieAddressLinkProps = {
   disableTruncation?: boolean;
 };
 
-export const BlockieAddressLink = ({ address, disableTruncation }: BlockieAddressLinkProps) => {
+const BlockieAddressLink = ({ address, disableTruncation }: BlockieAddressLinkProps) => {
   const raw = getAddress(address);
   const short = `${raw.substring(0, 6)}...${raw.substring(raw.length - 4)}`;
 
@@ -28,3 +28,5 @@ export const BlockieAddressLink = ({ address, disableTruncation }: BlockieAddres
     </Link>
   );
 };
+
+export default BlockieAddressLink;

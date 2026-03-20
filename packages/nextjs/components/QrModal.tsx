@@ -7,7 +7,7 @@ type Props = {
   onClose: () => void;
 };
 
-export const QrModal = ({ isOpen, onClose }: Props) => {
+const QrModal = ({ isOpen, onClose }: Props) => {
   if (!isOpen) return null;
 
   return (
@@ -26,3 +26,5 @@ export const QrModal = ({ isOpen, onClose }: Props) => {
     </dialog>
   );
 };
+
+export default QrModal;

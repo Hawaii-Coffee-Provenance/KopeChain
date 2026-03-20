@@ -4,8 +4,8 @@ import React, { useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Bars3Icon, QrCodeIcon } from "@heroicons/react/24/outline";
-import { QrModal } from "~~/components/QrModal";
-import { SwitchTheme } from "~~/components/SwitchTheme";
+import QrModal from "~~/components/QrModal";
+import SwitchTheme from "~~/components/SwitchTheme";
 import { RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
 
@@ -63,7 +63,7 @@ export const HeaderMenuLinks = () => {
   );
 };
 
-export const Header = () => {
+const Header = () => {
   const burgerMenuRef = useRef<HTMLDetailsElement>(null);
   const [qrOpen, setQrOpen] = useState(false);
 
@@ -117,3 +117,5 @@ export const Header = () => {
     </header>
   );
 };
+
+export default Header;

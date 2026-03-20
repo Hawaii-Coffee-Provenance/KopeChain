@@ -3,7 +3,7 @@
 import { motion, useMotionTemplate } from "framer-motion";
 import { STAGES, STAGE_COLORS, STAGE_STYLES } from "~~/utils/coffee";
 
-export const TimelineSpine = ({
+const TimelineSpine = ({
   stepsLength,
   activeProgress,
   fillHeight,
@@ -67,3 +67,5 @@ export const TimelineSpine = ({
     </div>
   );
 };
+
+export default TimelineSpine;

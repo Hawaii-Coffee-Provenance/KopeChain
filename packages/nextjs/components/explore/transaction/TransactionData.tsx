@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { DataRow } from "./DataRow";
-import { TransactionFunction } from "./TransactionFunction";
+import DataRow from "./DataRow";
+import TransactionFunction from "./TransactionFunction";
 import { Hash, Transaction, TransactionReceipt, formatEther, formatUnits } from "viem";
 import { usePublicClient } from "wagmi";
-import { BlockieAddressLink } from "~~/components/explore/BlockieAddressLink";
-import { TxHashLink } from "~~/components/explore/TxHashLink";
+import BlockieAddressLink from "~~/components/explore/BlockieAddressLink";
+import TxHashLink from "~~/components/explore/TxHashLink";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import { decodeTransactionData as decodeFunction } from "~~/utils/scaffold-eth";
 

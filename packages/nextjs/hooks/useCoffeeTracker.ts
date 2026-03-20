@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
-import { zeroAddress } from "viem";
-import { usePublicClient } from "wagmi";
-import { useDeployedContractInfo, useScaffoldEventHistory, useScaffoldReadContract } from "~~/hooks/scaffold-eth";
-import { BatchTxHashes, CoffeeBatch, CoffeeTrackerStats, PipelineData } from "~~/types/coffee";
+import { useMemo } from "react";
+import { useDeployedContractInfo, useScaffoldEventHistory, useScaffoldReadContract } from "./scaffold-eth";
+import { useQueries, useQuery } from "@tanstack/react-query";
+import { Abi, zeroAddress } from "viem";
+import { usePublicClient, useReadContracts } from "wagmi";
+import { BatchTxHashes, CoffeeBatch, CoffeeTrackerStats, PipelineData, RawBatch } from "~~/types/coffee";
 import {
   PROCESSING_METHODS,
   REGIONS,
@@ -13,67 +14,98 @@ import {
   formatWeight,
   getScaTier,
   getStage,
-  mapNestedToBatch,
+  mapBatch,
 } from "~~/utils/coffee";
+import { BatchMetadata, fetchMetadata } from "~~/utils/pinata";
+
+async function fetchAllBatches(
+  publicClient: ReturnType<typeof usePublicClient>,
+  contract: { address: `0x${string}`; abi: any },
+  count: number,
+): Promise<RawBatch[]> {
+  if (count === 0) return [];
+
+  const CHUNK_SIZE = 100;
+
+  const results = await Promise.all(
+    Array.from(
+      { length: Math.ceil(count / CHUNK_SIZE) },
+      (_, i) =>
+        publicClient!.readContract({
+          address: contract.address,
+          abi: contract.abi,
+          functionName: "getBatches",
+          args: [BigInt(i * CHUNK_SIZE), BigInt(CHUNK_SIZE)],
+        }) as Promise<RawBatch[]>,
+    ),
+  );
+
+  return results.flat();
+}
 
 export const useCoffeeTracker = () => {
   const { data: deployedContract } = useDeployedContractInfo({ contractName: "CoffeeTracker" });
   const publicClient = usePublicClient();
 
-  const [rawBatches, setRawBatches] = useState<any[]>([]);
-  const [rawBatchesLoading, setRawBatchesLoading] = useState(true);
+  const commonQueryConfig = {
+    enabled: !!deployedContract,
+    staleTime: 30_000,
+  };
 
-  const { data: batchCount } = useScaffoldReadContract({
-    contractName: "CoffeeTracker",
-    functionName: "getBatchCount",
+  const { data: combinedData, isLoading: combinedDataLoading } = useReadContracts({
+    contracts: [
+      {
+        address: deployedContract?.address,
+        abi: deployedContract?.abi as Abi,
+        functionName: "getBatchCount",
+      },
+      {
+        address: deployedContract?.address,
+        abi: deployedContract?.abi as Abi,
+        functionName: "getTransactionCount",
+      },
+      {
+        address: deployedContract?.address,
+        abi: deployedContract?.abi as Abi,
+        functionName: "getFarmCount",
+      },
+    ],
+    query: commonQueryConfig,
   });
 
-  // Fetch in chunks to avoid gas limits
-  useEffect(() => {
-    const fetchAllBatches = async () => {
-      if (batchCount === undefined || !deployedContract || !publicClient) return;
+  const [batchCountRes, transactionCountRes, farmCountRes] = combinedData || [];
+  const batchCount = batchCountRes?.result as bigint | undefined;
+  const transactionCount = transactionCountRes?.result as bigint | undefined;
+  const farmCount = farmCountRes?.result as bigint | undefined;
 
-      try {
-        setRawBatchesLoading(true);
-        const count = Number(batchCount);
-        if (count === 0) {
-          setRawBatches([]);
-          return;
-        }
-
-        const CHUNK_SIZE = 100;
-        let all: any[] = [];
-
-        for (let i = 0; i < count; i += CHUNK_SIZE) {
-          const chunk = (await publicClient.readContract({
-            address: deployedContract.address,
-            abi: deployedContract.abi,
-            functionName: "getBatches",
-            args: [BigInt(i), BigInt(CHUNK_SIZE)],
-          })) as any[];
-          all = [...all, ...chunk];
-        }
-
-        setRawBatches(all);
-      } catch (e) {
-        console.error("Error fetching batches in chunks:", e);
-      } finally {
-        setRawBatchesLoading(false);
-      }
-    };
-
-    fetchAllBatches();
-  }, [batchCount, deployedContract?.address, deployedContract?.abi, publicClient]);
-
-  const { data: transactionCount, isLoading: transactionCountLoading } = useScaffoldReadContract({
-    contractName: "CoffeeTracker",
-    functionName: "getTransactionCount",
+  const { data: rawBatches = [], isLoading: rawBatchesLoading } = useQuery({
+    queryKey: ["batches", deployedContract?.address, Number(batchCount)],
+    queryFn: () => fetchAllBatches(publicClient, deployedContract!, Number(batchCount)),
+    enabled: !!publicClient && !!deployedContract && batchCount !== undefined,
+    staleTime: 30_000,
   });
 
-  const { data: farmCount, isLoading: farmCountLoading } = useScaffoldReadContract({
-    contractName: "CoffeeTracker",
-    functionName: "getFarmCount",
+  const uniqueCIDs = useMemo(() => [...new Set(rawBatches.map(b => b.metadataCID).filter(Boolean))], [rawBatches]);
+
+  const metadataQueries = useQueries({
+    queries: uniqueCIDs.map(cid => ({
+      queryKey: ["ipfs", cid],
+      queryFn: () => fetchMetadata(cid),
+      staleTime: 5 * 60_000,
+      gcTime: 60 * 60_000,
+      retry: 2,
+    })),
   });
+
+  const metadataMap = useMemo(() => {
+    const map = new Map<string, BatchMetadata>();
+    uniqueCIDs.forEach((cid, i) => {
+      const d = metadataQueries[i]?.data;
+      if (d) map.set(cid, d);
+    });
+    return map;
+  }, [uniqueCIDs, metadataQueries]);
+  const metadataLoading = metadataQueries.some(q => q.isLoading);
 
   const { data: harvestedEvents, isLoading: harvestedEventsLoading } = useScaffoldEventHistory({
     contractName: "CoffeeTracker",
@@ -105,21 +137,19 @@ export const useCoffeeTracker = () => {
     fromBlock: 0n,
   });
 
-  // Transaction Hash Mapping
   const txHashMap = useMemo((): Record<string, BatchTxHashes> => {
     const map: Record<string, BatchTxHashes> = {};
 
-    const assign = (events: any[] | undefined, stageKey: keyof BatchTxHashes) => {
+    const assign = (
+      events: { args?: { batchId?: bigint }; transactionHash?: `0x${string}` }[] | undefined,
+      key: keyof BatchTxHashes,
+    ) => {
       if (!events) return;
       events.forEach(e => {
         const id = e.args?.batchId?.toString();
         if (!id || !e.transactionHash) return;
-
         if (!map[id]) map[id] = {};
-
-        if (!map[id][stageKey]) {
-          map[id][stageKey] = e.transactionHash as `0x${string}`;
-        }
+        if (!map[id][key]) map[id][key] = e.transactionHash;
       });
     };
 
@@ -133,12 +163,10 @@ export const useCoffeeTracker = () => {
   }, [harvestedEvents, processedEvents, roastedEvents, distributedEvents, verifiedEvents]);
 
   const stats = useMemo((): CoffeeTrackerStats | null => {
-    const rawData = (rawBatches as any[] | undefined) ?? [];
-    const batches: CoffeeBatch[] = rawData.map(mapNestedToBatch);
+    if (!rawBatches.length) return null;
 
-    if (batches.length === 0) return null;
+    const batches: CoffeeBatch[] = rawBatches.map(raw => mapBatch(raw, metadataMap.get(raw.metadataCID)));
 
-    // Dashboard Calculations
     const now = BigInt(Math.floor(Date.now() / 1000));
     const weekAgo = now - 7n * 24n * 60n * 60n;
     const dayStart = now - (now % (24n * 60n * 60n));
@@ -146,7 +174,6 @@ export const useCoffeeTracker = () => {
     const totalBatches = batches.length;
     const batchesThisWeek = batches.filter(b => b.mintTimestamp >= weekAgo).length;
     const batchesToday = batches.filter(b => b.mintTimestamp >= dayStart).length;
-
     const verifiedCount = batches.filter(b => b.verified).length;
     const verifiedPercent = Math.round((verifiedCount / totalBatches) * 100);
 
@@ -162,25 +189,18 @@ export const useCoffeeTracker = () => {
 
     const totalWeightKg = batches.reduce((sum, b) => sum + Number(b.harvestWeight), 0);
     const totalWeightDisplay = formatWeight(totalWeightKg);
+    const islandCount = new Set(batches.map(b => REGION_TO_ISLAND[b.region])).size;
 
-    const islands = new Set(batches.map(b => REGION_TO_ISLAND[b.region]));
-    const islandCount = islands.size;
-
-    // Analytics
     const pipeline = STAGES.reduce(
       (acc: PipelineData, stage) => {
-        const key = stage.toLowerCase() as keyof PipelineData;
-        acc[key] = batches.filter(b => getStage(b) === stage).length;
+        acc[stage.toLowerCase() as keyof PipelineData] = batches.filter(b => getStage(b) === stage).length;
         return acc;
       },
       { harvested: 0, processed: 0, roasted: 0, distributed: 0 },
     );
 
     const regionCounters = Object.entries(REGIONS)
-      .map(([key, name]) => ({
-        name,
-        count: batches.filter(b => b.region === Number(key)).length,
-      }))
+      .map(([key, name]) => ({ name, count: batches.filter(b => b.region === Number(key)).length }))
       .filter(r => r.count > 0)
       .sort((a, b) => b.count - a.count);
 
@@ -190,8 +210,6 @@ export const useCoffeeTracker = () => {
     }));
 
     const recentBatches = [...batches].sort((a, b) => Number(b.mintTimestamp) - Number(a.mintTimestamp));
-
-    // Timeline
     const averageElevation = Math.round(batches.reduce((sum, b) => sum + b.elevation, 0) / totalBatches);
     const averageYield = Math.round(batches.reduce((sum, b) => sum + Number(b.harvestWeight), 0) / totalBatches);
     const varietyCount = Object.keys(VARIETIES).length - 1;
@@ -237,14 +255,11 @@ export const useCoffeeTracker = () => {
       lowestSca,
       totalWeightDisplay,
       islandCount,
-
       pipeline,
       regionCounters,
       scaBuckets,
-
       recentBatches,
       allBatches: batches,
-
       averageElevation,
       averageYield,
       varietyCount,
@@ -254,7 +269,7 @@ export const useCoffeeTracker = () => {
       averageRoastWeightLoss,
       averageTransportTime,
     };
-  }, [rawBatches]);
+  }, [rawBatches, metadataMap]);
 
   return {
     stats,
@@ -263,8 +278,8 @@ export const useCoffeeTracker = () => {
     txHashMap,
     isLoading:
       rawBatchesLoading ||
-      transactionCountLoading ||
-      farmCountLoading ||
+      combinedDataLoading ||
+      metadataLoading ||
       harvestedEventsLoading ||
       processedEventsLoading ||
       roastedEventsLoading ||
@@ -274,18 +289,29 @@ export const useCoffeeTracker = () => {
 };
 
 export const useCoffeeBatch = (batchNumber: string) => {
-  const { data, isLoading } = useScaffoldReadContract({
+  const { data: rawBatch, isLoading: batchLoading } = useScaffoldReadContract({
     contractName: "CoffeeTracker",
     functionName: "getBatchByNumber",
     args: [batchNumber],
   });
 
-  const batch = useMemo(() => {
-    if (!data) return undefined;
-    return mapNestedToBatch(data as any);
-  }, [data]);
+  const cid = (rawBatch as RawBatch | undefined)?.metadataCID ?? "";
 
-  return { batch, isLoading };
+  const { data: metadata, isLoading: metadataLoading } = useQuery({
+    queryKey: ["ipfs", cid],
+    queryFn: () => fetchMetadata(cid),
+    enabled: !!cid,
+    staleTime: Infinity,
+    gcTime: 60 * 60_000,
+    retry: 2,
+  });
+
+  const batch = useMemo(() => {
+    if (!rawBatch) return undefined;
+    return mapBatch(rawBatch as RawBatch, metadata);
+  }, [rawBatch, metadata]);
+
+  return { batch, isLoading: batchLoading || metadataLoading };
 };
 
 export const useUserBatches = (address: string | undefined) => {
@@ -295,22 +321,38 @@ export const useUserBatches = (address: string | undefined) => {
     args: [address ?? zeroAddress],
   });
 
-  const [userRole, userBatches] = useMemo(() => {
-    if (!data) return [undefined, undefined];
-
-    const role = (data as any).userRole || (data as any)[0];
-    const history = (data as any).history || (data as any)[1];
-
-    if (!history) return [role, undefined];
-
-    return [role, (history as any[]).map(mapNestedToBatch)];
+  const rawHistory = useMemo((): RawBatch[] => {
+    if (!data) return [];
+    return ((data as any).history || (data as any)[1] || []) as RawBatch[];
   }, [data]);
 
-  return {
-    userRole,
-    userBatches,
-    isLoading,
-  };
+  const uniqueCIDs = useMemo(() => [...new Set(rawHistory.map(b => b.metadataCID).filter(Boolean))], [rawHistory]);
+
+  const metadataQueries = useQueries({
+    queries: uniqueCIDs.map(cid => ({
+      queryKey: ["ipfs", cid],
+      queryFn: () => fetchMetadata(cid),
+      staleTime: 5 * 60_000,
+      gcTime: 60 * 60_000,
+      retry: 2,
+    })),
+  });
+
+  const metadataMap = useMemo(() => {
+    const map = new Map<string, BatchMetadata>();
+    uniqueCIDs.forEach((cid, i) => {
+      const d = metadataQueries[i]?.data;
+      if (d) map.set(cid, d);
+    });
+    return map;
+  }, [uniqueCIDs, metadataQueries]);
+  const userRole = useMemo(() => ((data as any)?.userRole || (data as any)?.[0]) as string | undefined, [data]);
+  const userBatches = useMemo(
+    () => rawHistory.map(raw => mapBatch(raw, metadataMap.get(raw.metadataCID))),
+    [rawHistory, metadataMap],
+  );
+
+  return { userRole, userBatches, isLoading };
 };
 
 export const useUserRole = (address: string | undefined) => {
@@ -319,6 +361,5 @@ export const useUserRole = (address: string | undefined) => {
     functionName: "getRole",
     args: [address ?? zeroAddress],
   });
-
   return { userRole: data as string | undefined, isLoading };
 };

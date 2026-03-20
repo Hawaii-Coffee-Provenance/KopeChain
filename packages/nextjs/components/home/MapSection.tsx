@@ -1,8 +1,8 @@
 "use client";
 
-import { HomeMap } from "./HomeMap";
+import HomeMap from "./HomeMap";
 
-export const MapSection = () => {
+const MapSection = () => {
   return (
     <section className="w-full bg-base-200 py-20">
       <div className="max-w-7xl mx-auto section-padding">
@@ -20,3 +20,5 @@ export const MapSection = () => {
     </section>
   );
 };
+
+export default MapSection;

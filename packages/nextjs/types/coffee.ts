@@ -3,24 +3,45 @@ export type Coordinates = {
   longitude: number;
 };
 
-export type CoffeeBatch = {
+export type RawBatch = {
   batchId: bigint;
-  batchNumber: string;
+  mintTimestamp: number;
   verified: boolean;
-  mintTimestamp: bigint;
-
-  // HarvestData
   region: number;
   variety: number;
+  processingMethod: number;
+  roastingMethod: number;
+  roastLevel: number;
+  farmer: `0x${string}`;
+  processor: `0x${string}`;
+  roaster: `0x${string}`;
+  distributor: `0x${string}`;
+  batchNumber: string;
+  metadataCID: string;
+};
+
+export type CoffeeBatch = {
+  batchId: bigint;
+  mintTimestamp: bigint;
+  verified: boolean;
+  region: number;
+  variety: number;
+  processingMethod: number;
+  roastingMethod: number;
+  roastLevel: number;
+  farmer: string;
+  processor: string;
+  roaster: string;
+  distributor: string;
+  batchNumber: string;
+  metadataCID: string;
+
+  farmName: string;
   elevation: number;
   harvestDate: bigint;
   harvestWeight: bigint;
-  farmer: string;
-  farmName: string;
   harvestLocation: Coordinates;
 
-  // ProcessingData
-  processingMethod: number;
   moistureContent: number;
   scaScore: number;
   humidity: number;
@@ -28,27 +49,25 @@ export type CoffeeBatch = {
   processingDate: bigint;
   processingBeforeWeight: bigint;
   processingAfterWeight: bigint;
-  processor: string;
   processingLocation: Coordinates;
 
-  // RoastingData
-  roastingMethod: number;
-  roastLevel: number;
   transportTime: number;
   roastingDate: bigint;
   roastingBeforeWeight: bigint;
   roastingAfterWeight: bigint;
-  roaster: string;
   cuppingNotes: string;
   roastingLocation: Coordinates;
 
-  // DistributionData
   distributionDate: bigint;
   bagCount: number;
   distributionWeight: bigint;
-  distributor: string;
   destination: string;
   distributionLocation: Coordinates;
+
+  images: {
+    nft?: string;
+    qrCode?: string;
+  };
 };
 
 export type PipelineData = {

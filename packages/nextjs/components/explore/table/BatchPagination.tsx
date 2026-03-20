@@ -16,7 +16,7 @@ const getPageWindow = (current: number, total: number): number[] => {
   return Array.from({ length: end - start + 1 }, (_, i) => start + i);
 };
 
-export const BatchPagination = ({ currentPage, totalPages, totalItems, pageSize, goToPage }: PaginationConfig) => {
+const BatchPagination = ({ currentPage, totalPages, totalItems, pageSize, goToPage }: PaginationConfig) => {
   const showing = Math.min(pageSize, totalItems - (currentPage - 1) * pageSize);
 
   return (
@@ -61,3 +61,5 @@ export const BatchPagination = ({ currentPage, totalPages, totalItems, pageSize,
     </tfoot>
   );
 };
+
+export default BatchPagination;

@@ -1,7 +1,7 @@
 "use client";
 
-import { MapPin } from "./MapPin";
-import { MapPopup } from "./MapPopup";
+import MapPin from "./MapPin";
+import MapPopup from "./MapPopup";
 import { Marker as MarkerGL } from "react-map-gl/maplibre";
 import { CoffeeBatch, Coordinates, Stage } from "~~/types/coffee";
 import { STAGE_COLORS, getStage } from "~~/utils/coffee";
@@ -18,15 +18,7 @@ type MapMarkerProps = {
   displayStage?: Stage;
 };
 
-export const MapMarker = ({
-  batch,
-  isOpen,
-  onOpen,
-  onClose,
-  onClick,
-  displayLocation,
-  displayStage,
-}: MapMarkerProps) => {
+const MapMarker = ({ batch, isOpen, onOpen, onClose, onClick, displayLocation, displayStage }: MapMarkerProps) => {
   const stage = displayStage || getStage(batch);
   const color = STAGE_COLORS[stage];
   const location = displayLocation || batch.harvestLocation;
@@ -59,3 +51,5 @@ export const MapMarker = ({
     </>
   );
 };
+
+export default MapMarker;

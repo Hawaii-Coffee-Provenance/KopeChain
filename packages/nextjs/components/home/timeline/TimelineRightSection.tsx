@@ -1,10 +1,10 @@
 "use client";
 
-import { StatItem } from "./StatItem";
+import StatItem from "./StatItem";
 import { StepType } from "./index";
 import { AnimatePresence, motion } from "framer-motion";
 
-export const TimelineRightSection = ({ activeItem, activeIndex }: { activeItem: StepType; activeIndex: number }) => (
+const TimelineRightSection = ({ activeItem, activeIndex }: { activeItem: StepType; activeIndex: number }) => (
   <div className="flex-1 order-2 lg:order-3 flex flex-col justify-center items-start pl-8 md:pl-16 text-left relative min-h-0">
     {/* Mobile Header */}
     <AnimatePresence mode="wait">
@@ -46,3 +46,5 @@ export const TimelineRightSection = ({ activeItem, activeIndex }: { activeItem: 
     </AnimatePresence>
   </div>
 );
+
+export default TimelineRightSection;

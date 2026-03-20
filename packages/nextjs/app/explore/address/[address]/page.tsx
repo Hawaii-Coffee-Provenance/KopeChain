@@ -1,4 +1,4 @@
-import { ExploreAddressComponent } from "../../../../components/explore/address/ExploreAddressComponent";
+import ExploreAddressComponent from "../../../../components/explore/address/ExploreAddressComponent";
 import fs from "fs";
 import path from "path";
 import { Address } from "viem";

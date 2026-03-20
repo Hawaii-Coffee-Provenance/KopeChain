@@ -2,14 +2,14 @@
 
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { BatchTable } from "../explore/table/BatchTable";
+import BatchTable from "../explore/table/BatchTable";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { useCoffeeTracker } from "~~/hooks/useCoffeeTracker";
 import { CoffeeBatch } from "~~/types/coffee";
 
 const RECENT_LIMIT = 5;
 
-export const ActivitySection = () => {
+const ActivitySection = () => {
   const { stats, txHashMap, isLoading } = useCoffeeTracker();
   const allBatches = stats?.allBatches;
   const router = useRouter();
@@ -48,3 +48,5 @@ export const ActivitySection = () => {
     </section>
   );
 };
+
+export default ActivitySection;

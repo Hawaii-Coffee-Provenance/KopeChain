@@ -1,8 +1,8 @@
 "use client";
 
 import { memo } from "react";
-import { BlockieAddressLink } from "../BlockieAddressLink";
-import { TxHashLink } from "../TxHashLink";
+import BlockieAddressLink from "../BlockieAddressLink";
+import TxHashLink from "../TxHashLink";
 import { CoffeeBatch } from "~~/types/coffee";
 import { REGIONS, STAGE_STYLES, formatTimestamp, getStage } from "~~/utils/coffee";
 
@@ -11,7 +11,7 @@ type BatchRowProps = {
   txHash: `0x${string}` | undefined;
 };
 
-export const BatchRow = memo(({ batch, txHash }: BatchRowProps) => {
+const BatchRow = memo(({ batch, txHash }: BatchRowProps) => {
   const stage = getStage(batch);
   return (
     <tr>
@@ -57,3 +57,5 @@ export const BatchRow = memo(({ batch, txHash }: BatchRowProps) => {
   );
 });
 BatchRow.displayName = "BatchRow";
+
+export default BatchRow;

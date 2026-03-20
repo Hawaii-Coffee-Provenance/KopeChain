@@ -1,4 +1,4 @@
-export * from "./SearchBar";
+export * from "../../../components/explore/SearchBar";
 export * from "./BackButton";
 export * from "./AddressCodeTab";
 export * from "./TransactionHash";

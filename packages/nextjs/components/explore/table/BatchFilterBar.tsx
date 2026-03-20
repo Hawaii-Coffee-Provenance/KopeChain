@@ -1,6 +1,6 @@
 "use client";
 
-import { BatchSearch } from "./BatchSearch";
+import BatchSearch from "./BatchSearch";
 import { BatchFilterState, SortOrder, StageFilter } from "~~/types/coffee";
 import { REGIONS, STAGES } from "~~/utils/coffee";
 
@@ -14,7 +14,7 @@ type BatchFilterBarProps = BatchFilterState & {
 
 const STAGE_FILTERS: StageFilter[] = ["All", ...STAGES, "Verified"];
 
-export const BatchFilterBar = ({
+const BatchFilterBar = ({
   stage,
   region,
   sort,
@@ -98,3 +98,5 @@ export const BatchFilterBar = ({
     </div>
   );
 };
+
+export default BatchFilterBar;

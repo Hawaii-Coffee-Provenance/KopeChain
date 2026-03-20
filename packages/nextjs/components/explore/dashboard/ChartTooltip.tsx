@@ -9,7 +9,7 @@ type ChartTooltipProps = {
   subtitleClassName?: string;
 };
 
-export const ChartTooltip = ({ active, label, value, labelColor, subtitle, subtitleClassName }: ChartTooltipProps) => {
+const ChartTooltip = ({ active, label, value, labelColor, subtitle, subtitleClassName }: ChartTooltipProps) => {
   if (!active) return null;
 
   return (
@@ -22,3 +22,5 @@ export const ChartTooltip = ({ active, label, value, labelColor, subtitle, subti
     </div>
   );
 };
+
+export default ChartTooltip;

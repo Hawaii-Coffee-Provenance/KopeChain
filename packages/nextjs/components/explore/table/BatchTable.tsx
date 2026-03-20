@@ -1,9 +1,9 @@
 "use client";
 
 import { useMemo } from "react";
-import { BatchPagination, PaginationConfig } from "./BatchPagination";
-import { BatchRow } from "./BatchRow";
-import { BatchSkeletonRows } from "./BatchSkeletonRows";
+import BatchPagination, { PaginationConfig } from "./BatchPagination";
+import BatchRow from "./BatchRow";
+import BatchSkeletonRows from "./BatchSkeletonRows";
 import { CoffeeBatch } from "~~/types/coffee";
 
 type BatchTableProps = {
@@ -13,7 +13,7 @@ type BatchTableProps = {
   pagination?: PaginationConfig;
 };
 
-export const BatchTable = ({ batches, isLoading = false, txHashMap, pagination }: BatchTableProps) => {
+const BatchTable = ({ batches, isLoading = false, txHashMap, pagination }: BatchTableProps) => {
   const rows = useMemo(() => batches ?? [], [batches]);
 
   return (
@@ -52,3 +52,5 @@ export const BatchTable = ({ batches, isLoading = false, txHashMap, pagination }
     </div>
   );
 };
+
+export default BatchTable;

@@ -5,7 +5,7 @@ type Props = {
   onOpenQr?: () => void;
 };
 
-export const HeroSection = ({ onOpenQr }: Props) => {
+const HeroSection = ({ onOpenQr }: Props) => {
   const router = useRouter();
   const { stats } = useCoffeeTracker();
   const newBatchesThisWeek = stats?.batchesThisWeek;
@@ -54,3 +54,5 @@ export const HeroSection = ({ onOpenQr }: Props) => {
     </div>
   );
 };
+
+export default HeroSection;

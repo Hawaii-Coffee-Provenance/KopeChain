@@ -1,10 +1,10 @@
 import { ArrowUpIcon } from "@heroicons/react/24/solid";
-import { Skeleton } from "~~/components/Skeleton";
+import Skeleton from "~~/components/Skeleton";
 import { useCoffeeTracker } from "~~/hooks/useCoffeeTracker";
 
 type Trend = "up" | "down" | "neutral";
 
-export const DataDashboard = () => {
+const DataDashboard = () => {
   const { stats, transactionCount, farmCount, isLoading } = useCoffeeTracker();
 
   const statItems: { label: string; value?: string; sub: React.ReactNode; trend?: Trend }[] = [
@@ -96,3 +96,5 @@ export const DataDashboard = () => {
     </div>
   );
 };
+
+export default DataDashboard;

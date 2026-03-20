@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChartTooltip } from "./ChartTooltip";
+import ChartTooltip from "./ChartTooltip";
 import { Cell, Pie, PieChart as RechartsPieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { RegionData } from "~~/types/coffee";
 import { getRegionColor } from "~~/utils/coffee";
@@ -11,7 +11,7 @@ const DEFAULT_REGIONS = ["Kona", "Ka'ū", "Puna", "Hamakua", "Maui", "Kauai", "M
   count: 0,
 }));
 
-export const RegionChart = ({ data, isLoading }: { data: RegionData; isLoading?: boolean }) => {
+const RegionChart = ({ data, isLoading }: { data: RegionData; isLoading?: boolean }) => {
   const [hoveredKey, setHoveredKey] = useState<string | null>(null);
 
   const displayData = isLoading || !data?.length ? DEFAULT_REGIONS : data;
@@ -61,3 +61,5 @@ export const RegionChart = ({ data, isLoading }: { data: RegionData; isLoading?:
     </ResponsiveContainer>
   );
 };
+
+export default RegionChart;

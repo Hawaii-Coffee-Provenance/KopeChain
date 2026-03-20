@@ -1,14 +1,14 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { TimelineLeftSection } from "./timeline/TimelineLeftSection";
-import { TimelineRightSection } from "./timeline/TimelineRightSection";
-import { TimelineSpine } from "./timeline/TimelineSpine";
+import TimelineLeftSection from "./timeline/TimelineLeftSection";
+import TimelineRightSection from "./timeline/TimelineRightSection";
+import TimelineSpine from "./timeline/TimelineSpine";
 import { useTimelineSteps } from "./timeline/index";
 import { motion, useMotionValueEvent, useScroll, useSpring, useTransform } from "framer-motion";
 import { useCoffeeTracker } from "~~/hooks/useCoffeeTracker";
 
-export const ChainSection = () => {
+const ChainSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeProgress, setActiveProgress] = useState(0);
 
@@ -91,3 +91,5 @@ export const ChainSection = () => {
     </section>
   );
 };
+
+export default ChainSection;

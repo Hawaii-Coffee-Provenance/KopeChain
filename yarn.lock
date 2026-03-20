@@ -4987,6 +4987,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/query-core@npm:5.91.2":
+  version: 5.91.2
+  resolution: "@tanstack/query-core@npm:5.91.2"
+  checksum: 415ed176f5229344c8b37dd2483f23b57fe52ff505fd2149da06a5e401663652b88cf171ffc095b28442d02a52f0df99120511b89dd91d84ef710199dae512c2
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query@npm:^5.91.2":
+  version: 5.91.2
+  resolution: "@tanstack/react-query@npm:5.91.2"
+  dependencies:
+    "@tanstack/query-core": 5.91.2
+  peerDependencies:
+    react: ^18 || ^19
+  checksum: 83c9fb7aab9183bb3c9ba14d7104ca5bf621dabb30d4e5d7ee95afe6cdb25bb8f1586dbbfbe950c05a563b7a2083d19b02caed9a82bc3090fafe64483bd68e17
+  languageName: node
+  linkType: hard
+
 "@tanstack/react-query@npm:~5.59.15":
   version: 5.59.20
   resolution: "@tanstack/react-query@npm:5.59.20"
@@ -17085,6 +17103,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "se-2@workspace:."
   dependencies:
+    "@tanstack/react-query": ^5.91.2
     "@types/react-is": ^19
     framer-motion: ^12.36.0
     husky: ~9.1.6

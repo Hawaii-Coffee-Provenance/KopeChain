@@ -3,7 +3,7 @@
 import { StepType } from "./index";
 import { AnimatePresence, motion } from "framer-motion";
 
-export const TimelineLeftSection = ({ activeItem, activeIndex }: { activeItem: StepType; activeIndex: number }) => (
+const TimelineLeftSection = ({ activeItem, activeIndex }: { activeItem: StepType; activeIndex: number }) => (
   <div className="hidden lg:flex flex-1 flex-col justify-center items-start pr-8 md:pr-16 text-left relative min-h-0">
     {/* Desktop Header */}
     <AnimatePresence mode="wait">
@@ -25,3 +25,5 @@ export const TimelineLeftSection = ({ activeItem, activeIndex }: { activeItem: S
     </AnimatePresence>
   </div>
 );
+
+export default TimelineLeftSection;
