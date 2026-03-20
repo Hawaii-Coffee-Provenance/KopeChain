@@ -199,45 +199,21 @@ const deployedContracts = {
             },
             {
               indexed: false,
-              internalType: "uint32",
-              name: "distributionDate",
-              type: "uint32",
+              internalType: "string",
+              name: "batchNumber",
+              type: "string",
             },
             {
               indexed: false,
-              internalType: "uint32",
-              name: "bagCount",
-              type: "uint32",
-            },
-            {
-              indexed: false,
-              internalType: "uint64",
-              name: "distributionWeight",
-              type: "uint64",
+              internalType: "string",
+              name: "metadataCID",
+              type: "string",
             },
             {
               indexed: true,
               internalType: "address",
               name: "distributor",
               type: "address",
-            },
-            {
-              indexed: false,
-              internalType: "string",
-              name: "destination",
-              type: "string",
-            },
-            {
-              indexed: false,
-              internalType: "int32",
-              name: "latitude",
-              type: "int32",
-            },
-            {
-              indexed: false,
-              internalType: "int32",
-              name: "longitude",
-              type: "int32",
             },
           ],
           name: "Distributed",
@@ -260,6 +236,18 @@ const deployedContracts = {
             },
             {
               indexed: false,
+              internalType: "string",
+              name: "metadataCID",
+              type: "string",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "farmer",
+              type: "address",
+            },
+            {
+              indexed: true,
               internalType: "enum CoffeeTracker.Region",
               name: "region",
               type: "uint8",
@@ -269,48 +257,6 @@ const deployedContracts = {
               internalType: "enum CoffeeTracker.Variety",
               name: "variety",
               type: "uint8",
-            },
-            {
-              indexed: false,
-              internalType: "uint16",
-              name: "elevation",
-              type: "uint16",
-            },
-            {
-              indexed: false,
-              internalType: "uint32",
-              name: "harvestDate",
-              type: "uint32",
-            },
-            {
-              indexed: false,
-              internalType: "uint64",
-              name: "harvestWeight",
-              type: "uint64",
-            },
-            {
-              indexed: true,
-              internalType: "address",
-              name: "farmer",
-              type: "address",
-            },
-            {
-              indexed: false,
-              internalType: "string",
-              name: "farmName",
-              type: "string",
-            },
-            {
-              indexed: false,
-              internalType: "int32",
-              name: "latitude",
-              type: "int32",
-            },
-            {
-              indexed: false,
-              internalType: "int32",
-              name: "longitude",
-              type: "int32",
             },
           ],
           name: "Harvested",
@@ -327,51 +273,40 @@ const deployedContracts = {
             },
             {
               indexed: false,
-              internalType: "enum CoffeeTracker.ProcessingMethod",
-              name: "processingMethod",
-              type: "uint8",
+              internalType: "string",
+              name: "batchNumber",
+              type: "string",
             },
             {
               indexed: false,
-              internalType: "uint8",
-              name: "moistureContent",
-              type: "uint8",
+              internalType: "string",
+              name: "metadataCID",
+              type: "string",
+            },
+          ],
+          name: "MetadataUpdated",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "batchId",
+              type: "uint256",
             },
             {
               indexed: false,
-              internalType: "uint8",
-              name: "scaScore",
-              type: "uint8",
+              internalType: "string",
+              name: "batchNumber",
+              type: "string",
             },
             {
               indexed: false,
-              internalType: "uint8",
-              name: "humidity",
-              type: "uint8",
-            },
-            {
-              indexed: false,
-              internalType: "uint16",
-              name: "dryTemperature",
-              type: "uint16",
-            },
-            {
-              indexed: false,
-              internalType: "uint32",
-              name: "processingDate",
-              type: "uint32",
-            },
-            {
-              indexed: false,
-              internalType: "uint64",
-              name: "beforeWeight",
-              type: "uint64",
-            },
-            {
-              indexed: false,
-              internalType: "uint64",
-              name: "afterWeight",
-              type: "uint64",
+              internalType: "string",
+              name: "metadataCID",
+              type: "string",
             },
             {
               indexed: true,
@@ -381,15 +316,9 @@ const deployedContracts = {
             },
             {
               indexed: false,
-              internalType: "int32",
-              name: "latitude",
-              type: "int32",
-            },
-            {
-              indexed: false,
-              internalType: "int32",
-              name: "longitude",
-              type: "int32",
+              internalType: "enum CoffeeTracker.ProcessingMethod",
+              name: "processingMethod",
+              type: "uint8",
             },
           ],
           name: "Processed",
@@ -406,39 +335,15 @@ const deployedContracts = {
             },
             {
               indexed: false,
-              internalType: "enum CoffeeTracker.RoastingMethod",
-              name: "roastingMethod",
-              type: "uint8",
+              internalType: "string",
+              name: "batchNumber",
+              type: "string",
             },
             {
               indexed: false,
-              internalType: "enum CoffeeTracker.RoastLevel",
-              name: "roastLevel",
-              type: "uint8",
-            },
-            {
-              indexed: false,
-              internalType: "uint16",
-              name: "transportTime",
-              type: "uint16",
-            },
-            {
-              indexed: false,
-              internalType: "uint32",
-              name: "roastingDate",
-              type: "uint32",
-            },
-            {
-              indexed: false,
-              internalType: "uint64",
-              name: "beforeWeight",
-              type: "uint64",
-            },
-            {
-              indexed: false,
-              internalType: "uint64",
-              name: "afterWeight",
-              type: "uint64",
+              internalType: "string",
+              name: "metadataCID",
+              type: "string",
             },
             {
               indexed: true,
@@ -448,21 +353,15 @@ const deployedContracts = {
             },
             {
               indexed: false,
-              internalType: "string",
-              name: "cuppingNotes",
-              type: "string",
+              internalType: "enum CoffeeTracker.RoastingMethod",
+              name: "roastingMethod",
+              type: "uint8",
             },
             {
               indexed: false,
-              internalType: "int32",
-              name: "latitude",
-              type: "int32",
-            },
-            {
-              indexed: false,
-              internalType: "int32",
-              name: "longitude",
-              type: "int32",
+              internalType: "enum CoffeeTracker.RoastLevel",
+              name: "roastLevel",
+              type: "uint8",
             },
           ],
           name: "Roasted",
@@ -646,6 +545,18 @@ const deployedContracts = {
               type: "uint256",
             },
             {
+              indexed: false,
+              internalType: "string",
+              name: "batchNumber",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "metadataCID",
+              type: "string",
+            },
+            {
               indexed: true,
               internalType: "address",
               name: "verifier",
@@ -795,41 +706,9 @@ const deployedContracts = {
               type: "uint256",
             },
             {
-              internalType: "uint32",
-              name: "_distributionDate",
-              type: "uint32",
-            },
-            {
-              internalType: "uint32",
-              name: "_bagCount",
-              type: "uint32",
-            },
-            {
-              internalType: "uint64",
-              name: "_distributionWeight",
-              type: "uint64",
-            },
-            {
               internalType: "string",
-              name: "_destination",
+              name: "_metadataCID",
               type: "string",
-            },
-            {
-              components: [
-                {
-                  internalType: "int32",
-                  name: "latitude",
-                  type: "int32",
-                },
-                {
-                  internalType: "int32",
-                  name: "longitude",
-                  type: "int32",
-                },
-              ],
-              internalType: "struct CoffeeTracker.Coordinates",
-              name: "_location",
-              type: "tuple",
             },
           ],
           name: "distributeBatch",
@@ -855,250 +734,9 @@ const deployedContracts = {
                   type: "uint64",
                 },
                 {
-                  internalType: "string",
-                  name: "batchNumber",
-                  type: "string",
-                },
-                {
-                  components: [
-                    {
-                      internalType: "enum CoffeeTracker.Region",
-                      name: "region",
-                      type: "uint8",
-                    },
-                    {
-                      internalType: "enum CoffeeTracker.Variety",
-                      name: "variety",
-                      type: "uint8",
-                    },
-                    {
-                      internalType: "uint16",
-                      name: "elevation",
-                      type: "uint16",
-                    },
-                    {
-                      internalType: "uint32",
-                      name: "harvestDate",
-                      type: "uint32",
-                    },
-                    {
-                      internalType: "uint64",
-                      name: "harvestWeight",
-                      type: "uint64",
-                    },
-                    {
-                      internalType: "address",
-                      name: "farmer",
-                      type: "address",
-                    },
-                    {
-                      internalType: "string",
-                      name: "farmName",
-                      type: "string",
-                    },
-                    {
-                      components: [
-                        {
-                          internalType: "int32",
-                          name: "latitude",
-                          type: "int32",
-                        },
-                        {
-                          internalType: "int32",
-                          name: "longitude",
-                          type: "int32",
-                        },
-                      ],
-                      internalType: "struct CoffeeTracker.Coordinates",
-                      name: "location",
-                      type: "tuple",
-                    },
-                  ],
-                  internalType: "struct CoffeeTracker.HarvestData",
-                  name: "harvestData",
-                  type: "tuple",
-                },
-                {
-                  components: [
-                    {
-                      internalType: "enum CoffeeTracker.ProcessingMethod",
-                      name: "processingMethod",
-                      type: "uint8",
-                    },
-                    {
-                      internalType: "uint8",
-                      name: "moistureContent",
-                      type: "uint8",
-                    },
-                    {
-                      internalType: "uint8",
-                      name: "scaScore",
-                      type: "uint8",
-                    },
-                    {
-                      internalType: "uint8",
-                      name: "humidity",
-                      type: "uint8",
-                    },
-                    {
-                      internalType: "uint16",
-                      name: "dryTemperature",
-                      type: "uint16",
-                    },
-                    {
-                      internalType: "uint32",
-                      name: "processingDate",
-                      type: "uint32",
-                    },
-                    {
-                      internalType: "uint64",
-                      name: "beforeWeight",
-                      type: "uint64",
-                    },
-                    {
-                      internalType: "uint64",
-                      name: "afterWeight",
-                      type: "uint64",
-                    },
-                    {
-                      internalType: "address",
-                      name: "processor",
-                      type: "address",
-                    },
-                    {
-                      components: [
-                        {
-                          internalType: "int32",
-                          name: "latitude",
-                          type: "int32",
-                        },
-                        {
-                          internalType: "int32",
-                          name: "longitude",
-                          type: "int32",
-                        },
-                      ],
-                      internalType: "struct CoffeeTracker.Coordinates",
-                      name: "location",
-                      type: "tuple",
-                    },
-                  ],
-                  internalType: "struct CoffeeTracker.ProcessingData",
-                  name: "processingData",
-                  type: "tuple",
-                },
-                {
-                  components: [
-                    {
-                      internalType: "enum CoffeeTracker.RoastingMethod",
-                      name: "roastingMethod",
-                      type: "uint8",
-                    },
-                    {
-                      internalType: "enum CoffeeTracker.RoastLevel",
-                      name: "roastLevel",
-                      type: "uint8",
-                    },
-                    {
-                      internalType: "uint16",
-                      name: "transportTime",
-                      type: "uint16",
-                    },
-                    {
-                      internalType: "uint32",
-                      name: "roastingDate",
-                      type: "uint32",
-                    },
-                    {
-                      internalType: "uint64",
-                      name: "beforeWeight",
-                      type: "uint64",
-                    },
-                    {
-                      internalType: "uint64",
-                      name: "afterWeight",
-                      type: "uint64",
-                    },
-                    {
-                      internalType: "address",
-                      name: "roaster",
-                      type: "address",
-                    },
-                    {
-                      internalType: "string",
-                      name: "cuppingNotes",
-                      type: "string",
-                    },
-                    {
-                      components: [
-                        {
-                          internalType: "int32",
-                          name: "latitude",
-                          type: "int32",
-                        },
-                        {
-                          internalType: "int32",
-                          name: "longitude",
-                          type: "int32",
-                        },
-                      ],
-                      internalType: "struct CoffeeTracker.Coordinates",
-                      name: "location",
-                      type: "tuple",
-                    },
-                  ],
-                  internalType: "struct CoffeeTracker.RoastingData",
-                  name: "roastingData",
-                  type: "tuple",
-                },
-                {
-                  components: [
-                    {
-                      internalType: "uint32",
-                      name: "distributionDate",
-                      type: "uint32",
-                    },
-                    {
-                      internalType: "uint32",
-                      name: "bagCount",
-                      type: "uint32",
-                    },
-                    {
-                      internalType: "uint64",
-                      name: "distributionWeight",
-                      type: "uint64",
-                    },
-                    {
-                      internalType: "address",
-                      name: "distributor",
-                      type: "address",
-                    },
-                    {
-                      internalType: "string",
-                      name: "destination",
-                      type: "string",
-                    },
-                    {
-                      components: [
-                        {
-                          internalType: "int32",
-                          name: "latitude",
-                          type: "int32",
-                        },
-                        {
-                          internalType: "int32",
-                          name: "longitude",
-                          type: "int32",
-                        },
-                      ],
-                      internalType: "struct CoffeeTracker.Coordinates",
-                      name: "location",
-                      type: "tuple",
-                    },
-                  ],
-                  internalType: "struct CoffeeTracker.DistributionData",
-                  name: "distributionData",
-                  type: "tuple",
+                  internalType: "uint32",
+                  name: "mintTimestamp",
+                  type: "uint32",
                 },
                 {
                   internalType: "bool",
@@ -1106,9 +744,59 @@ const deployedContracts = {
                   type: "bool",
                 },
                 {
-                  internalType: "uint32",
-                  name: "mintTimestamp",
-                  type: "uint32",
+                  internalType: "enum CoffeeTracker.Region",
+                  name: "region",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.Variety",
+                  name: "variety",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.ProcessingMethod",
+                  name: "processingMethod",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.RoastingMethod",
+                  name: "roastingMethod",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.RoastLevel",
+                  name: "roastLevel",
+                  type: "uint8",
+                },
+                {
+                  internalType: "address",
+                  name: "farmer",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "processor",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "roaster",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "distributor",
+                  type: "address",
+                },
+                {
+                  internalType: "string",
+                  name: "batchNumber",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "metadataCID",
+                  type: "string",
                 },
               ],
               internalType: "struct CoffeeTracker.CoffeeBatch",
@@ -1137,250 +825,9 @@ const deployedContracts = {
                   type: "uint64",
                 },
                 {
-                  internalType: "string",
-                  name: "batchNumber",
-                  type: "string",
-                },
-                {
-                  components: [
-                    {
-                      internalType: "enum CoffeeTracker.Region",
-                      name: "region",
-                      type: "uint8",
-                    },
-                    {
-                      internalType: "enum CoffeeTracker.Variety",
-                      name: "variety",
-                      type: "uint8",
-                    },
-                    {
-                      internalType: "uint16",
-                      name: "elevation",
-                      type: "uint16",
-                    },
-                    {
-                      internalType: "uint32",
-                      name: "harvestDate",
-                      type: "uint32",
-                    },
-                    {
-                      internalType: "uint64",
-                      name: "harvestWeight",
-                      type: "uint64",
-                    },
-                    {
-                      internalType: "address",
-                      name: "farmer",
-                      type: "address",
-                    },
-                    {
-                      internalType: "string",
-                      name: "farmName",
-                      type: "string",
-                    },
-                    {
-                      components: [
-                        {
-                          internalType: "int32",
-                          name: "latitude",
-                          type: "int32",
-                        },
-                        {
-                          internalType: "int32",
-                          name: "longitude",
-                          type: "int32",
-                        },
-                      ],
-                      internalType: "struct CoffeeTracker.Coordinates",
-                      name: "location",
-                      type: "tuple",
-                    },
-                  ],
-                  internalType: "struct CoffeeTracker.HarvestData",
-                  name: "harvestData",
-                  type: "tuple",
-                },
-                {
-                  components: [
-                    {
-                      internalType: "enum CoffeeTracker.ProcessingMethod",
-                      name: "processingMethod",
-                      type: "uint8",
-                    },
-                    {
-                      internalType: "uint8",
-                      name: "moistureContent",
-                      type: "uint8",
-                    },
-                    {
-                      internalType: "uint8",
-                      name: "scaScore",
-                      type: "uint8",
-                    },
-                    {
-                      internalType: "uint8",
-                      name: "humidity",
-                      type: "uint8",
-                    },
-                    {
-                      internalType: "uint16",
-                      name: "dryTemperature",
-                      type: "uint16",
-                    },
-                    {
-                      internalType: "uint32",
-                      name: "processingDate",
-                      type: "uint32",
-                    },
-                    {
-                      internalType: "uint64",
-                      name: "beforeWeight",
-                      type: "uint64",
-                    },
-                    {
-                      internalType: "uint64",
-                      name: "afterWeight",
-                      type: "uint64",
-                    },
-                    {
-                      internalType: "address",
-                      name: "processor",
-                      type: "address",
-                    },
-                    {
-                      components: [
-                        {
-                          internalType: "int32",
-                          name: "latitude",
-                          type: "int32",
-                        },
-                        {
-                          internalType: "int32",
-                          name: "longitude",
-                          type: "int32",
-                        },
-                      ],
-                      internalType: "struct CoffeeTracker.Coordinates",
-                      name: "location",
-                      type: "tuple",
-                    },
-                  ],
-                  internalType: "struct CoffeeTracker.ProcessingData",
-                  name: "processingData",
-                  type: "tuple",
-                },
-                {
-                  components: [
-                    {
-                      internalType: "enum CoffeeTracker.RoastingMethod",
-                      name: "roastingMethod",
-                      type: "uint8",
-                    },
-                    {
-                      internalType: "enum CoffeeTracker.RoastLevel",
-                      name: "roastLevel",
-                      type: "uint8",
-                    },
-                    {
-                      internalType: "uint16",
-                      name: "transportTime",
-                      type: "uint16",
-                    },
-                    {
-                      internalType: "uint32",
-                      name: "roastingDate",
-                      type: "uint32",
-                    },
-                    {
-                      internalType: "uint64",
-                      name: "beforeWeight",
-                      type: "uint64",
-                    },
-                    {
-                      internalType: "uint64",
-                      name: "afterWeight",
-                      type: "uint64",
-                    },
-                    {
-                      internalType: "address",
-                      name: "roaster",
-                      type: "address",
-                    },
-                    {
-                      internalType: "string",
-                      name: "cuppingNotes",
-                      type: "string",
-                    },
-                    {
-                      components: [
-                        {
-                          internalType: "int32",
-                          name: "latitude",
-                          type: "int32",
-                        },
-                        {
-                          internalType: "int32",
-                          name: "longitude",
-                          type: "int32",
-                        },
-                      ],
-                      internalType: "struct CoffeeTracker.Coordinates",
-                      name: "location",
-                      type: "tuple",
-                    },
-                  ],
-                  internalType: "struct CoffeeTracker.RoastingData",
-                  name: "roastingData",
-                  type: "tuple",
-                },
-                {
-                  components: [
-                    {
-                      internalType: "uint32",
-                      name: "distributionDate",
-                      type: "uint32",
-                    },
-                    {
-                      internalType: "uint32",
-                      name: "bagCount",
-                      type: "uint32",
-                    },
-                    {
-                      internalType: "uint64",
-                      name: "distributionWeight",
-                      type: "uint64",
-                    },
-                    {
-                      internalType: "address",
-                      name: "distributor",
-                      type: "address",
-                    },
-                    {
-                      internalType: "string",
-                      name: "destination",
-                      type: "string",
-                    },
-                    {
-                      components: [
-                        {
-                          internalType: "int32",
-                          name: "latitude",
-                          type: "int32",
-                        },
-                        {
-                          internalType: "int32",
-                          name: "longitude",
-                          type: "int32",
-                        },
-                      ],
-                      internalType: "struct CoffeeTracker.Coordinates",
-                      name: "location",
-                      type: "tuple",
-                    },
-                  ],
-                  internalType: "struct CoffeeTracker.DistributionData",
-                  name: "distributionData",
-                  type: "tuple",
+                  internalType: "uint32",
+                  name: "mintTimestamp",
+                  type: "uint32",
                 },
                 {
                   internalType: "bool",
@@ -1388,9 +835,59 @@ const deployedContracts = {
                   type: "bool",
                 },
                 {
-                  internalType: "uint32",
-                  name: "mintTimestamp",
-                  type: "uint32",
+                  internalType: "enum CoffeeTracker.Region",
+                  name: "region",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.Variety",
+                  name: "variety",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.ProcessingMethod",
+                  name: "processingMethod",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.RoastingMethod",
+                  name: "roastingMethod",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.RoastLevel",
+                  name: "roastLevel",
+                  type: "uint8",
+                },
+                {
+                  internalType: "address",
+                  name: "farmer",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "processor",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "roaster",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "distributor",
+                  type: "address",
+                },
+                {
+                  internalType: "string",
+                  name: "batchNumber",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "metadataCID",
+                  type: "string",
                 },
               ],
               internalType: "struct CoffeeTracker.CoffeeBatch",
@@ -1437,250 +934,9 @@ const deployedContracts = {
                   type: "uint64",
                 },
                 {
-                  internalType: "string",
-                  name: "batchNumber",
-                  type: "string",
-                },
-                {
-                  components: [
-                    {
-                      internalType: "enum CoffeeTracker.Region",
-                      name: "region",
-                      type: "uint8",
-                    },
-                    {
-                      internalType: "enum CoffeeTracker.Variety",
-                      name: "variety",
-                      type: "uint8",
-                    },
-                    {
-                      internalType: "uint16",
-                      name: "elevation",
-                      type: "uint16",
-                    },
-                    {
-                      internalType: "uint32",
-                      name: "harvestDate",
-                      type: "uint32",
-                    },
-                    {
-                      internalType: "uint64",
-                      name: "harvestWeight",
-                      type: "uint64",
-                    },
-                    {
-                      internalType: "address",
-                      name: "farmer",
-                      type: "address",
-                    },
-                    {
-                      internalType: "string",
-                      name: "farmName",
-                      type: "string",
-                    },
-                    {
-                      components: [
-                        {
-                          internalType: "int32",
-                          name: "latitude",
-                          type: "int32",
-                        },
-                        {
-                          internalType: "int32",
-                          name: "longitude",
-                          type: "int32",
-                        },
-                      ],
-                      internalType: "struct CoffeeTracker.Coordinates",
-                      name: "location",
-                      type: "tuple",
-                    },
-                  ],
-                  internalType: "struct CoffeeTracker.HarvestData",
-                  name: "harvestData",
-                  type: "tuple",
-                },
-                {
-                  components: [
-                    {
-                      internalType: "enum CoffeeTracker.ProcessingMethod",
-                      name: "processingMethod",
-                      type: "uint8",
-                    },
-                    {
-                      internalType: "uint8",
-                      name: "moistureContent",
-                      type: "uint8",
-                    },
-                    {
-                      internalType: "uint8",
-                      name: "scaScore",
-                      type: "uint8",
-                    },
-                    {
-                      internalType: "uint8",
-                      name: "humidity",
-                      type: "uint8",
-                    },
-                    {
-                      internalType: "uint16",
-                      name: "dryTemperature",
-                      type: "uint16",
-                    },
-                    {
-                      internalType: "uint32",
-                      name: "processingDate",
-                      type: "uint32",
-                    },
-                    {
-                      internalType: "uint64",
-                      name: "beforeWeight",
-                      type: "uint64",
-                    },
-                    {
-                      internalType: "uint64",
-                      name: "afterWeight",
-                      type: "uint64",
-                    },
-                    {
-                      internalType: "address",
-                      name: "processor",
-                      type: "address",
-                    },
-                    {
-                      components: [
-                        {
-                          internalType: "int32",
-                          name: "latitude",
-                          type: "int32",
-                        },
-                        {
-                          internalType: "int32",
-                          name: "longitude",
-                          type: "int32",
-                        },
-                      ],
-                      internalType: "struct CoffeeTracker.Coordinates",
-                      name: "location",
-                      type: "tuple",
-                    },
-                  ],
-                  internalType: "struct CoffeeTracker.ProcessingData",
-                  name: "processingData",
-                  type: "tuple",
-                },
-                {
-                  components: [
-                    {
-                      internalType: "enum CoffeeTracker.RoastingMethod",
-                      name: "roastingMethod",
-                      type: "uint8",
-                    },
-                    {
-                      internalType: "enum CoffeeTracker.RoastLevel",
-                      name: "roastLevel",
-                      type: "uint8",
-                    },
-                    {
-                      internalType: "uint16",
-                      name: "transportTime",
-                      type: "uint16",
-                    },
-                    {
-                      internalType: "uint32",
-                      name: "roastingDate",
-                      type: "uint32",
-                    },
-                    {
-                      internalType: "uint64",
-                      name: "beforeWeight",
-                      type: "uint64",
-                    },
-                    {
-                      internalType: "uint64",
-                      name: "afterWeight",
-                      type: "uint64",
-                    },
-                    {
-                      internalType: "address",
-                      name: "roaster",
-                      type: "address",
-                    },
-                    {
-                      internalType: "string",
-                      name: "cuppingNotes",
-                      type: "string",
-                    },
-                    {
-                      components: [
-                        {
-                          internalType: "int32",
-                          name: "latitude",
-                          type: "int32",
-                        },
-                        {
-                          internalType: "int32",
-                          name: "longitude",
-                          type: "int32",
-                        },
-                      ],
-                      internalType: "struct CoffeeTracker.Coordinates",
-                      name: "location",
-                      type: "tuple",
-                    },
-                  ],
-                  internalType: "struct CoffeeTracker.RoastingData",
-                  name: "roastingData",
-                  type: "tuple",
-                },
-                {
-                  components: [
-                    {
-                      internalType: "uint32",
-                      name: "distributionDate",
-                      type: "uint32",
-                    },
-                    {
-                      internalType: "uint32",
-                      name: "bagCount",
-                      type: "uint32",
-                    },
-                    {
-                      internalType: "uint64",
-                      name: "distributionWeight",
-                      type: "uint64",
-                    },
-                    {
-                      internalType: "address",
-                      name: "distributor",
-                      type: "address",
-                    },
-                    {
-                      internalType: "string",
-                      name: "destination",
-                      type: "string",
-                    },
-                    {
-                      components: [
-                        {
-                          internalType: "int32",
-                          name: "latitude",
-                          type: "int32",
-                        },
-                        {
-                          internalType: "int32",
-                          name: "longitude",
-                          type: "int32",
-                        },
-                      ],
-                      internalType: "struct CoffeeTracker.Coordinates",
-                      name: "location",
-                      type: "tuple",
-                    },
-                  ],
-                  internalType: "struct CoffeeTracker.DistributionData",
-                  name: "distributionData",
-                  type: "tuple",
+                  internalType: "uint32",
+                  name: "mintTimestamp",
+                  type: "uint32",
                 },
                 {
                   internalType: "bool",
@@ -1688,9 +944,59 @@ const deployedContracts = {
                   type: "bool",
                 },
                 {
-                  internalType: "uint32",
-                  name: "mintTimestamp",
-                  type: "uint32",
+                  internalType: "enum CoffeeTracker.Region",
+                  name: "region",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.Variety",
+                  name: "variety",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.ProcessingMethod",
+                  name: "processingMethod",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.RoastingMethod",
+                  name: "roastingMethod",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.RoastLevel",
+                  name: "roastLevel",
+                  type: "uint8",
+                },
+                {
+                  internalType: "address",
+                  name: "farmer",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "processor",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "roaster",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "distributor",
+                  type: "address",
+                },
+                {
+                  internalType: "string",
+                  name: "batchNumber",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "metadataCID",
+                  type: "string",
                 },
               ],
               internalType: "struct CoffeeTracker.CoffeeBatch[]",
@@ -1788,250 +1094,9 @@ const deployedContracts = {
                   type: "uint64",
                 },
                 {
-                  internalType: "string",
-                  name: "batchNumber",
-                  type: "string",
-                },
-                {
-                  components: [
-                    {
-                      internalType: "enum CoffeeTracker.Region",
-                      name: "region",
-                      type: "uint8",
-                    },
-                    {
-                      internalType: "enum CoffeeTracker.Variety",
-                      name: "variety",
-                      type: "uint8",
-                    },
-                    {
-                      internalType: "uint16",
-                      name: "elevation",
-                      type: "uint16",
-                    },
-                    {
-                      internalType: "uint32",
-                      name: "harvestDate",
-                      type: "uint32",
-                    },
-                    {
-                      internalType: "uint64",
-                      name: "harvestWeight",
-                      type: "uint64",
-                    },
-                    {
-                      internalType: "address",
-                      name: "farmer",
-                      type: "address",
-                    },
-                    {
-                      internalType: "string",
-                      name: "farmName",
-                      type: "string",
-                    },
-                    {
-                      components: [
-                        {
-                          internalType: "int32",
-                          name: "latitude",
-                          type: "int32",
-                        },
-                        {
-                          internalType: "int32",
-                          name: "longitude",
-                          type: "int32",
-                        },
-                      ],
-                      internalType: "struct CoffeeTracker.Coordinates",
-                      name: "location",
-                      type: "tuple",
-                    },
-                  ],
-                  internalType: "struct CoffeeTracker.HarvestData",
-                  name: "harvestData",
-                  type: "tuple",
-                },
-                {
-                  components: [
-                    {
-                      internalType: "enum CoffeeTracker.ProcessingMethod",
-                      name: "processingMethod",
-                      type: "uint8",
-                    },
-                    {
-                      internalType: "uint8",
-                      name: "moistureContent",
-                      type: "uint8",
-                    },
-                    {
-                      internalType: "uint8",
-                      name: "scaScore",
-                      type: "uint8",
-                    },
-                    {
-                      internalType: "uint8",
-                      name: "humidity",
-                      type: "uint8",
-                    },
-                    {
-                      internalType: "uint16",
-                      name: "dryTemperature",
-                      type: "uint16",
-                    },
-                    {
-                      internalType: "uint32",
-                      name: "processingDate",
-                      type: "uint32",
-                    },
-                    {
-                      internalType: "uint64",
-                      name: "beforeWeight",
-                      type: "uint64",
-                    },
-                    {
-                      internalType: "uint64",
-                      name: "afterWeight",
-                      type: "uint64",
-                    },
-                    {
-                      internalType: "address",
-                      name: "processor",
-                      type: "address",
-                    },
-                    {
-                      components: [
-                        {
-                          internalType: "int32",
-                          name: "latitude",
-                          type: "int32",
-                        },
-                        {
-                          internalType: "int32",
-                          name: "longitude",
-                          type: "int32",
-                        },
-                      ],
-                      internalType: "struct CoffeeTracker.Coordinates",
-                      name: "location",
-                      type: "tuple",
-                    },
-                  ],
-                  internalType: "struct CoffeeTracker.ProcessingData",
-                  name: "processingData",
-                  type: "tuple",
-                },
-                {
-                  components: [
-                    {
-                      internalType: "enum CoffeeTracker.RoastingMethod",
-                      name: "roastingMethod",
-                      type: "uint8",
-                    },
-                    {
-                      internalType: "enum CoffeeTracker.RoastLevel",
-                      name: "roastLevel",
-                      type: "uint8",
-                    },
-                    {
-                      internalType: "uint16",
-                      name: "transportTime",
-                      type: "uint16",
-                    },
-                    {
-                      internalType: "uint32",
-                      name: "roastingDate",
-                      type: "uint32",
-                    },
-                    {
-                      internalType: "uint64",
-                      name: "beforeWeight",
-                      type: "uint64",
-                    },
-                    {
-                      internalType: "uint64",
-                      name: "afterWeight",
-                      type: "uint64",
-                    },
-                    {
-                      internalType: "address",
-                      name: "roaster",
-                      type: "address",
-                    },
-                    {
-                      internalType: "string",
-                      name: "cuppingNotes",
-                      type: "string",
-                    },
-                    {
-                      components: [
-                        {
-                          internalType: "int32",
-                          name: "latitude",
-                          type: "int32",
-                        },
-                        {
-                          internalType: "int32",
-                          name: "longitude",
-                          type: "int32",
-                        },
-                      ],
-                      internalType: "struct CoffeeTracker.Coordinates",
-                      name: "location",
-                      type: "tuple",
-                    },
-                  ],
-                  internalType: "struct CoffeeTracker.RoastingData",
-                  name: "roastingData",
-                  type: "tuple",
-                },
-                {
-                  components: [
-                    {
-                      internalType: "uint32",
-                      name: "distributionDate",
-                      type: "uint32",
-                    },
-                    {
-                      internalType: "uint32",
-                      name: "bagCount",
-                      type: "uint32",
-                    },
-                    {
-                      internalType: "uint64",
-                      name: "distributionWeight",
-                      type: "uint64",
-                    },
-                    {
-                      internalType: "address",
-                      name: "distributor",
-                      type: "address",
-                    },
-                    {
-                      internalType: "string",
-                      name: "destination",
-                      type: "string",
-                    },
-                    {
-                      components: [
-                        {
-                          internalType: "int32",
-                          name: "latitude",
-                          type: "int32",
-                        },
-                        {
-                          internalType: "int32",
-                          name: "longitude",
-                          type: "int32",
-                        },
-                      ],
-                      internalType: "struct CoffeeTracker.Coordinates",
-                      name: "location",
-                      type: "tuple",
-                    },
-                  ],
-                  internalType: "struct CoffeeTracker.DistributionData",
-                  name: "distributionData",
-                  type: "tuple",
+                  internalType: "uint32",
+                  name: "mintTimestamp",
+                  type: "uint32",
                 },
                 {
                   internalType: "bool",
@@ -2039,9 +1104,59 @@ const deployedContracts = {
                   type: "bool",
                 },
                 {
-                  internalType: "uint32",
-                  name: "mintTimestamp",
-                  type: "uint32",
+                  internalType: "enum CoffeeTracker.Region",
+                  name: "region",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.Variety",
+                  name: "variety",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.ProcessingMethod",
+                  name: "processingMethod",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.RoastingMethod",
+                  name: "roastingMethod",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.RoastLevel",
+                  name: "roastLevel",
+                  type: "uint8",
+                },
+                {
+                  internalType: "address",
+                  name: "farmer",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "processor",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "roaster",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "distributor",
+                  type: "address",
+                },
+                {
+                  internalType: "string",
+                  name: "batchNumber",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "metadataCID",
+                  type: "string",
                 },
               ],
               internalType: "struct CoffeeTracker.CoffeeBatch[]",
@@ -2088,41 +1203,9 @@ const deployedContracts = {
               type: "uint8",
             },
             {
-              internalType: "uint16",
-              name: "_elevation",
-              type: "uint16",
-            },
-            {
-              internalType: "uint32",
-              name: "_harvestDate",
-              type: "uint32",
-            },
-            {
-              internalType: "uint64",
-              name: "_harvestWeight",
-              type: "uint64",
-            },
-            {
               internalType: "string",
-              name: "_farmName",
+              name: "_metadataCID",
               type: "string",
-            },
-            {
-              components: [
-                {
-                  internalType: "int32",
-                  name: "latitude",
-                  type: "int32",
-                },
-                {
-                  internalType: "int32",
-                  name: "longitude",
-                  type: "int32",
-                },
-              ],
-              internalType: "struct CoffeeTracker.Coordinates",
-              name: "_location",
-              type: "tuple",
             },
           ],
           name: "harvestBatch",
@@ -2191,56 +1274,9 @@ const deployedContracts = {
               type: "uint8",
             },
             {
-              internalType: "uint8",
-              name: "_moistureContent",
-              type: "uint8",
-            },
-            {
-              internalType: "uint8",
-              name: "_scaScore",
-              type: "uint8",
-            },
-            {
-              internalType: "uint8",
-              name: "_humidity",
-              type: "uint8",
-            },
-            {
-              internalType: "uint16",
-              name: "_dryTemperature",
-              type: "uint16",
-            },
-            {
-              internalType: "uint32",
-              name: "_processingDate",
-              type: "uint32",
-            },
-            {
-              internalType: "uint64",
-              name: "_beforeWeight",
-              type: "uint64",
-            },
-            {
-              internalType: "uint64",
-              name: "_afterWeight",
-              type: "uint64",
-            },
-            {
-              components: [
-                {
-                  internalType: "int32",
-                  name: "latitude",
-                  type: "int32",
-                },
-                {
-                  internalType: "int32",
-                  name: "longitude",
-                  type: "int32",
-                },
-              ],
-              internalType: "struct CoffeeTracker.Coordinates",
-              name: "_location",
-              type: "tuple",
+              internalType: "string",
+              name: "_metadataCID",
+              type: "string",
             },
           ],
           name: "processBatch",
@@ -2302,46 +1338,9 @@ const deployedContracts = {
               type: "uint8",
             },
             {
-              internalType: "uint16",
-              name: "_transportTime",
-              type: "uint16",
-            },
-            {
-              internalType: "uint32",
-              name: "_roastingDate",
-              type: "uint32",
-            },
-            {
-              internalType: "uint64",
-              name: "_beforeWeight",
-              type: "uint64",
-            },
-            {
-              internalType: "uint64",
-              name: "_afterWeight",
-              type: "uint64",
-            },
-            {
               internalType: "string",
-              name: "_cuppingNotes",
+              name: "_metadataCID",
               type: "string",
-            },
-            {
-              components: [
-                {
-                  internalType: "int32",
-                  name: "latitude",
-                  type: "int32",
-                },
-                {
-                  internalType: "int32",
-                  name: "longitude",
-                  type: "int32",
-                },
-              ],
-              internalType: "struct CoffeeTracker.Coordinates",
-              name: "_location",
-              type: "tuple",
             },
           ],
           name: "roastBatch",
@@ -2456,7 +1455,25 @@ const deployedContracts = {
           inputs: [
             {
               internalType: "uint256",
-              name: "",
+              name: "_batchId",
+              type: "uint256",
+            },
+            {
+              internalType: "string",
+              name: "_metadataCID",
+              type: "string",
+            },
+          ],
+          name: "updateMetadataCID",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_batchId",
               type: "uint256",
             },
           ],

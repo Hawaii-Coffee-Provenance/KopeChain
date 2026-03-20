@@ -62,71 +62,59 @@ contract CoffeeTracker is ERC1155, AccessControl {
         Other
     }
 
-    struct Coordinates {
-        int32 latitude;
-        int32 longitude;
-    }
-
-    struct HarvestData {
-        Region region;
-        Variety variety;
-        uint16 elevation;
-        uint32 harvestDate;
-        uint64 harvestWeight;
-        address farmer;
-        string farmName;
-        Coordinates location;
-    }
-
-    struct ProcessingData {
-        ProcessingMethod processingMethod;
-        uint8 moistureContent;
-        uint8 scaScore;
-        uint8 humidity;
-        uint16 dryTemperature;
-        uint32 processingDate;
-        uint64 beforeWeight;
-        uint64 afterWeight;
-        address processor;
-        Coordinates location;
-    }
-
-    struct RoastingData {
-        RoastingMethod roastingMethod;
-        RoastLevel roastLevel;
-        uint16 transportTime;
-        uint32 roastingDate;
-        uint64 beforeWeight;
-        uint64 afterWeight;
-        address roaster;
-        string cuppingNotes;
-        Coordinates location;
-    }
-
-    struct DistributionData {
-        uint32 distributionDate;
-        uint32 bagCount;
-        uint64 distributionWeight;
-        address distributor;
-        string destination;
-        Coordinates location;
-    }
-
     struct CoffeeBatch {
         uint64 batchId;
-        string batchNumber;
-        HarvestData harvestData;
-        ProcessingData processingData;
-        RoastingData roastingData;
-        DistributionData distributionData;
-        bool verified;
         uint32 mintTimestamp;
+        bool verified;
+        Region region;
+        Variety variety;
+        ProcessingMethod processingMethod;
+        RoastingMethod roastingMethod;
+        RoastLevel roastLevel;
+        address farmer;
+        address processor;
+        address roaster;
+        address distributor;
+        string batchNumber;
+        string metadataCID;
     }
 
     mapping(uint256 => CoffeeBatch) private batches;
     mapping(string => uint256) public batchNumberToId;
     mapping(address => uint256[]) private userBatches;
     mapping(address => bool) private registeredFarms;
+
+    event Harvested(
+        uint256 indexed batchId,
+        string batchNumber,
+        string metadataCID,
+        address indexed farmer,
+        Region indexed region,
+        Variety variety
+    );
+
+    event Processed(
+        uint256 indexed batchId,
+        string batchNumber,
+        string metadataCID,
+        address indexed processor,
+        ProcessingMethod processingMethod
+    );
+
+    event Roasted(
+        uint256 indexed batchId,
+        string batchNumber,
+        string metadataCID,
+        address indexed roaster,
+        RoastingMethod roastingMethod,
+        RoastLevel roastLevel
+    );
+
+    event Distributed(uint256 indexed batchId, string batchNumber, string metadataCID, address indexed distributor);
+
+    event Verified(uint256 indexed batchId, string batchNumber, string metadataCID, address indexed verifier);
+
+    event MetadataUpdated(uint256 indexed batchId, string batchNumber, string metadataCID);
 
     constructor(address admin, address farmer, address processor, address roaster, address distributor) ERC1155("") {
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
@@ -136,205 +124,71 @@ contract CoffeeTracker is ERC1155, AccessControl {
         _grantRole(DISTRIBUTOR_ROLE, distributor);
     }
 
-    event Harvested(
-        uint256 indexed batchId,
-        string batchNumber,
-        Region region,
-        Variety variety,
-        uint16 elevation,
-        uint32 harvestDate,
-        uint64 harvestWeight,
-        address indexed farmer,
-        string farmName,
-        int32 latitude,
-        int32 longitude
-    );
-
-    event Processed(
-        uint256 indexed batchId,
-        ProcessingMethod processingMethod,
-        uint8 moistureContent,
-        uint8 scaScore,
-        uint8 humidity,
-        uint16 dryTemperature,
-        uint32 processingDate,
-        uint64 beforeWeight,
-        uint64 afterWeight,
-        address indexed processor,
-        int32 latitude,
-        int32 longitude
-    );
-
-    event Roasted(
-        uint256 indexed batchId,
-        RoastingMethod roastingMethod,
-        RoastLevel roastLevel,
-        uint16 transportTime,
-        uint32 roastingDate,
-        uint64 beforeWeight,
-        uint64 afterWeight,
-        address indexed roaster,
-        string cuppingNotes,
-        int32 latitude,
-        int32 longitude
-    );
-
-    event Distributed(
-        uint256 indexed batchId,
-        uint32 distributionDate,
-        uint32 bagCount,
-        uint64 distributionWeight,
-        address indexed distributor,
-        string destination,
-        int32 latitude,
-        int32 longitude
-    );
-
-    event Verified(uint256 indexed batchId, address indexed verifier);
-
     function harvestBatch(
         string calldata _batchNumber,
         Region _region,
         Variety _variety,
-        uint16 _elevation,
-        uint32 _harvestDate,
-        uint64 _harvestWeight,
-        string calldata _farmName,
-        Coordinates calldata _location
+        string calldata _metadataCID
     ) public onlyRole(FARMER_ROLE) {
-        require(batchNumberToId[_batchNumber] == 0, "Batch number already exists!");
+        require(batchNumberToId[_batchNumber] == 0, "This coffee batch number already exists!");
 
         uint256 _batchId = _batchIdCounter;
 
         batches[_batchId] = CoffeeBatch({
             batchId: uint64(_batchId),
-            batchNumber: _batchNumber,
-            harvestData: HarvestData({
-                region: _region,
-                variety: _variety,
-                elevation: _elevation,
-                harvestDate: _harvestDate,
-                harvestWeight: _harvestWeight,
-                farmer: msg.sender,
-                farmName: _farmName,
-                location: _location
-            }),
-            processingData: ProcessingData({
-                processingMethod: ProcessingMethod.Other,
-                moistureContent: 0,
-                scaScore: 0,
-                humidity: 0,
-                dryTemperature: 0,
-                processingDate: 0,
-                beforeWeight: 0,
-                afterWeight: 0,
-                processor: address(0),
-                location: Coordinates({ latitude: 0, longitude: 0 })
-            }),
-            roastingData: RoastingData({
-                roastingMethod: RoastingMethod.Other,
-                roastLevel: RoastLevel.Other,
-                transportTime: 0,
-                roastingDate: 0,
-                beforeWeight: 0,
-                afterWeight: 0,
-                roaster: address(0),
-                cuppingNotes: "",
-                location: Coordinates({ latitude: 0, longitude: 0 })
-            }),
-            distributionData: DistributionData({
-                distributionDate: 0,
-                bagCount: 0,
-                distributionWeight: 0,
-                distributor: address(0),
-                destination: "",
-                location: Coordinates({ latitude: 0, longitude: 0 })
-            }),
+            mintTimestamp: uint32(block.timestamp),
             verified: false,
-            mintTimestamp: uint32(block.timestamp)
+            region: _region,
+            variety: _variety,
+            processingMethod: ProcessingMethod.Other,
+            roastingMethod: RoastingMethod.Other,
+            roastLevel: RoastLevel.Other,
+            farmer: msg.sender,
+            processor: address(0),
+            roaster: address(0),
+            distributor: address(0),
+            batchNumber: _batchNumber,
+            metadataCID: _metadataCID
         });
+
+        batchNumberToId[_batchNumber] = _batchId;
+        userBatches[msg.sender].push(_batchId);
 
         if (!registeredFarms[msg.sender]) {
             registeredFarms[msg.sender] = true;
             _farmCount++;
         }
 
-        userBatches[msg.sender].push(_batchId);
-        batchNumberToId[_batchNumber] = _batchId;
-
-        _mint(msg.sender, _batchId, 1, "");
-
-        emit Harvested(
-            _batchId,
-            _batchNumber,
-            _region,
-            _variety,
-            _elevation,
-            _harvestDate,
-            _harvestWeight,
-            msg.sender,
-            _farmName,
-            _location.latitude,
-            _location.longitude
-        );
+        emit Harvested(_batchId, _batchNumber, _metadataCID, msg.sender, _region, _variety);
 
         _batchIdCounter++;
         _transactionCount++;
+
+        _mint(msg.sender, _batchId, 1, "");
     }
 
     function processBatch(
         uint256 _batchId,
         ProcessingMethod _processingMethod,
-        uint8 _moistureContent,
-        uint8 _scaScore,
-        uint8 _humidity,
-        uint16 _dryTemperature,
-        uint32 _processingDate,
-        uint64 _beforeWeight,
-        uint64 _afterWeight,
-        Coordinates calldata _location
+        string calldata _metadataCID
     ) public onlyRole(PROCESSOR_ROLE) {
         CoffeeBatch storage batch = batches[_batchId];
 
-        require(batch.harvestData.harvestDate != 0, "This coffee batch must be harvested!");
+        require(batch.farmer != address(0), "This coffee batch must be harvested!");
         require(
-            batch.processingData.processor == address(0) ||
-                batch.processingData.processor == msg.sender ||
-                hasRole(DEFAULT_ADMIN_ROLE, msg.sender),
-            "This coffee batch is already processed by another processor!"
+            batch.processor == address(0) || batch.processor == msg.sender || hasRole(DEFAULT_ADMIN_ROLE, msg.sender),
+            "This coffee batch has already been processed!"
         );
 
-        if (batch.processingData.processor == address(0)) {
+        if (batch.processor == address(0)) {
             userBatches[msg.sender].push(_batchId);
         }
 
-        ProcessingData storage pData = batch.processingData;
-        pData.processingMethod = _processingMethod;
-        pData.moistureContent = _moistureContent;
-        pData.scaScore = _scaScore;
-        pData.humidity = _humidity;
-        pData.dryTemperature = _dryTemperature;
-        pData.processingDate = _processingDate;
-        pData.beforeWeight = _beforeWeight;
-        pData.afterWeight = _afterWeight;
-        pData.processor = msg.sender;
-        pData.location.latitude = _location.latitude;
-        pData.location.longitude = _location.longitude;
+        batch.processor = msg.sender;
+        batch.processingMethod = _processingMethod;
+        batch.metadataCID = _metadataCID;
 
-        emit Processed(
-            _batchId,
-            _processingMethod,
-            _moistureContent,
-            _scaScore,
-            _humidity,
-            _dryTemperature,
-            _processingDate,
-            _beforeWeight,
-            _afterWeight,
-            msg.sender,
-            _location.latitude,
-            _location.longitude
-        );
+        emit Processed(_batchId, batch.batchNumber, _metadataCID, msg.sender, _processingMethod);
 
         _transactionCount++;
     }
@@ -343,100 +197,52 @@ contract CoffeeTracker is ERC1155, AccessControl {
         uint256 _batchId,
         RoastingMethod _roastingMethod,
         RoastLevel _roastLevel,
-        uint16 _transportTime,
-        uint32 _roastingDate,
-        uint64 _beforeWeight,
-        uint64 _afterWeight,
-        string calldata _cuppingNotes,
-        Coordinates calldata _location
+        string calldata _metadataCID
     ) public onlyRole(ROASTER_ROLE) {
         CoffeeBatch storage batch = batches[_batchId];
 
-        require(batch.harvestData.harvestDate != 0, "This coffee batch must be harvested!");
-        require(batch.processingData.processingDate != 0, "This coffee batch must be processed before roasting!");
+        require(batch.farmer != address(0), "This coffee batch must be harvested!");
+        require(batch.processor != address(0), "This coffee batch must be processed!");
         require(
-            batch.roastingData.roaster == address(0) ||
-                batch.roastingData.roaster == msg.sender ||
-                hasRole(DEFAULT_ADMIN_ROLE, msg.sender),
-            "This coffee batch is already roasted by another roaster!"
+            batch.roaster == address(0) || batch.roaster == msg.sender || hasRole(DEFAULT_ADMIN_ROLE, msg.sender),
+            "This coffee batch has already been roasted!"
         );
 
-        if (batch.roastingData.roaster == address(0)) {
+        if (batch.roaster == address(0)) {
             userBatches[msg.sender].push(_batchId);
         }
 
-        RoastingData storage rData = batch.roastingData;
-        rData.roastingMethod = _roastingMethod;
-        rData.roastLevel = _roastLevel;
-        rData.transportTime = _transportTime;
-        rData.roastingDate = _roastingDate;
-        rData.beforeWeight = _beforeWeight;
-        rData.afterWeight = _afterWeight;
-        rData.roaster = msg.sender;
-        rData.cuppingNotes = _cuppingNotes;
-        rData.location.latitude = _location.latitude;
-        rData.location.longitude = _location.longitude;
+        batch.roaster = msg.sender;
+        batch.roastingMethod = _roastingMethod;
+        batch.roastLevel = _roastLevel;
+        batch.metadataCID = _metadataCID;
 
-        emit Roasted(
-            _batchId,
-            _roastingMethod,
-            _roastLevel,
-            _transportTime,
-            _roastingDate,
-            _beforeWeight,
-            _afterWeight,
-            msg.sender,
-            _cuppingNotes,
-            _location.latitude,
-            _location.longitude
-        );
+        emit Roasted(_batchId, batch.batchNumber, _metadataCID, msg.sender, _roastingMethod, _roastLevel);
 
         _transactionCount++;
     }
 
-    function distributeBatch(
-        uint256 _batchId,
-        uint32 _distributionDate,
-        uint32 _bagCount,
-        uint64 _distributionWeight,
-        string calldata _destination,
-        Coordinates calldata _location
-    ) public onlyRole(DISTRIBUTOR_ROLE) {
+    function distributeBatch(uint256 _batchId, string calldata _metadataCID) public onlyRole(DISTRIBUTOR_ROLE) {
         CoffeeBatch storage batch = batches[_batchId];
 
-        require(batch.harvestData.harvestDate != 0, "This coffee batch must be harvested!");
-        require(batch.processingData.processingDate != 0, "This coffee batch must be processed before distribution!");
-        require(batch.roastingData.roastingDate != 0, "This coffee batch must be roasted before distribution!");
+        require(batch.farmer != address(0), "This coffee batch must be harvested!");
+        require(batch.processor != address(0), "This coffee batch must be processed!");
+        require(batch.roaster != address(0), "This coffee batch must be roasted!");
         require(
-            batch.distributionData.distributor == address(0) ||
-                batch.distributionData.distributor == msg.sender ||
+            batch.distributor == address(0) ||
+                batch.distributor == msg.sender ||
                 hasRole(DEFAULT_ADMIN_ROLE, msg.sender),
-            "This coffee batch is already distributed by another distributor!"
+            "This coffee batch has already been distributed!"
         );
 
-        if (batch.distributionData.distributor == address(0)) {
+        if (batch.distributor == address(0)) {
             userBatches[msg.sender].push(_batchId);
         }
 
-        DistributionData storage dData = batch.distributionData;
-        dData.distributionDate = _distributionDate;
-        dData.bagCount = _bagCount;
-        dData.distributionWeight = _distributionWeight;
-        dData.distributor = msg.sender;
-        dData.destination = _destination;
-        dData.location.latitude = _location.latitude;
-        dData.location.longitude = _location.longitude;
+        batch.distributor = msg.sender;
+        batch.metadataCID = _metadataCID;
 
-        emit Distributed(
-            _batchId,
-            _distributionDate,
-            _bagCount,
-            _distributionWeight,
-            msg.sender,
-            _destination,
-            _location.latitude,
-            _location.longitude
-        );
+        emit Distributed(_batchId, batch.batchNumber, _metadataCID, msg.sender);
 
         _transactionCount++;
     }
@@ -444,25 +250,32 @@ contract CoffeeTracker is ERC1155, AccessControl {
     function verifyBatch(uint256 _batchId) public onlyRole(DEFAULT_ADMIN_ROLE) {
         CoffeeBatch storage batch = batches[_batchId];
 
-        require(batch.harvestData.harvestDate != 0, "This coffee batch must be harvested!");
-        require(!batch.verified, "This coffee batch is already verified!");
+        require(batch.farmer != address(0), "This coffee batch must be harvested!");
+        require(!batch.verified, "This coffee batch has already been verified!");
+
         batch.verified = true;
 
-        emit Verified(_batchId, msg.sender);
+        emit Verified(_batchId, batch.batchNumber, batch.metadataCID, msg.sender);
 
         _transactionCount++;
     }
 
-    function getBatchCount() public view returns (uint256) {
-        return _batchIdCounter - 1;
-    }
+    function updateMetadataCID(uint256 _batchId, string calldata _metadataCID) public {
+        CoffeeBatch storage batch = batches[_batchId];
 
-    function getTransactionCount() public view returns (uint256) {
-        return _transactionCount;
-    }
+        require(batch.farmer != address(0), "Batch Number does not exist!");
+        require(
+            hasRole(DEFAULT_ADMIN_ROLE, msg.sender) ||
+                batch.farmer == msg.sender ||
+                batch.processor == msg.sender ||
+                batch.roaster == msg.sender ||
+                batch.distributor == msg.sender,
+            "Not Authorized!"
+        );
 
-    function getFarmCount() public view returns (uint256) {
-        return _farmCount;
+        batch.metadataCID = _metadataCID;
+
+        emit MetadataUpdated(_batchId, batch.batchNumber, _metadataCID);
     }
 
     function getBatch(uint256 _batchId) public view returns (CoffeeBatch memory) {
@@ -503,6 +316,18 @@ contract CoffeeTracker is ERC1155, AccessControl {
         return (userRole, history);
     }
 
+    function getBatchCount() public view returns (uint256) {
+        return _batchIdCounter - 1;
+    }
+
+    function getTransactionCount() public view returns (uint256) {
+        return _transactionCount;
+    }
+
+    function getFarmCount() public view returns (uint256) {
+        return _farmCount;
+    }
+
     function getRole(address account) public view returns (string memory) {
         if (hasRole(DEFAULT_ADMIN_ROLE, account)) return "Admin";
         if (hasRole(FARMER_ROLE, account)) return "Farmer";
@@ -510,6 +335,11 @@ contract CoffeeTracker is ERC1155, AccessControl {
         if (hasRole(ROASTER_ROLE, account)) return "Roaster";
         if (hasRole(DISTRIBUTOR_ROLE, account)) return "Distributor";
         return "User";
+    }
+
+    function uri(uint256 _batchId) public view override returns (string memory) {
+        require(_batchId >= 1 && _batchId < _batchIdCounter, "This coffee batch does not exist!");
+        return string(abi.encodePacked("ipfs://", batches[_batchId].metadataCID));
     }
 
     function supportsInterface(bytes4 interfaceId) public view override(ERC1155, AccessControl) returns (bool) {
