@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import TransactionData from "./TransactionData";
-import TransactionJourney from "./TransactionJourney";
-import TransactionOverview from "./TransactionOverview";
-import TransactionTabs from "./TransactionTabs";
+import BatchData from "./BatchData";
+import BatchJourney from "./BatchJourney";
+import BatchOverview from "./BatchOverview";
+import BatchTabs from "./BatchTabs";
 import { BatchTxHashes } from "~~/types/coffee";
 import { REGION_TO_ISLAND, STAGE_STYLES, getStage } from "~~/utils/coffee";
 
-const TransactionInfo = ({ batch, txHashes }: { batch: any; txHashes: BatchTxHashes }) => {
+const BatchInfo = ({ batch, txHashes }: { batch: any; txHashes: BatchTxHashes }) => {
   const stage = getStage(batch);
   const [activeTab, setActiveTab] = useState<"Overview" | "Journey" | "On Chain">("Overview");
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -52,7 +52,7 @@ const TransactionInfo = ({ batch, txHashes }: { batch: any; txHashes: BatchTxHas
           </p>
         </div>
 
-        <TransactionTabs tabs={["Overview", "Journey", "On Chain"]} activeTab={activeTab} setActiveTab={setActiveTab} />
+        <BatchTabs tabs={["Overview", "Journey", "On Chain"]} activeTab={activeTab} setActiveTab={setActiveTab} />
       </div>
 
       <div
@@ -61,23 +61,33 @@ const TransactionInfo = ({ batch, txHashes }: { batch: any; txHashes: BatchTxHas
         style={{ scrollbarWidth: "none" }}
       >
         <div className={`flex flex-col gap-8 animate-fadeIn mt-4 ${activeTab === "Overview" ? "block" : "hidden"}`}>
-          <TransactionOverview batch={batch} />
+          <BatchOverview batch={batch} />
         </div>
 
         <div className={`animate-fadeIn mt-4 ${activeTab === "Journey" ? "block" : "hidden"}`}>
-          <TransactionJourney batch={batch} />
+          <BatchJourney batch={batch} />
         </div>
 
         <div className={`animate-fadeIn mt-4 ${activeTab === "On Chain" ? "block" : "hidden"}`}>
-          {txHashes?.harvested && <TransactionData txHash={txHashes.harvested} title="Harvested Transaction" />}
-          {txHashes?.processed && <TransactionData txHash={txHashes.processed} title="Processed Transaction" />}
-          {txHashes?.roasted && <TransactionData txHash={txHashes.roasted} title="Roasted Transaction" />}
-          {txHashes?.distributed && <TransactionData txHash={txHashes.distributed} title="Distributed Transaction" />}
-          {txHashes?.verified && <TransactionData txHash={txHashes.verified} title="Verified Transaction" />}
+          {txHashes?.harvested && (
+            <BatchData txHash={txHashes.harvested} title="Harvested Transaction" batchNumber={batch.batchNumber} />
+          )}
+          {txHashes?.processed && (
+            <BatchData txHash={txHashes.processed} title="Processed Transaction" batchNumber={batch.batchNumber} />
+          )}
+          {txHashes?.roasted && (
+            <BatchData txHash={txHashes.roasted} title="Roasted Transaction" batchNumber={batch.batchNumber} />
+          )}
+          {txHashes?.distributed && (
+            <BatchData txHash={txHashes.distributed} title="Distributed Transaction" batchNumber={batch.batchNumber} />
+          )}
+          {txHashes?.verified && (
+            <BatchData txHash={txHashes.verified} title="Verified Transaction" batchNumber={batch.batchNumber} />
+          )}
         </div>
       </div>
     </div>
   );
 };
 
-export default TransactionInfo;
+export default BatchInfo;

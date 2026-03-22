@@ -1,31 +1,25 @@
 "use client";
 
 import { useMemo } from "react";
-import TransactionAlbum from "./TransactionAlbum";
-import TransactionInfo from "./TransactionInfo";
-import { Hash } from "viem";
+import BatchAlbum from "./BatchAlbum";
+import BatchInfo from "./BatchInfo";
 import Skeleton from "~~/components/Skeleton";
 import Map3D from "~~/components/map/Map3D";
 import { useCoffeeTracker } from "~~/hooks/useCoffeeTracker";
+import { CoffeeBatch } from "~~/types/coffee";
 
-type TransactionPageClientProps = {
-  txHash: Hash;
+type BatchPageClientProps = {
+  batchNumber: string;
 };
 
-const TransactionPageClient = ({ txHash }: TransactionPageClientProps) => {
+const BatchPageClient = ({ batchNumber }: BatchPageClientProps) => {
   const { stats, txHashMap, isLoading } = useCoffeeTracker();
 
   const batch = useMemo(() => {
-    if (!stats?.allBatches || !txHashMap) return null;
+    if (!stats?.allBatches) return null;
 
-    return (
-      stats.allBatches.find((b: any) => {
-        const hashes = txHashMap[b.batchId?.toString?.()];
-        if (!hashes) return false;
-        return Object.values(hashes).includes(txHash);
-      }) ?? null
-    );
-  }, [stats, txHashMap, txHash]);
+    return stats.allBatches.find((b: CoffeeBatch) => b.batchNumber === batchNumber) ?? null;
+  }, [stats, batchNumber]);
 
   const isDataLoading = isLoading || !batch;
 
@@ -36,7 +30,12 @@ const TransactionPageClient = ({ txHash }: TransactionPageClientProps) => {
           {isDataLoading ? (
             <Skeleton className="absolute inset-0 w-full h-full rounded-3xl" />
           ) : (
-            <Map3D className="absolute inset-0 w-full h-full" batches={[batch]} showJourney autoFitMarkers />
+            <Map3D
+              className="absolute inset-0 w-full h-full"
+              batches={batch ? [batch] : []}
+              showJourney
+              autoFitMarkers
+            />
           )}
         </div>
 
@@ -46,7 +45,7 @@ const TransactionPageClient = ({ txHash }: TransactionPageClientProps) => {
           ) : (
             <>
               <h2 className="text-label mb-3">Media & Certificates</h2>
-              <TransactionAlbum batch={batch} />
+              <BatchAlbum batch={batch!} />
             </>
           )}
         </div>
@@ -61,11 +60,11 @@ const TransactionPageClient = ({ txHash }: TransactionPageClientProps) => {
             <Skeleton className="w-full h-full rounded-3xl" />
           </div>
         ) : (
-          <TransactionInfo batch={batch} txHashes={txHashMap[batch.batchId.toString()]} />
+          <BatchInfo batch={batch!} txHashes={txHashMap[batch!.batchId.toString()]} />
         )}
       </div>
     </div>
   );
 };
 
-export default TransactionPageClient;
+export default BatchPageClient;

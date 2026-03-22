@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import BatchFunction from "./BatchFunction";
 import DataRow from "./DataRow";
-import TransactionFunction from "./TransactionFunction";
 import { Hash, Transaction, TransactionReceipt, formatEther, formatUnits } from "viem";
 import { usePublicClient } from "wagmi";
 import BlockieAddressLink from "~~/components/explore/BlockieAddressLink";
@@ -17,7 +17,7 @@ export type DecodedTx = Transaction & {
   functionArgs?: any[];
 };
 
-const TransactionData = ({ txHash, title }: { txHash: Hash; title?: string }) => {
+const BatchData = ({ txHash, title, batchNumber }: { txHash: Hash; title?: string; batchNumber: string }) => {
   const client = usePublicClient();
   const { targetNetwork } = useTargetNetwork();
 
@@ -54,7 +54,7 @@ const TransactionData = ({ txHash, title }: { txHash: Hash; title?: string }) =>
       <div className="text-label text-base! mb-2 mt-2">{title || "Blockchain Data"}</div>
 
       <DataRow title="TX Hash">
-        <TxHashLink txHash={txDecoded.hash} disableTruncation={true} />
+        <TxHashLink txHash={txDecoded.hash} disableTruncation={true} href={`/explore/batch/${batchNumber}`} />
       </DataRow>
 
       <DataRow title="Block" value={`#${Number(receipt.blockNumber)}`} />
@@ -81,7 +81,7 @@ const TransactionData = ({ txHash, title }: { txHash: Hash; title?: string }) =>
       />
 
       <DataRow title="Function" itemsStart={true}>
-        <TransactionFunction tx={txDecoded} />
+        <BatchFunction tx={txDecoded} />
       </DataRow>
 
       <DataRow title="Selector" value={txDecoded.input.substring(0, 10)} hasBorder={false} />
@@ -89,4 +89,4 @@ const TransactionData = ({ txHash, title }: { txHash: Hash; title?: string }) =>
   );
 };
 
-export default TransactionData;
+export default BatchData;

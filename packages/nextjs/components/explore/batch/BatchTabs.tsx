@@ -1,6 +1,6 @@
 "use client";
 
-const TransactionTabs = ({
+const BatchTabs = ({
   tabs,
   activeTab,
   setActiveTab,
@@ -28,4 +28,4 @@ const TransactionTabs = ({
   );
 };
 
-export default TransactionTabs;
+export default BatchTabs;

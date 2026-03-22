@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { Popup as PopupGL } from "react-map-gl/maplibre";
 import { XMarkIcon } from "@heroicons/react/24/solid";
-import { useCoffeeTracker } from "~~/hooks/useCoffeeTracker";
 import { CoffeeBatch, Coordinates, Stage } from "~~/types/coffee";
 import { REGIONS, STAGE_STYLES, VARIETIES } from "~~/utils/coffee";
 
@@ -17,12 +16,7 @@ type MapPopupProps = {
 };
 
 const MapPopup = ({ batch, location, stage, onClose }: MapPopupProps) => {
-  const { txHashMap } = useCoffeeTracker();
-
-  const batchTxHashes = txHashMap[batch.batchId.toString()];
-  const linkHash =
-    batchTxHashes?.harvested || batchTxHashes?.processed || batchTxHashes?.roasted || batchTxHashes?.distributed;
-  const href = linkHash ? `/explore/transaction/${linkHash}` : "#";
+  const href = `/explore/batch/${batch.batchNumber}`;
 
   return (
     <Popup

@@ -1,35 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { isAddress, isHex } from "viem";
-import { hardhat } from "viem/chains";
-import { usePublicClient } from "wagmi";
 
-const SearchBar = () => {
+type SearchBarProps = {
+  onSearch: (value: string) => void;
+};
+
+const SearchBar = ({ onSearch }: SearchBarProps) => {
   const [searchInput, setSearchInput] = useState("");
-  const router = useRouter();
 
-  const client = usePublicClient({ chainId: hardhat.id });
-
-  const handleSearch = async (event: React.FormEvent) => {
+  const handleSearch = (event: React.FormEvent) => {
     event.preventDefault();
-    if (isHex(searchInput)) {
-      try {
-        const tx = await client?.getTransaction({ hash: searchInput });
-        if (tx) {
-          router.push(`/explore/transaction/${searchInput}`);
-          return;
-        }
-      } catch (error) {
-        console.error("Failed to fetch transaction:", error);
-      }
-    }
-
-    if (isAddress(searchInput)) {
-      router.push(`/explore/address/${searchInput}`);
-      return;
-    }
+    onSearch(searchInput);
   };
 
   return (

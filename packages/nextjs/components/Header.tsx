@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Bars3Icon, QrCodeIcon } from "@heroicons/react/24/outline";
@@ -67,6 +67,10 @@ const Header = () => {
   const burgerMenuRef = useRef<HTMLDetailsElement>(null);
   const [qrOpen, setQrOpen] = useState(false);
 
+  const handleQrClose = useCallback(() => {
+    setQrOpen(false);
+  }, []);
+
   useOutsideClick(burgerMenuRef, () => {
     burgerMenuRef?.current?.removeAttribute("open");
   });
@@ -113,7 +117,7 @@ const Header = () => {
         </details>
       </div>
 
-      <QrModal isOpen={qrOpen} onClose={() => setQrOpen(false)} />
+      <QrModal isOpen={qrOpen} onClose={handleQrClose} />
     </header>
   );
 };

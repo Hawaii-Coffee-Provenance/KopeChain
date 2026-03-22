@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import QrModal from "../components/QrModal";
 import ActivitySection from "../components/home/ActivitySection";
 import ChainSection from "../components/home/ChainSection";
@@ -11,9 +11,13 @@ import type { NextPage } from "next";
 const Home: NextPage = () => {
   const [qrOpen, setQrOpen] = useState(false);
 
+  const handleQrClose = useCallback(() => {
+    setQrOpen(false);
+  }, []);
+
   return (
     <div className="min-h-screen bg-base-200">
-      <QrModal isOpen={qrOpen} onClose={() => setQrOpen(false)} />
+      <QrModal isOpen={qrOpen} onClose={handleQrClose} />
       <section className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)]">
         <HeroSection onOpenQr={() => setQrOpen(true)} />
       </section>

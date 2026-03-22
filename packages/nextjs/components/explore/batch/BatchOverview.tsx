@@ -5,7 +5,7 @@ import { zeroAddress } from "viem";
 import BlockieAddressLink from "~~/components/explore/BlockieAddressLink";
 import { formatDate } from "~~/utils/coffee";
 
-const TransactionOverview = ({ batch }: { batch: any }) => {
+const BatchOverview = ({ batch }: { batch: any }) => {
   return (
     <>
       <div>
@@ -61,4 +61,4 @@ const TransactionOverview = ({ batch }: { batch: any }) => {
   );
 };
 
-export default TransactionOverview;
+export default BatchOverview;

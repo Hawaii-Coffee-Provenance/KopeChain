@@ -13,7 +13,7 @@ import {
   formatCoordinates,
 } from "~~/utils/coffee";
 
-const TransactionJourney = ({ batch }: { batch: any }) => {
+const BatchJourney = ({ batch }: { batch: any }) => {
   if (!batch) return <div className="text-base-content/50">No batch data available</div>;
 
   const hasProcessed = batch?.processor && batch.processor !== zeroAddress;
@@ -134,4 +134,4 @@ const TransactionJourney = ({ batch }: { batch: any }) => {
   );
 };
 
-export default TransactionJourney;
+export default BatchJourney;

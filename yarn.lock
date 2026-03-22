@@ -5442,7 +5442,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/qrcode@npm:~1.5.5":
+"@types/qrcode@npm:^1, @types/qrcode@npm:~1.5.5":
   version: 1.5.6
   resolution: "@types/qrcode@npm:1.5.6"
   dependencies:
@@ -11738,6 +11738,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"html5-qrcode@npm:^2.3.8":
+  version: 2.3.8
+  resolution: "html5-qrcode@npm:2.3.8"
+  checksum: 14b2bd6925c2b31670801a5eb2fe3b258cb4d1a764a52abbdc31d89e58c9a4db1949007448a2b322559fda259a2a1beb8d4def5fd635597a83a667bfaa13be2b
+  languageName: node
+  linkType: hard
+
 "http-cache-semantics@npm:^4.1.1, http-cache-semantics@npm:^4.2.0":
   version: 4.2.0
   resolution: "http-cache-semantics@npm:4.2.0"
@@ -16250,7 +16257,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"qrcode@npm:~1.5.4":
+"qrcode@npm:^1.5.4, qrcode@npm:~1.5.4":
   version: 1.5.4
   resolution: "qrcode@npm:1.5.4"
   dependencies:
@@ -17104,11 +17111,14 @@ __metadata:
   resolution: "se-2@workspace:."
   dependencies:
     "@tanstack/react-query": ^5.91.2
+    "@types/qrcode": ^1
     "@types/react-is": ^19
     framer-motion: ^12.36.0
+    html5-qrcode: ^2.3.8
     husky: ~9.1.6
     lint-staged: ~13.2.2
     maplibre-gl: ^5.20.0
+    qrcode: ^1.5.4
     react-is: ^19.2.4
     react-map-gl: ^8.1.0
     recharts: ^3.8.0

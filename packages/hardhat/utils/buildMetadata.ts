@@ -20,12 +20,20 @@ export const ROAST_LEVELS = ["Light", "Medium", "Dark", "Other"];
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
-// TODO: REPLACE
 const PLACEHOLDER_IMAGE_CID = "bafybeidw72h3yqxdx2rzd2sxolcexquoqgovpj6lnwhbvit75bouznbkd4";
 
-export function buildMetadata(data: (typeof defaultData)[0]): BatchMetadata {
+export type SeedStages = {
+  processed: boolean;
+  roasted: boolean;
+  distributed: boolean;
+  qrCID: string;
+};
+
+export function buildFullMetadata(data: (typeof defaultData)[0], stages: SeedStages): BatchMetadata {
   const h = data.harvestData;
   const p = data.processingData;
+  const r = data.roastingData;
+  const d = data.distributionData;
   const regionName = REGIONS[h.region] ?? "Other";
   const varietyName = VARIETIES[h.variety] ?? "Other";
 
@@ -33,7 +41,7 @@ export function buildMetadata(data: (typeof defaultData)[0]): BatchMetadata {
     name: `${regionName} ${varietyName} — ${data.batchNumber}`,
     description: `Single origin ${varietyName} harvested at ${h.elevation}m. Farm: ${h.farmName}.`,
     image: `ipfs://${PLACEHOLDER_IMAGE_CID}`,
-    external_url: `${APP_URL}/batch/${data.batchNumber}`,
+    external_url: `${APP_URL}/explore/batch/${data.batchNumber}`,
 
     attributes: [
       { trait_type: "Region", value: regionName },
@@ -58,8 +66,48 @@ export function buildMetadata(data: (typeof defaultData)[0]): BatchMetadata {
           longitude: h.location.longitude / 1e6,
         },
       },
+      ...(stages.processed && {
+        processing: {
+          processingMethod: PROCESSING_METHODS[p.processingMethod],
+          moistureContent: p.moistureContent,
+          scaScore: p.scaScore,
+          humidity: p.humidity,
+          dryTemperature: p.dryTemperature,
+          processingDate: p.processingDate,
+          beforeWeight: p.beforeWeight,
+          afterWeight: p.afterWeight,
+          location: { latitude: p.location.latitude / 1e6, longitude: p.location.longitude / 1e6 },
+        },
+      }),
+      ...(stages.roasted && {
+        roasting: {
+          roastingMethod: ROASTING_METHODS[r.roastingMethod],
+          roastLevel: ROAST_LEVELS[r.roastLevel],
+          cuppingNotes: r.cuppingNotes,
+          roastingDate: r.roastingDate,
+          transportTime: r.transportTime,
+          beforeWeight: r.beforeWeight,
+          afterWeight: r.afterWeight,
+          location: { latitude: r.location.latitude / 1e6, longitude: r.location.longitude / 1e6 },
+        },
+      }),
+      ...(stages.distributed && {
+        distribution: {
+          distributionDate: d.distributionDate,
+          bagCount: d.bagCount,
+          distributionWeight: d.distributionWeight,
+          destination: d.destination,
+          location: { latitude: d.location.latitude / 1e6, longitude: d.location.longitude / 1e6 },
+        },
+      }),
       images: {
-        nft: `ipfs://${PLACEHOLDER_IMAGE_CID}`,
+        nft: { cid: `ipfs://${PLACEHOLDER_IMAGE_CID}`, description: "Batch NFT Certificate" },
+        qrCode: { cid: `ipfs://${stages.qrCID}`, description: `Scan to view batch ${data.batchNumber}` },
+        gallery: [
+          { cid: `ipfs://${PLACEHOLDER_IMAGE_CID}`, description: "Image 1" },
+          { cid: `ipfs://${PLACEHOLDER_IMAGE_CID}`, description: "Image 2" },
+          { cid: `ipfs://${PLACEHOLDER_IMAGE_CID}`, description: "Image 3" },
+        ],
       },
     },
   };

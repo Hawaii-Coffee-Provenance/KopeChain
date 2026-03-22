@@ -1,6 +1,6 @@
-import type { DecodedTx } from "./TransactionData";
+import type { DecodedTx } from "./BatchData";
 
-const TransactionFunction = ({ tx }: { tx: DecodedTx }) => {
+const BatchFunction = ({ tx }: { tx: DecodedTx }) => {
   if (tx.functionName && tx.functionName !== "Unknown" && tx.functionName !== "0x") {
     return (
       <div className="flex flex-col overflow-hidden text-left">
@@ -40,4 +40,4 @@ const TransactionFunction = ({ tx }: { tx: DecodedTx }) => {
   );
 };
 
-export default TransactionFunction;
+export default BatchFunction;

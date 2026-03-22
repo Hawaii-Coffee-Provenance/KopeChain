@@ -53,8 +53,9 @@ export type BatchMetadata = {
       location: { latitude: number; longitude: number };
     };
     images: {
-      nft?: string;
-      qrCode?: string;
+      nft?: { cid: string; description: string };
+      qrCode: { cid: string; description: string };
+      gallery?: Array<{ cid: string; description: string }>;
     };
   };
 };
@@ -87,10 +88,16 @@ export async function pinJSON(
   return (await res.json()).IpfsHash;
 }
 
-export async function pinFile(buffer: Buffer, filename: string, contentType: string): Promise<string> {
+export async function pinFile(
+  buffer: Buffer,
+  filename: string,
+  contentType: string,
+  groupId?: string,
+): Promise<string> {
   const formData = new FormData();
   formData.append("file", new Blob([new Uint8Array(buffer)], { type: contentType }), filename);
   formData.append("pinataMetadata", JSON.stringify({ name: filename }));
+  formData.append("pinataOptions", JSON.stringify({ groupId: groupId ?? undefined }));
 
   const res = await fetch("https://api.pinata.cloud/pinning/pinFileToIPFS", {
     method: "POST",
@@ -103,8 +110,12 @@ export async function pinFile(buffer: Buffer, filename: string, contentType: str
 }
 
 export async function findExistingPin(batchNumber: string): Promise<string | null> {
+  const filter = JSON.stringify({
+    batchNumber: { value: batchNumber, op: "eq" },
+  });
+
   const res = await fetch(
-    `https://api.pinata.cloud/data/pinList?metadata[keyvalues][batchNumber]=${encodeURIComponent(batchNumber)}&status=pinned&pageLimit=10`,
+    `https://api.pinata.cloud/data/pinList?metadata[keyvalues]=${encodeURIComponent(filter)}&status=pinned&pageLimit=10`,
     { headers: { Authorization: `Bearer ${PINATA_JWT}` } },
   );
 
