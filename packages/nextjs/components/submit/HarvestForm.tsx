@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { FormFooter } from "./FormFooter";
-import { FormHeader } from "./FormHeader";
-import { MediaPreview } from "./MediaPreview";
-import { MediaUploader } from "./MediaUploader";
+import FormFooter from "./FormFooter";
+import FormHeader from "./FormHeader";
+import LocationInput from "./LocationInput";
+import MediaPreview from "./MediaPreview";
+import MediaUploader from "./MediaUploader";
 import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 import { useFormFields } from "~~/hooks/useFormFields";
 import { useMediaFiles } from "~~/hooks/useMediaFiles";
@@ -15,7 +16,7 @@ import { HARVEST_INITIAL_FORM } from "~~/utils/forms";
 import { getOrCreateGroup, pinJSON, pinQR, uploadGallery } from "~~/utils/pinata";
 import { notification } from "~~/utils/scaffold-eth";
 
-export const HarvestForm = () => {
+const HarvestForm = () => {
   const { form, updateField, resetForm: resetFormFields } = useFormFields(HARVEST_INITIAL_FORM);
   const { mediaFiles, addFiles, updateDescription, removeFile, resetFiles } = useMediaFiles();
   const [isUploading, setIsUploading] = useState(false);
@@ -136,7 +137,7 @@ export const HarvestForm = () => {
   const isDisabled = isMining || isUploading;
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-box border border-base-300 bg-base-100 shadow-sm">
+    <form onSubmit={handleSubmit} className="rounded-xl border border-base-300 bg-base-100 shadow-sm">
       <FormHeader title="Harvest Batch" description="Enter the initial coffee batch data." />
 
       <div className="px-6 py-6 sm:px-8 sm:py-8">
@@ -165,7 +166,7 @@ export const HarvestForm = () => {
 
           {/* Row 1, Col 3 — Spans 4 Rows (Last on mobile) */}
           <div className="order-last md:order-none md:col-start-3 md:row-start-1 md:row-span-4 relative">
-            <div className="md:absolute md:inset-0 flex flex-col gap-2 overflow-y-auto">
+            <div className="md:absolute md:inset-0 flex flex-col gap-2">
               <MediaUploader onAddFiles={addFiles} isDisabled={isDisabled} />
               <MediaPreview
                 mediaFiles={mediaFiles}
@@ -248,29 +249,12 @@ export const HarvestForm = () => {
           </label>
 
           {/* Row 4, Col 2 */}
-          <div className="flex flex-col gap-2">
-            <span className="text-label">Location (Lat/Long)</span>
-            <div className="grid grid-cols-2 gap-3">
-              <input
-                className="input input-bordered w-full text-sm h-10"
-                inputMode="decimal"
-                placeholder="19.527610"
-                step="0.000001"
-                type="number"
-                value={form.latitude}
-                onChange={e => updateField("latitude", e.target.value)}
-              />
-              <input
-                className="input input-bordered w-full text-sm h-10"
-                inputMode="decimal"
-                placeholder="-155.916630"
-                step="0.000001"
-                type="number"
-                value={form.longitude}
-                onChange={e => updateField("longitude", e.target.value)}
-              />
-            </div>
-          </div>
+          <LocationInput
+            latitude={form.latitude}
+            longitude={form.longitude}
+            onChange={updateField}
+            disabled={isDisabled}
+          />
         </div>
       </div>
 
@@ -284,3 +268,5 @@ export const HarvestForm = () => {
     </form>
   );
 };
+
+export default HarvestForm;

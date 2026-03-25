@@ -9,7 +9,7 @@ interface FormFooterProps {
   submitDisabled?: boolean;
 }
 
-export const FormFooter = ({
+const FormFooter = ({
   onReset,
   isUploading,
   isMining,
@@ -44,3 +44,5 @@ export const FormFooter = ({
     </div>
   );
 };
+
+export default FormFooter;

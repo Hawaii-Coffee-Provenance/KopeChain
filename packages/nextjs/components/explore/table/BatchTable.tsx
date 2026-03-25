@@ -18,7 +18,7 @@ const BatchTable = ({ batches, isLoading = false, txHashMap, pagination }: Batch
 
   return (
     <div className="w-full">
-      <div className="bg-base-100 border border-base-300 rounded-xl overflow-x-auto">
+      <div className="bg-base-100 border border-base-300 rounded-xl overflow-x-auto shadow-sm">
         <table className="table text-left">
           <thead>
             <tr>

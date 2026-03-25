@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { BatchSelect } from "./BatchSelect";
-import { FormFooter } from "./FormFooter";
-import { FormHeader } from "./FormHeader";
-import { MediaPreview } from "./MediaPreview";
-import { MediaUploader } from "./MediaUploader";
+import BatchSelect from "./BatchSelect";
+import FormFooter from "./FormFooter";
+import FormHeader from "./FormHeader";
+import LocationInput from "./LocationInput";
+import MediaPreview from "./MediaPreview";
+import MediaUploader from "./MediaUploader";
 import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 import { useFormFields } from "~~/hooks/useFormFields";
 import { useMediaFiles } from "~~/hooks/useMediaFiles";
@@ -15,7 +16,7 @@ import { DISTRIBUTE_INITIAL_FORM } from "~~/utils/forms";
 import { ensureQrCode, fetchMetadata, getOrCreateGroup, mergeGallery, pinJSON, uploadGallery } from "~~/utils/pinata";
 import { notification } from "~~/utils/scaffold-eth";
 
-export const DistributeForm = () => {
+const DistributeForm = () => {
   const { form, updateField, resetForm: resetFormFields } = useFormFields(DISTRIBUTE_INITIAL_FORM);
   const { mediaFiles, addFiles, updateDescription, removeFile, resetFiles } = useMediaFiles();
   const [isUploading, setIsUploading] = useState(false);
@@ -124,7 +125,7 @@ export const DistributeForm = () => {
   const isDisabled = isMining || isUploading;
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-box border border-base-300 bg-base-100 shadow-sm">
+    <form onSubmit={handleSubmit} className="rounded-xl border border-base-300 bg-base-100 shadow-sm">
       <FormHeader title="Distribute Batch" description="Enter the distribution data to finalize a batch." />
 
       <div className="px-6 py-6 sm:px-8 sm:py-8">
@@ -204,29 +205,14 @@ export const DistributeForm = () => {
           </label>
 
           {/* Row 3, Col 2 */}
-          <div className="flex flex-col gap-2">
-            <span className="text-label">Location (Lat/Long)</span>
-            <div className="grid grid-cols-2 gap-3">
-              <input
-                className="input input-bordered w-full text-sm h-10"
-                inputMode="decimal"
-                placeholder="19.641720"
-                step="0.000001"
-                type="number"
-                value={form.latitude}
-                onChange={e => updateField("latitude", e.target.value)}
-              />
-              <input
-                className="input input-bordered w-full text-sm h-10"
-                inputMode="decimal"
-                placeholder="-155.996480"
-                step="0.000001"
-                type="number"
-                value={form.longitude}
-                onChange={e => updateField("longitude", e.target.value)}
-              />
-            </div>
-          </div>
+          <LocationInput
+            latitude={form.latitude}
+            longitude={form.longitude}
+            onChange={updateField}
+            disabled={isDisabled}
+            latPlaceholder="19.641720"
+            longPlaceholder="-155.996480"
+          />
         </div>
       </div>
 
@@ -241,3 +227,5 @@ export const DistributeForm = () => {
     </form>
   );
 };
+
+export default DistributeForm;

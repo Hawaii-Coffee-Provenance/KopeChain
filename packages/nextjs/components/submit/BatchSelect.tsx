@@ -31,7 +31,7 @@ const STAGE_CONFIG = {
   },
 } as const;
 
-export const BatchSelect = ({ value, onSelect, requiredStage, isDisabled }: BatchSelectProps) => {
+const BatchSelect = ({ value, onSelect, requiredStage, isDisabled }: BatchSelectProps) => {
   const [debouncedValue] = useDebounceValue(value, 500);
   const isQueryEnabled = debouncedValue?.trim().length > 0;
 
@@ -93,3 +93,5 @@ export const BatchSelect = ({ value, onSelect, requiredStage, isDisabled }: Batc
     </div>
   );
 };
+
+export default BatchSelect;

@@ -109,7 +109,7 @@ const Header = () => {
             <Bars3Icon className="h-5 w-5" />
           </summary>
           <ul
-            className="dropdown-content menu p-2 mt-2 bg-base-100 border border-base-300 rounded-xl shadow-lg w-44 list-none"
+            className="dropdown-content menu p-2 mt-2 bg-base-100 border border-base-300 rounded-xl shadow-lg w-44 list-none gap-1"
             onClick={() => burgerMenuRef?.current?.removeAttribute("open")}
           >
             <HeaderMenuLinks />

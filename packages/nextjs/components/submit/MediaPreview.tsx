@@ -3,12 +3,7 @@
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import { MediaPreviewProps } from "~~/types/forms";
 
-export const MediaPreview = ({
-  mediaFiles,
-  onUpdateDescription,
-  onRemoveFile,
-  isDisabled = false,
-}: MediaPreviewProps) => {
+const MediaPreview = ({ mediaFiles, onUpdateDescription, onRemoveFile, isDisabled = false }: MediaPreviewProps) => {
   if (mediaFiles.length === 0) return null;
 
   return (
@@ -52,3 +47,5 @@ export const MediaPreview = ({
     </div>
   );
 };
+
+export default MediaPreview;

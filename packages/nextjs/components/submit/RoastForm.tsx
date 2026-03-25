@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { BatchSelect } from "./BatchSelect";
-import { FormFooter } from "./FormFooter";
-import { FormHeader } from "./FormHeader";
-import { MediaPreview } from "./MediaPreview";
-import { MediaUploader } from "./MediaUploader";
+import BatchSelect from "./BatchSelect";
+import FormFooter from "./FormFooter";
+import FormHeader from "./FormHeader";
+import LocationInput from "./LocationInput";
+import MediaPreview from "./MediaPreview";
+import MediaUploader from "./MediaUploader";
 import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 import { useFormFields } from "~~/hooks/useFormFields";
 import { useMediaFiles } from "~~/hooks/useMediaFiles";
@@ -15,7 +16,7 @@ import { ROAST_INITIAL_FORM } from "~~/utils/forms";
 import { ensureQrCode, fetchMetadata, getOrCreateGroup, mergeGallery, pinJSON, uploadGallery } from "~~/utils/pinata";
 import { notification } from "~~/utils/scaffold-eth";
 
-export const RoastForm = () => {
+const RoastForm = () => {
   const { form, updateField, resetForm: resetFormFields } = useFormFields(ROAST_INITIAL_FORM);
   const { mediaFiles, addFiles, updateDescription, removeFile, resetFiles } = useMediaFiles();
   const [isUploading, setIsUploading] = useState(false);
@@ -132,7 +133,7 @@ export const RoastForm = () => {
   const isDisabled = isMining || isUploading;
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-box border border-base-300 bg-base-100 shadow-sm">
+    <form onSubmit={handleSubmit} className="rounded-xl border border-base-300 bg-base-100 shadow-sm">
       <FormHeader title="Roast Batch" description="Enter the roasting data to update a batch." />
 
       <div className="px-6 py-6 sm:px-8 sm:py-8">
@@ -166,7 +167,7 @@ export const RoastForm = () => {
 
           {/* Row 1, Col 3 — Spans 5 Rows (Last on mobile) */}
           <div className="order-last md:order-none md:col-start-3 md:row-start-1 md:row-span-5 relative">
-            <div className="md:absolute md:inset-0 flex flex-col gap-2 overflow-y-auto">
+            <div className="md:absolute md:inset-0 flex flex-col gap-2">
               <MediaUploader onAddFiles={addFiles} isDisabled={isDisabled} />
               <MediaPreview
                 mediaFiles={mediaFiles}
@@ -258,29 +259,14 @@ export const RoastForm = () => {
           </label>
 
           {/* Row 5, Col 2 */}
-          <div className="flex flex-col gap-2">
-            <span className="text-label">Location (Lat/Long)</span>
-            <div className="grid grid-cols-2 gap-3">
-              <input
-                className="input input-bordered w-full text-sm h-10"
-                inputMode="decimal"
-                placeholder="19.636820"
-                step="0.000001"
-                type="number"
-                value={form.latitude}
-                onChange={e => updateField("latitude", e.target.value)}
-              />
-              <input
-                className="input input-bordered w-full text-sm h-10"
-                inputMode="decimal"
-                placeholder="-155.993450"
-                step="0.000001"
-                type="number"
-                value={form.longitude}
-                onChange={e => updateField("longitude", e.target.value)}
-              />
-            </div>
-          </div>
+          <LocationInput
+            latitude={form.latitude}
+            longitude={form.longitude}
+            onChange={updateField}
+            disabled={isDisabled}
+            latPlaceholder="19.636820"
+            longPlaceholder="-155.993450"
+          />
         </div>
       </div>
 
@@ -295,3 +281,5 @@ export const RoastForm = () => {
     </form>
   );
 };
+
+export default RoastForm;

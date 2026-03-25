@@ -61,38 +61,36 @@ const DataDashboard = () => {
   ];
 
   return (
-    <div className="overflow-x-auto mb-6">
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 min-h-[150px] gap-px bg-base-300 border border-base-300 rounded-xl overflow-hidden">
-        {statItems.map(({ label, value, sub, trend }) => (
-          <div key={label} className="ghost-surface p-7 transition-colors flex flex-col h-full gap-4">
-            {isLoading ? (
-              <>
-                <div className="shrink-0">
-                  <Skeleton className="h-4 w-16" />
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 min-h-[150px] gap-px bg-base-300 border border-base-300 rounded-xl overflow-hidden shadow-sm mb-6">
+      {statItems.map(({ label, value, sub, trend }) => (
+        <div key={label} className="card-surface p-7 transition-colors flex flex-col h-full gap-4">
+          {isLoading ? (
+            <>
+              <div className="shrink-0">
+                <Skeleton className="h-4 w-16" />
+              </div>
+              <div className="flex-1 flex flex-col justify-center">
+                <Skeleton className="h-10 w-20 mb-2" />
+                <Skeleton className="h-3 w-16" />
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="text-hint uppercase tracking-widest shrink-0">{label}</div>
+              <div className="flex-1 flex flex-col justify-center">
+                <div className="font-serif text-3xl xl:text-5xl font-light text-base-content leading-none mb-1">
+                  {value ?? "—"}
                 </div>
-                <div className="flex-1 flex flex-col justify-center">
-                  <Skeleton className="h-10 w-20 mb-2" />
-                  <Skeleton className="h-3 w-16" />
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="text-hint uppercase tracking-widest shrink-0">{label}</div>
-                <div className="flex-1 flex flex-col justify-center">
-                  <div className="font-serif text-3xl xl:text-5xl font-light text-base-content leading-none mb-1">
-                    {value ?? "—"}
-                  </div>
-                  <p
-                    className={`text-xs mt-2 ${trend === "up" ? "text-primary" : trend === "down" ? "text-accent" : "text-muted"}`}
-                  >
-                    {sub}
-                  </p>
-                </div>
-              </>
-            )}
-          </div>
-        ))}
-      </div>
+                <p
+                  className={`text-xs mt-2 ${trend === "up" ? "text-primary" : trend === "down" ? "text-accent" : "text-muted"}`}
+                >
+                  {sub}
+                </p>
+              </div>
+            </>
+          )}
+        </div>
+      ))}
     </div>
   );
 };

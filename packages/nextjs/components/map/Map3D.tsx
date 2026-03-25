@@ -122,7 +122,7 @@ const Map3D = ({
     setTimeout(() => {
       map.fitBounds(bounds.toArray() as [[number, number], [number, number]], {
         padding: { top: 100, bottom: 100, left: 100, right: 100 },
-        maxZoom: 25,
+        maxZoom: 15,
         duration: 1000,
       });
       hasFittedMap.current = true;

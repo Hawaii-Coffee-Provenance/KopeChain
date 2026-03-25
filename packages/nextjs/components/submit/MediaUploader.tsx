@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { ArrowUpTrayIcon } from "@heroicons/react/24/outline";
 import { MediaUploaderProps } from "~~/types/forms";
 
-export const MediaUploader = ({ onAddFiles, isDisabled = false }: MediaUploaderProps) => {
+const MediaUploader = ({ onAddFiles, isDisabled = false }: MediaUploaderProps) => {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -48,3 +48,5 @@ export const MediaUploader = ({ onAddFiles, isDisabled = false }: MediaUploaderP
     </div>
   );
 };
+
+export default MediaUploader;

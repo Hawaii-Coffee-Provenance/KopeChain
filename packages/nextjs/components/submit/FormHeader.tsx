@@ -5,7 +5,7 @@ interface FormHeaderProps {
   description: string;
 }
 
-export const FormHeader = ({ title, description }: FormHeaderProps) => {
+const FormHeader = ({ title, description }: FormHeaderProps) => {
   return (
     <div className="px-6 py-6 sm:px-8 border-b border-base-300">
       <h2 className="heading-card text-4xl mb-2">{title}</h2>
@@ -13,3 +13,5 @@ export const FormHeader = ({ title, description }: FormHeaderProps) => {
     </div>
   );
 };
+
+export default FormHeader;

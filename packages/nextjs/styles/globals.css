@@ -117,12 +117,12 @@
   @apply shadow-md;
 }
 
-.ghost-surface {
+.card-surface {
   background-color: var(--color-base-100);
   border-color: var(--color-base-300);
 }
 
-.ghost-surface:hover {
+.card-surface:hover {
   background-color: var(--color-base-200);
 }
 
@@ -140,6 +140,15 @@
 
 .btn.btn-ghost.btn-borderless:hover {
   border-color: var(--color-base-300);
+}
+
+.menu li > a:hover,
+.menu li > a:active,
+.menu li > a.active,
+.menu li > a:focus {
+  background-color: var(--color-base-200) !important;
+  color: var(--color-base-content) !important;
+  border-radius: 0.5rem !important;
 }
 
 .text-label {
