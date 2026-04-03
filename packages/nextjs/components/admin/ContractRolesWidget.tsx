@@ -2,14 +2,16 @@
 
 import { useState } from "react";
 import { useScaffoldReadContract } from "~~/hooks/scaffold-eth";
+import { truncateAddress } from "~~/utils/coffee";
 import { ContractName } from "~~/utils/scaffold-eth/contract";
 
-type AdminContractReadWidgetProps = {
+type ContractRolesProps = {
   contractName: ContractName;
 };
 
-export const AdminContractReadWidget = ({ contractName }: AdminContractReadWidgetProps) => {
+const ContractRolesWidget = ({ contractName }: ContractRolesProps) => {
   const [copied, setCopied] = useState<number | null>(null);
+  const [showCopiedText, setShowCopiedText] = useState<number | null>(null);
 
   const { data: defaultAdminRole, isLoading: isLoading1 } = useScaffoldReadContract({
     contractName,
@@ -44,14 +46,18 @@ export const AdminContractReadWidget = ({ contractName }: AdminContractReadWidge
     if (typeof window !== "undefined") {
       navigator.clipboard.writeText(value);
       setCopied(idx);
-      setTimeout(() => setCopied(null), 2000);
+      setShowCopiedText(idx);
+      setTimeout(() => {
+        setCopied(null);
+        setTimeout(() => setShowCopiedText(null), 500);
+      }, 2000);
     }
   };
 
   return (
-    <div className="flex flex-col gap-3 py-5 px-6 rounded-xl border border-base-300 bg-base-100 shadow-sm h-full max-h-full overflow-y-auto">
+    <div className="flex flex-col gap-3 py-5 px-6 rounded-xl border border-base-300 bg-base-100 shadow-sm">
       {isLoading ? (
-        <span className="loading loading-spinner text-primary mx-auto my-auto"></span>
+        <span className="loading loading-spinner text-primary mx-auto my-auto py-10"></span>
       ) : (
         <div className="flex flex-col gap-3">
           {dataList.map((item, idx) => {
@@ -60,17 +66,15 @@ export const AdminContractReadWidget = ({ contractName }: AdminContractReadWidge
             return (
               <div
                 key={idx}
-                className="flex flex-col gap-1 border-b border-base-300 pb-3 last:border-0 last:pb-0 overflow-hidden"
+                className="flex flex-col gap-1 border-b border-base-300 pb-3 last:border-0 last:pb-0 min-w-0"
               >
-                <span className="text-sm font-semibold">{item.label}</span>
+                <span className="text-label">{item.label}</span>
                 <div
-                  className="tooltip tooltip-top cursor-pointer max-w-full flex"
-                  data-tip={copied === idx ? "Copied!" : "Copy Address"}
+                  className={`tooltip tooltip-top cursor-pointer max-w-full flex w-fit ${copied === idx ? "tooltip-open" : ""}`}
+                  data-tip={showCopiedText === idx ? "Copied!" : "Copy Address"}
                   onClick={() => handleCopy(val, idx)}
                 >
-                  <span className="text-sm font-mono hover:text-primary transition-colors truncate">
-                    {val || "Loading..."}
-                  </span>
+                  <span className="font-sans text-md text-primary">{truncateAddress(val)}</span>
                 </div>
               </div>
             );
@@ -80,3 +84,5 @@ export const AdminContractReadWidget = ({ contractName }: AdminContractReadWidge
     </div>
   );
 };
+
+export default ContractRolesWidget;

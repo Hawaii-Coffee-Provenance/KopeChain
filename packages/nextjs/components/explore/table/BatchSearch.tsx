@@ -30,7 +30,7 @@ const BatchSearch = ({ onSearch, redirectToExplore = false, placeholder = "TX Ha
   };
 
   return (
-    <div className="flex w-full bg-base-100 border border-base-300 rounded-xl overflow-hidden focus-within:ring-1 focus-within:ring-primary transition-all">
+    <div className="flex w-full bg-base-100 border border-base-300 rounded-xl overflow-hidden focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
       <input
         type="text"
         value={value}

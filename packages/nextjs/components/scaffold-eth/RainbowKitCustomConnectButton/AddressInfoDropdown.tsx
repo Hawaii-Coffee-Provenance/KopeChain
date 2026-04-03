@@ -7,6 +7,7 @@ import { useDisconnect } from "wagmi";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { BlockieAvatar } from "~~/components/scaffold-eth";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
+import { truncateAddress } from "~~/utils/coffee";
 import { isENS } from "~~/utils/scaffold-eth/common";
 
 type AddressInfoDropdownProps = {
@@ -37,7 +38,7 @@ export const AddressInfoDropdown = ({ address, ensAvatar, displayName }: Address
             <BlockieAvatar address={checkSumAddress} size={20} ensImage={ensAvatar} />
           </div>
           <span className="ml-1 mr-1 hidden md:flex">
-            {isENS(displayName) ? displayName : checkSumAddress?.slice(0, 6) + "..." + checkSumAddress?.slice(-4)}
+            {isENS(displayName) ? displayName : truncateAddress(checkSumAddress)}
           </span>
           <ChevronDownIcon className="h-4 w-4 ml-1 sm:ml-0 transition-transform duration-200 group-open:rotate-180 hidden md:flex" />
         </summary>

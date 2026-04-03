@@ -80,7 +80,7 @@ const BatchSelect = ({ value, onSelect, requiredStage, isDisabled }: BatchSelect
           {status === "loading" ? (
             <span className="loading loading-spinner loading-sm text-base-content/50" />
           ) : (
-            <div className="tooltip tooltip-left tooltip-base" data-tip={message}>
+            <div className="tooltip tooltip-left" data-tip={message}>
               {status === "valid" ? (
                 <CheckIcon className="w-5 h-5 text-success" />
               ) : (

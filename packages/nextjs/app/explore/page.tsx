@@ -59,7 +59,7 @@ const ExplorePage: NextPage = () => {
   const { paginatedItems, currentPage, totalPages, pageSize, goToPage, setPageSize } = useBatchPagination(batches);
 
   return (
-    <div className="container mx-auto section-padding">
+    <div className="w-full flex flex-col section-padding">
       <DataDashboard />
       <ChartDashboard />
       <BatchFilterBar

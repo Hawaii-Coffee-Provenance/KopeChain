@@ -44,12 +44,19 @@ export const HeaderMenuLinks = () => {
   const { address } = useAccount();
   const { userRole } = useUserRole(address);
 
+  const allowedSubmitRoles = ["Admin", "Farmer", "Processor", "Roaster", "Distributor"];
+
   return (
     <>
       {menuLinks.map(({ label, href }) => {
         if (label === "Admin" && userRole !== "Admin") {
           return null;
         }
+
+        if (label === "Submit" && (!userRole || !allowedSubmitRoles.includes(userRole))) {
+          return null;
+        }
+
         const isActive = pathname === href;
         return (
           <li key={href}>

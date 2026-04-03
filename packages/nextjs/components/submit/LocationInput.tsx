@@ -133,7 +133,7 @@ const LocationInput = ({
                 {tmkStatus === "loading" ? (
                   <span className="loading loading-spinner loading-sm text-base-content/50" />
                 ) : (
-                  <div className="tooltip tooltip-left tooltip-base" data-tip={tmkMessage}>
+                  <div className="tooltip tooltip-left" data-tip={tmkMessage}>
                     {tmkStatus === "valid" ? (
                       <CheckIcon className="w-5 h-5 text-success" />
                     ) : (

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getAddress } from "viem";
 import { BlockieAvatar } from "~~/components/scaffold-eth";
+import { truncateAddress } from "~~/utils/coffee";
 
 type BlockieAddressLinkProps = {
   address: string;
@@ -9,20 +10,22 @@ type BlockieAddressLinkProps = {
 
 const BlockieAddressLink = ({ address, disableTruncation }: BlockieAddressLinkProps) => {
   const raw = getAddress(address);
-  const short = `${raw.substring(0, 6)}...${raw.substring(raw.length - 4)}`;
 
   return (
-    <Link href={`/explore/address/${raw}`} target="_blank" className="flex items-center gap-1.5 text-primary shrink-0">
+    <Link
+      href={`/explore/address/${raw}`}
+      target="_blank"
+      className="flex items-center gap-1.5 text-primary w-full min-w-0"
+    >
       <BlockieAvatar address={raw} ensImage={null} size={20} />
-
       <span className="font-sans text-md border-b border-transparent hover:border-primary pb-0.5 transition-colors">
         {disableTruncation ? (
           <>
-            <span className="sm:hidden">{short}</span>
+            <span className="sm:hidden">{truncateAddress(raw)}</span>
             <span className="hidden sm:inline">{raw}</span>
           </>
         ) : (
-          short
+          truncateAddress(raw)
         )}
       </span>
     </Link>

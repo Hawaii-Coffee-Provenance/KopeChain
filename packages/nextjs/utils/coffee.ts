@@ -38,6 +38,11 @@ export const formatCoordinates = (c?: Coordinates | null): string => {
 
 export const toUnixSeconds = (value: string) => Math.floor(new Date(`${value}T00:00:00`).getTime() / 1000);
 
+export const truncateAddress = (address: string) => {
+  if (!address) return "";
+  return `${address.slice(0, 6)}...${address.slice(-6)}`;
+};
+
 export const REGIONS: Record<number, string> = {
   0: "Kona",
   1: "Ka'ū",
