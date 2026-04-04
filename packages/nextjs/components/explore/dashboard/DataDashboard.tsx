@@ -63,7 +63,7 @@ const DataDashboard = () => {
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 min-h-[150px] gap-px bg-base-300 border border-base-300 rounded-xl overflow-hidden shadow-sm mb-6">
       {statItems.map(({ label, value, sub, trend }) => (
-        <div key={label} className="card-surface p-7 transition-colors flex flex-col h-full gap-4">
+        <div key={label} className="card-surface p-6 transition-colors flex flex-col h-full gap-4">
           {isLoading ? (
             <>
               <div className="shrink-0">

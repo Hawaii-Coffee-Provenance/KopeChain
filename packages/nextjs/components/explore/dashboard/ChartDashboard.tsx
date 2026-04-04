@@ -58,7 +58,7 @@ const PipelineCard = ({ stats, isLoading }: CardProps) => {
   const total = stats?.totalBatches ?? 0;
 
   return (
-    <div className="card-surface hover:!bg-base-100 p-7 flex flex-col gap-4 h-full">
+    <div className="card-surface hover:!bg-base-100 p-6 flex flex-col gap-4 h-full">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="text-label text-muted">Supply Chain Pipeline</div>
@@ -118,7 +118,7 @@ const RegionLegend = ({ stats, isLoading }: CardProps) => {
 
 const RegionCard = ({ stats, isLoading }: CardProps) => {
   return (
-    <div className="card-surface hover:!bg-base-100 p-7 flex flex-col gap-4 h-full">
+    <div className="card-surface hover:!bg-base-100 p-6 flex flex-col gap-4 h-full">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="text-label text-muted">Batches By Region</div>
@@ -146,7 +146,7 @@ const ScaLegend = ({ stats }: { stats: Stats | null }) => (
       { label: "Lowest", value: stats?.lowestSca ?? "—", cls: "text-accent" },
       { label: "Scored", value: stats?.scaBuckets?.reduce((s, b) => s + b.count, 0) ?? "—", cls: "text-primary" },
     ].map(({ label, value, cls }) => (
-      <div key={label} className="px-2 py-2.5 flex flex-col items-center gap-0.5">
+      <div key={label} className="p-2.5 flex flex-col items-center gap-0.5">
         <span className={`font-serif text-xl font-light leading-none ${cls}`}>{value}</span>
         <span className="text-xs font-medium tracking-wide uppercase text-muted">{label}</span>
       </div>
@@ -155,7 +155,7 @@ const ScaLegend = ({ stats }: { stats: Stats | null }) => (
 );
 
 const ScaCard = ({ stats, isLoading }: CardProps) => (
-  <div className="card-surface hover:!bg-base-100 p-7 flex flex-col gap-4 h-full">
+  <div className="card-surface hover:!bg-base-100 p-6 flex flex-col gap-4 h-full">
     {/* Header */}
     <div className="flex items-center justify-between">
       <div className="text-label text-muted">SCA Score Distribution</div>

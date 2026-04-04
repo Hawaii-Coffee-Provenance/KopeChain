@@ -30,10 +30,6 @@ export const menuLinks: HeaderMenuLink[] = [
     href: "/submit",
   },
   {
-    label: "Debug",
-    href: "/debug",
-  },
-  {
     label: "Admin",
     href: "/admin",
   },
@@ -64,7 +60,7 @@ export const HeaderMenuLinks = () => {
               href={href}
               passHref
               className={`
-                text-xs font-medium tracking-[0.1em] uppercase px-2 py-1.5 transition-colors 
+                text-xs font-medium tracking-[0.1em] uppercase p-2 transition-colors 
                   ${isActive ? "text-base-content" : "text-muted hover:text-base-content"}
               `}
             >
@@ -103,7 +99,7 @@ const Header = () => {
 
       <div className="flex items-center gap-2">
         <div className="flex items-center">
-          <span className="text-xs font-medium tracking-[0.1em] uppercase px-2 py-1.5 text-muted hidden md:inline">
+          <span className="text-xs font-medium tracking-[0.1em] uppercase p-2 text-muted hidden md:inline">
             Scan QR Code
           </span>
           <button

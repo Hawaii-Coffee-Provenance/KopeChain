@@ -23,7 +23,7 @@ const ContractFunctions = () => {
   const [userBatchesAddress, setUserBatchesAddress] = useState("");
 
   return (
-    <div className="h-auto lg:h-full rounded-xl border border-base-300 bg-base-100 px-5 py-5 shadow-sm overflow-y-auto min-w-0 pb-10">
+    <div className="h-auto lg:h-full rounded-xl border border-base-300 bg-base-100 p-6 shadow-sm overflow-y-auto min-w-0 pb-10">
       <FunctionSection title="Write Operations">
         <FunctionRow label="verifyBatch" result={results["verifyBatch"]}>
           <InputField

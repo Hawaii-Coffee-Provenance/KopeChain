@@ -3,8 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import BatchSelect from "./BatchSelect";
-import FormFooter from "./FormFooter";
-import FormHeader from "./FormHeader";
 import LocationInput from "./LocationInput";
 import MediaPreview from "./MediaPreview";
 import MediaUploader from "./MediaUploader";
@@ -126,13 +124,17 @@ const DistributeForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="rounded-xl border border-base-300 bg-base-100 shadow-sm">
-      <FormHeader title="Distribute Batch" description="Enter the distribution data to finalize a batch." />
+      {/* Header */}
+      <div className="p-6 border-b border-base-300">
+        <h2 className="heading-card text-4xl mb-2">Distribute Batch</h2>
+        <p className="text-muted text-sm m-0">Enter the distribution data to finalize a batch.</p>
+      </div>
 
-      <div className="px-6 py-6 sm:px-8 sm:py-8">
+      <div className="p-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 gap-x-6">
           {/* Row 1, Col 1 */}
-          <div className="form-control w-full">
-            <span className="text-label mb-2">Batch Number</span>
+          <div className="flex flex-col gap-2 w-full">
+            <span className="text-label">Batch Number</span>
             <BatchSelect
               value={form.batchNumber}
               onSelect={val => updateField("batchNumber", val)}
@@ -142,15 +144,15 @@ const DistributeForm = () => {
           </div>
 
           {/* Row 1, Col 2 */}
-          <label className="form-control w-full">
-            <span className="text-label mb-2">Destination</span>
+          <div className="flex flex-col gap-2 w-full">
+            <span className="text-label">Destination</span>
             <input
               className="input input-bordered w-full text-sm h-10"
               placeholder="Kailua-Kona Cafe"
               value={form.destination}
               onChange={e => updateField("destination", e.target.value)}
             />
-          </label>
+          </div>
 
           {/* Row 1, Col 3 — Spans 3 Rows (Last on mobile) */}
           <div className="order-last md:order-none md:col-start-3 md:row-start-1 md:row-span-3 relative">
@@ -166,8 +168,8 @@ const DistributeForm = () => {
           </div>
 
           {/* Row 2, Col 1 */}
-          <label className="form-control w-full">
-            <span className="text-label mb-2">Total Distribute Weight (kg)</span>
+          <div className="flex flex-col gap-2 w-full">
+            <span className="text-label">Total Distribute Weight (kg)</span>
             <input
               className="input input-bordered w-full text-sm h-10"
               inputMode="numeric"
@@ -177,22 +179,22 @@ const DistributeForm = () => {
               value={form.distributionWeight}
               onChange={e => updateField("distributionWeight", e.target.value)}
             />
-          </label>
+          </div>
 
           {/* Row 2, Col 2 */}
-          <label className="form-control w-full">
-            <span className="text-label mb-2">Distribution Date</span>
+          <div className="flex flex-col gap-2 w-full">
+            <span className="text-label">Distribution Date</span>
             <input
               className="input input-bordered w-full text-sm h-10"
               type="date"
               value={form.distributionDate}
               onChange={e => updateField("distributionDate", e.target.value)}
             />
-          </label>
+          </div>
 
           {/* Row 3, Col 1 */}
-          <label className="form-control w-full">
-            <span className="text-label mb-2">Bag Count</span>
+          <div className="flex flex-col gap-2 w-full">
+            <span className="text-label">Bag Count</span>
             <input
               className="input input-bordered w-full text-sm h-10"
               inputMode="numeric"
@@ -202,7 +204,7 @@ const DistributeForm = () => {
               value={form.bagCount}
               onChange={e => updateField("bagCount", e.target.value)}
             />
-          </label>
+          </div>
 
           {/* Row 3, Col 2 */}
           <LocationInput
@@ -216,14 +218,31 @@ const DistributeForm = () => {
         </div>
       </div>
 
-      <FormFooter
-        onReset={resetForm}
-        isUploading={isUploading}
-        isMining={isMining}
-        submitLabel="Distribute Batch"
-        disabled={isDisabled}
-        submitDisabled={!batchData || (batchData?.batchId ?? 0n) === 0n}
-      />
+      {/* Footer */}
+      <div className="flex items-center justify-between gap-4 flex-wrap border-t border-base-300 px-6 py-5 sm:px-8">
+        <p className="text-hint text-xs leading-relaxed">
+          Batch data and media are pinned to IPFS and linked to this batch on-chain for permanent transparency.
+        </p>
+
+        <div className="flex items-center gap-3 w-full sm:w-80">
+          <button
+            type="button"
+            className="btn btn-ghost border flex-1 text-base tracking-wide whitespace-nowrap"
+            onClick={resetForm}
+            disabled={isDisabled}
+          >
+            Reset
+          </button>
+
+          <button
+            type="submit"
+            className="btn btn-primary flex-1 text-base tracking-wide whitespace-nowrap"
+            disabled={isDisabled || !batchData || (batchData?.batchId ?? 0n) === 0n}
+          >
+            {isUploading ? "Uploading..." : isMining ? "Submitting..." : "Distribute Batch"}
+          </button>
+        </div>
+      </div>
     </form>
   );
 };

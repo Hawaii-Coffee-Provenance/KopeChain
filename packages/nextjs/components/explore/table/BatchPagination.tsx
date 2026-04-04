@@ -22,7 +22,7 @@ const BatchPagination = ({ currentPage, totalPages, totalItems, pageSize, goToPa
   return (
     <tfoot>
       <tr>
-        <td colSpan={12} className="px-5 py-3 border-t border-base-300">
+        <td colSpan={12} className="p-6 border-t border-base-300">
           <div className="flex items-center justify-between">
             <span className="text-muted">
               Showing {showing} of {totalItems} batches

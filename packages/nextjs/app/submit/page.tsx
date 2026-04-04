@@ -30,7 +30,7 @@ const SubmitPage: NextPage = () => {
         return <DistributeForm />;
       default:
         return (
-          <div className="rounded-xl border border-base-300 bg-base-100 px-6 py-10 shadow-sm text-center">
+          <div className="rounded-xl border border-base-300 bg-base-100 p-6 shadow-sm text-center">
             <h3 className="text-xl font-semibold mb-2">Insufficient Permissions</h3>
             <p className="text-muted">You do not have a supply chain role assigned to submit batches.</p>
           </div>

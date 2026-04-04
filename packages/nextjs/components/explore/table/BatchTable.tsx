@@ -23,7 +23,7 @@ const BatchTable = ({ batches, isLoading = false, txHashMap, pagination }: Batch
           <thead>
             <tr>
               {["TX", "ID", "Batch", "Region", "Stage", "Verified", "From", "Minted"].map(col => (
-                <th key={col} className="px-5 py-3 text-left text-col-header text-sm whitespace-nowrap bg-primary">
+                <th key={col} className="px-4 py-2 text-left text-col-header text-sm whitespace-nowrap bg-primary">
                   {col}
                 </th>
               ))}
@@ -35,7 +35,7 @@ const BatchTable = ({ batches, isLoading = false, txHashMap, pagination }: Batch
               <BatchSkeletonRows />
             ) : rows.length === 0 ? (
               <tr>
-                <td colSpan={8} className="px-5 py-12 text-center text-sm text-muted">
+                <td colSpan={8} className="p-42 text-center text-sm text-muted">
                   No batches found
                 </td>
               </tr>

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useDebounceValue } from "usehooks-ts";
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useTMK } from "~~/hooks/useTMK";
+import { notification } from "~~/utils/scaffold-eth";
 import { formatTMKInput, isLookupReady } from "~~/utils/tmk";
 
 interface LocationInputProps {
@@ -36,7 +37,7 @@ const LocationInput = ({
   useEffect(() => {
     if (!isLookupReady(debouncedTMK)) {
       setTmkStatus(debouncedTMK.length > 0 ? "invalid" : "none");
-      setTmkMessage(debouncedTMK.length > 0 ? "Need Island-Zone-Section-Plat-Parcel format" : "");
+      setTmkMessage(debouncedTMK.length > 0 ? "Need Island-Zone-Section-Plat-Parcel Format!" : "");
       return;
     }
 
@@ -52,10 +53,10 @@ const LocationInput = ({
         onChange("latitude", result.latitude.toFixed(6));
         onChange("longitude", result.longitude.toFixed(6));
         setTmkStatus("valid");
-        setTmkMessage("Location found");
+        setTmkMessage("Location Found!");
       } else {
         setTmkStatus("invalid");
-        setTmkMessage("No parcel found for that TMK");
+        setTmkMessage("No Parcel Found For That TMK!");
       }
     };
 
@@ -71,10 +72,25 @@ const LocationInput = ({
     setTmkStatus("none");
   };
 
+  const handleCurrentLocation = () => {
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        onChange("latitude", position.coords.latitude.toFixed(6));
+        onChange("longitude", position.coords.longitude.toFixed(6));
+        setMode("latlng");
+      },
+      error => {
+        notification.error("Failed to get current location: " + error.message);
+      },
+    );
+  };
+
   return (
     <div className="flex flex-col gap-2">
+      {/* Header + Switch Mode */}
       <div className="flex items-center justify-between">
         <span className="text-label">Location</span>
+
         <button
           type="button"
           className="cursor-pointer text-nav-link text-primary border-b border-transparent hover:border-primary transition-colors"
@@ -146,6 +162,18 @@ const LocationInput = ({
           </div>
         </div>
       )}
+
+      {/* Current Location Button */}
+      <div className="flex justify-end pr-1">
+        <button
+          type="button"
+          className="cursor-pointer text-nav-link text-primary border-b border-transparent hover:border-primary transition-colors"
+          onClick={handleCurrentLocation}
+          disabled={disabled}
+        >
+          Use Current Location
+        </button>
+      </div>
     </div>
   );
 };

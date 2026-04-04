@@ -13,7 +13,7 @@ const ChartTooltip = ({ active, label, value, labelColor, subtitle, subtitleClas
   if (!active) return null;
 
   return (
-    <div className="bg-base-100 border border-base-300 rounded-lg px-3 py-1 text-xs whitespace-nowrap shadow-sm pointer-events-none">
+    <div className="bg-base-100 border border-base-300 rounded-lg p-2 text-xs whitespace-nowrap shadow-sm pointer-events-none">
       <span className="font-semibold text-base-content" style={labelColor ? { color: labelColor } : undefined}>
         {label}
       </span>

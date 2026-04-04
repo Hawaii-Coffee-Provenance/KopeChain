@@ -38,7 +38,7 @@ const StatusDashboard = ({ userRole }: StatusDashboardProps) => {
   return (
     <div className="grid gap-4 lg:grid-cols-3">
       {statusItems.map(item => (
-        <div key={item.label} className="rounded-xl border border-base-300 bg-base-100 px-5 py-4 shadow-sm min-w-0">
+        <div key={item.label} className="rounded-xl border border-base-300 bg-base-100 p-4 shadow-sm min-w-0">
           <div className="text-label">{item.label}</div>
           <div className={`mt-2 text-xl font-medium ${item.tone}`}>{item.value}</div>
         </div>

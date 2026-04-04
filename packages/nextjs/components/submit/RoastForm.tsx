@@ -3,8 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import BatchSelect from "./BatchSelect";
-import FormFooter from "./FormFooter";
-import FormHeader from "./FormHeader";
 import LocationInput from "./LocationInput";
 import MediaPreview from "./MediaPreview";
 import MediaUploader from "./MediaUploader";
@@ -134,13 +132,17 @@ const RoastForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="rounded-xl border border-base-300 bg-base-100 shadow-sm">
-      <FormHeader title="Roast Batch" description="Enter the roasting data to update a batch." />
+      {/* Header */}
+      <div className="p-6 border-b border-base-300">
+        <h2 className="heading-card text-4xl mb-2">Roast Batch</h2>
+        <p className="text-muted text-sm m-0">Enter the roasting data to update a batch.</p>
+      </div>
 
-      <div className="px-6 py-6 sm:px-8 sm:py-8">
+      <div className="p-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 gap-x-6">
           {/* Row 1, Col 1 */}
-          <div className="form-control w-full">
-            <span className="text-label mb-2">Batch Number</span>
+          <div className="flex flex-col gap-2 w-full">
+            <span className="text-label">Batch Number</span>
             <BatchSelect
               value={form.batchNumber}
               onSelect={val => updateField("batchNumber", val)}
@@ -150,8 +152,8 @@ const RoastForm = () => {
           </div>
 
           {/* Row 1, Col 2 */}
-          <label className="form-control w-full">
-            <span className="text-label mb-2">Roasting Method</span>
+          <div className="flex flex-col gap-2 w-full">
+            <span className="text-label">Roasting Method</span>
             <select
               className="select select-bordered w-full text-sm h-10"
               value={form.roastingMethod}
@@ -163,7 +165,7 @@ const RoastForm = () => {
                 </option>
               ))}
             </select>
-          </label>
+          </div>
 
           {/* Row 1, Col 3 — Spans 5 Rows (Last on mobile) */}
           <div className="order-last md:order-none md:col-start-3 md:row-start-1 md:row-span-5 relative">
@@ -179,30 +181,30 @@ const RoastForm = () => {
           </div>
 
           {/* Row 2, Col 1 — Spans 2 Rows */}
-          <label className="form-control w-full md:row-span-2 flex flex-col h-full">
-            <span className="text-label mb-2">Cupping Notes</span>
+          <div className="flex flex-col gap-2 w-full md:row-span-2 h-full">
+            <span className="text-label">Cupping Notes</span>
             <textarea
               className="textarea textarea-bordered w-full text-sm resize-none flex-grow"
               placeholder="Milk chocolate, roasted macadamia nut, brown sugar, hints of tropical fruit"
               value={form.cuppingNotes}
               onChange={e => updateField("cuppingNotes", e.target.value)}
             />
-          </label>
+          </div>
 
           {/* Row 2, Col 2 */}
-          <label className="form-control w-full">
-            <span className="text-label mb-2">Roasting Date</span>
+          <div className="flex flex-col gap-2 w-full">
+            <span className="text-label">Roasting Date</span>
             <input
               className="input input-bordered w-full text-sm h-10"
               type="date"
               value={form.roastingDate}
               onChange={e => updateField("roastingDate", e.target.value)}
             />
-          </label>
+          </div>
 
           {/* Row 3, Col 2 */}
-          <label className="form-control w-full">
-            <span className="text-label mb-2">Roast Level</span>
+          <div className="flex flex-col gap-2 w-full">
+            <span className="text-label">Roast Level</span>
             <select
               className="select select-bordered w-full text-sm h-10"
               value={form.roastLevel}
@@ -214,11 +216,11 @@ const RoastForm = () => {
                 </option>
               ))}
             </select>
-          </label>
+          </div>
 
           {/* Row 4, Col 1 */}
-          <label className="form-control w-full">
-            <span className="text-label mb-2">Before Weight (kg)</span>
+          <div className="flex flex-col gap-2 w-full">
+            <span className="text-label">Before Weight (kg)</span>
             <input
               className="input input-bordered w-full text-sm h-10"
               inputMode="numeric"
@@ -228,11 +230,11 @@ const RoastForm = () => {
               value={form.beforeWeight}
               onChange={e => updateField("beforeWeight", e.target.value)}
             />
-          </label>
+          </div>
 
           {/* Row 4, Col 2 */}
-          <label className="form-control w-full">
-            <span className="text-label mb-2">Transport Time (days)</span>
+          <div className="flex flex-col gap-2 w-full">
+            <span className="text-label">Transport Time (days)</span>
             <input
               className="input input-bordered w-full text-sm h-10"
               inputMode="numeric"
@@ -242,11 +244,11 @@ const RoastForm = () => {
               value={form.transportTime}
               onChange={e => updateField("transportTime", e.target.value)}
             />
-          </label>
+          </div>
 
           {/* Row 5, Col 1 */}
-          <label className="form-control w-full">
-            <span className="text-label mb-2">After Weight (kg)</span>
+          <div className="flex flex-col gap-2 w-full">
+            <span className="text-label">After Weight (kg)</span>
             <input
               className="input input-bordered w-full text-sm h-10"
               inputMode="numeric"
@@ -256,7 +258,7 @@ const RoastForm = () => {
               value={form.afterWeight}
               onChange={e => updateField("afterWeight", e.target.value)}
             />
-          </label>
+          </div>
 
           {/* Row 5, Col 2 */}
           <LocationInput
@@ -270,14 +272,31 @@ const RoastForm = () => {
         </div>
       </div>
 
-      <FormFooter
-        onReset={resetForm}
-        isUploading={isUploading}
-        isMining={isMining}
-        submitLabel="Roast Batch"
-        disabled={isDisabled}
-        submitDisabled={!batchData || (batchData?.batchId ?? 0n) === 0n}
-      />
+      {/* Footer */}
+      <div className="flex items-center justify-between gap-4 flex-wrap border-t border-base-300 px-6 py-5 sm:px-8">
+        <p className="text-hint text-xs leading-relaxed">
+          Batch data and media are pinned to IPFS and linked to this batch on-chain for permanent transparency.
+        </p>
+
+        <div className="flex items-center gap-3 w-full sm:w-80">
+          <button
+            type="button"
+            className="btn btn-ghost border flex-1 text-base tracking-wide whitespace-nowrap"
+            onClick={resetForm}
+            disabled={isDisabled}
+          >
+            Reset
+          </button>
+
+          <button
+            type="submit"
+            className="btn btn-primary flex-1 text-base tracking-wide whitespace-nowrap"
+            disabled={isDisabled || !batchData || (batchData?.batchId ?? 0n) === 0n}
+          >
+            {isUploading ? "Uploading..." : isMining ? "Submitting..." : "Roast Batch"}
+          </button>
+        </div>
+      </div>
     </form>
   );
 };

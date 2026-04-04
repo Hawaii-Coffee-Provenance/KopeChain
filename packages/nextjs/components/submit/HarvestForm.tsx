@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import FormFooter from "./FormFooter";
-import FormHeader from "./FormHeader";
 import LocationInput from "./LocationInput";
 import MediaPreview from "./MediaPreview";
 import MediaUploader from "./MediaUploader";
@@ -138,31 +136,35 @@ const HarvestForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="rounded-xl border border-base-300 bg-base-100 shadow-sm">
-      <FormHeader title="Harvest Batch" description="Enter the initial coffee batch data." />
+      {/* Header */}
+      <div className="p-6 border-b border-base-300">
+        <h2 className="heading-card text-4xl mb-2">Harvest Batch</h2>
+        <p className="text-muted text-sm m-0">Enter the initial coffee batch data.</p>
+      </div>
 
-      <div className="px-6 py-6 sm:px-8 sm:py-8">
+      <div className="p-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 gap-x-6">
           {/* Row 1, Col 1 */}
-          <label className="form-control w-full">
-            <span className="text-label mb-2">Batch Number</span>
+          <div className="flex flex-col gap-2 w-full">
+            <span className="text-label">Batch Number</span>
             <input
               className="input input-bordered w-full text-sm h-10"
               placeholder="KONA-2026-201"
               value={form.batchNumber}
               onChange={e => updateField("batchNumber", e.target.value)}
             />
-          </label>
+          </div>
 
           {/* Row 1, Col 2 */}
-          <label className="form-control w-full">
-            <span className="text-label mb-2">Farm Name</span>
+          <div className="flex flex-col gap-2 w-full">
+            <span className="text-label">Farm Name</span>
             <input
               className="input input-bordered w-full text-sm h-10"
               placeholder="Holualoa Kona Coffee Co"
               value={form.farmName}
               onChange={e => updateField("farmName", e.target.value)}
             />
-          </label>
+          </div>
 
           {/* Row 1, Col 3 — Spans 4 Rows (Last on mobile) */}
           <div className="order-last md:order-none md:col-start-3 md:row-start-1 md:row-span-4 relative">
@@ -178,8 +180,8 @@ const HarvestForm = () => {
           </div>
 
           {/* Row 2, Col 1 */}
-          <label className="form-control w-full">
-            <span className="text-label mb-2">Variety</span>
+          <div className="flex flex-col gap-2 w-full">
+            <span className="text-label">Variety</span>
             <select
               className="select select-bordered w-full text-sm h-10"
               value={form.variety}
@@ -191,11 +193,11 @@ const HarvestForm = () => {
                 </option>
               ))}
             </select>
-          </label>
+          </div>
 
           {/* Row 2, Col 2 */}
-          <label className="form-control w-full">
-            <span className="text-label mb-2">Region</span>
+          <div className="flex flex-col gap-2 w-full">
+            <span className="text-label">Region</span>
             <select
               className="select select-bordered w-full text-sm h-10"
               value={form.region}
@@ -207,22 +209,22 @@ const HarvestForm = () => {
                 </option>
               ))}
             </select>
-          </label>
+          </div>
 
           {/* Row 3, Col 1 */}
-          <label className="form-control w-full">
-            <span className="text-label mb-2">Harvest Date</span>
+          <div className="flex flex-col gap-2 w-full">
+            <span className="text-label">Harvest Date</span>
             <input
               className="input input-bordered w-full text-sm h-10"
               type="date"
               value={form.harvestDate}
               onChange={e => updateField("harvestDate", e.target.value)}
             />
-          </label>
+          </div>
 
           {/* Row 3, Col 2 */}
-          <label className="form-control w-full">
-            <span className="text-label mb-2">Harvest Weight (kg)</span>
+          <div className="flex flex-col gap-2 w-full">
+            <span className="text-label">Harvest Weight (kg)</span>
             <input
               className="input input-bordered w-full text-sm h-10"
               inputMode="numeric"
@@ -232,11 +234,11 @@ const HarvestForm = () => {
               value={form.harvestWeight}
               onChange={e => updateField("harvestWeight", e.target.value)}
             />
-          </label>
+          </div>
 
           {/* Row 4, Col 1 */}
-          <label className="form-control w-full">
-            <span className="text-label mb-2">Elevation (m)</span>
+          <div className="flex flex-col gap-2 w-full">
+            <span className="text-label">Elevation (m)</span>
             <input
               className="input input-bordered w-full text-sm h-10"
               inputMode="numeric"
@@ -246,7 +248,7 @@ const HarvestForm = () => {
               value={form.elevation}
               onChange={e => updateField("elevation", e.target.value)}
             />
-          </label>
+          </div>
 
           {/* Row 4, Col 2 */}
           <LocationInput
@@ -258,13 +260,31 @@ const HarvestForm = () => {
         </div>
       </div>
 
-      <FormFooter
-        onReset={resetForm}
-        isUploading={isUploading}
-        isMining={isMining}
-        submitLabel="Submit Batch"
-        disabled={isDisabled}
-      />
+      {/* Footer */}
+      <div className="flex items-center justify-between gap-4 flex-wrap border-t border-base-300 p-6">
+        <p className="text-hint text-xs leading-relaxed">
+          Batch data and media are pinned to IPFS and linked to this batch on-chain for permanent transparency.
+        </p>
+
+        <div className="flex items-center gap-3 w-full sm:w-80">
+          <button
+            type="button"
+            className="btn btn-ghost border flex-1 text-base tracking-wide whitespace-nowrap"
+            onClick={resetForm}
+            disabled={isDisabled}
+          >
+            Reset
+          </button>
+
+          <button
+            type="submit"
+            className="btn btn-primary flex-1 text-base tracking-wide whitespace-nowrap"
+            disabled={isDisabled}
+          >
+            {isUploading ? "Uploading..." : isMining ? "Submitting..." : "Submit Batch"}
+          </button>
+        </div>
+      </div>
     </form>
   );
 };

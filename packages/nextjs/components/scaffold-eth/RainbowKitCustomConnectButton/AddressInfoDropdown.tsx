@@ -33,7 +33,7 @@ export const AddressInfoDropdown = ({ address, ensAvatar, displayName }: Address
   return (
     <>
       <details ref={dropdownRef} className="dropdown dropdown-end leading-3 group">
-        <summary className="btn bg-primary text-primary-content border-none btn-sm px-2 py-1 shadow-md dropdown-toggle gap-2 h-auto! font-sans text-xs font-medium tracking-[0.1em] uppercase">
+        <summary className="btn bg-primary text-primary-content border-none btn-sm p-2 shadow-md dropdown-toggle gap-2 h-auto! font-sans text-xs font-medium tracking-[0.1em] uppercase">
           <div className="bg-white/20 p-[2px] rounded-full">
             <BlockieAvatar address={checkSumAddress} size={20} ensImage={ensAvatar} />
           </div>

@@ -25,7 +25,7 @@ const BatchPageClient = ({ batchNumber }: BatchPageClientProps) => {
 
   return (
     <div className="w-full min-h-[calc(100vh-4rem)] lg:h-[calc(100vh-4rem)] flex flex-col lg:flex-row">
-      <div className="w-full lg:w-1/3 flex flex-col px-10 py-10 gap-10 lg:h-full order-2 lg:order-1">
+      <div className="w-full lg:w-1/3 flex flex-col p-10 gap-10 lg:h-full order-2 lg:order-1">
         <div className="flex-1 rounded-3xl bg-base-100 border border-base-300 min-h-[350px] aspect-square lg:aspect-auto relative overflow-hidden shadow-sm">
           {isDataLoading ? (
             <Skeleton className="absolute inset-0 w-full h-full rounded-3xl" />
@@ -54,7 +54,7 @@ const BatchPageClient = ({ batchNumber }: BatchPageClientProps) => {
       </div>
 
       <div
-        className="w-full lg:w-2/3 flex flex-col px-10 py-10 lg:h-full min-h-[700px] lg:min-h-0 order-1 lg:order-2"
+        className="w-full lg:w-2/3 flex flex-col p-10 lg:h-full min-h-[700px] lg:min-h-0 order-1 lg:order-2"
         style={{ scrollbarWidth: "none" }}
       >
         {isDataLoading ? (
