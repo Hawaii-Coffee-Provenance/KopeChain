@@ -31,7 +31,7 @@ const SubmitPage: NextPage = () => {
       default:
         return (
           <div className="rounded-xl border border-base-300 bg-base-100 p-6 shadow-sm text-center">
-            <h3 className="text-xl font-semibold mb-2">Insufficient Permissions</h3>
+            <h3 className="text-xl font-semibold mb-2">Insufficient Permissions!</h3>
             <p className="text-muted">You do not have a supply chain role assigned to submit batches.</p>
           </div>
         );

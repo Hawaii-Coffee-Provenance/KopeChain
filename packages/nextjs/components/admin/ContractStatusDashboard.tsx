@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { formatEther } from "viem";
-import { useBalance } from "wagmi";
+import { useAccount, useBalance } from "wagmi";
 import { useDeployedContractInfo, useSelectedNetwork } from "~~/hooks/scaffold-eth";
 import { truncateAddress } from "~~/utils/coffee";
 import { ContractName } from "~~/utils/scaffold-eth/contract";
@@ -14,6 +14,8 @@ const ContractStatusDashboard = () => {
   const primaryContractName = contractNames[0];
 
   const targetNetwork = useSelectedNetwork();
+  const { chain } = useAccount();
+  const isCorrectNetwork = chain?.id === targetNetwork.id;
   const { data: deployedContractInfo } = useDeployedContractInfo({ contractName: primaryContractName });
 
   const { data: balanceData } = useBalance({
@@ -40,20 +42,17 @@ const ContractStatusDashboard = () => {
       },
       {
         label: "Network",
-        value: targetNetwork.name,
-        tone: "text-primary",
+        value: chain?.name ?? "Disconnected",
+        tone: isCorrectNetwork ? "text-primary" : "text-accent",
       },
     ],
-    [deployedContractInfo, contractAddress, formattedBalance, targetNetwork.name, primaryContractName],
+    [deployedContractInfo, contractAddress, formattedBalance, chain?.name, isCorrectNetwork, primaryContractName],
   );
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+    <div className="grid gap-4 lg:grid-cols-3 mb-4">
       {stats.map(item => (
-        <div
-          key={item.label}
-          className="rounded-xl border border-base-300 bg-base-100 px-5 py-4 shadow-sm flex flex-col min-w-0"
-        >
+        <div key={item.label} className="rounded-xl border border-base-300 bg-base-100 p-4 shadow-sm min-w-0">
           <div className="text-label">{item.label}</div>
           <div className={`mt-2 text-xl font-medium ${item.tone}`}>{item.value}</div>
         </div>

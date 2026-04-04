@@ -1,20 +1,26 @@
 "use client";
 
-import { useState } from "react";
-import { InputField, RoleDropdown, SubmitButton } from "./contract/FunctionInputs";
-import { FunctionRow, FunctionSection } from "./contract/FunctionRow";
-import { useContractFunctions } from "~~/hooks/useContractFunctions";
-import { ROLES } from "~~/utils/admin";
+import { useEffect, useState } from "react";
+import {
+  AdminInputField,
+  AdminNoArguments,
+  AdminRoleDropdown,
+  AdminSubmitButton,
+} from "./functions/AdminFunctionInputs";
+import { AdminFunctionDisplay, AdminFunctionSection } from "./functions/AdminFunctions";
+import { useContractFunctions, useContractRoles } from "~~/hooks/useAdminPanel";
+import { AdminContractProps } from "~~/types/admin";
 
-const ContractFunctions = () => {
-  const { results, handleWrite, handleRead, isMining } = useContractFunctions();
+const ContractFunctions = ({ contractName }: AdminContractProps) => {
+  const { results, handleWrite, handleRead, isMining } = useContractFunctions(contractName);
+  const { roles } = useContractRoles(contractName);
 
   const [verifyBatchId, setVerifyBatchId] = useState("");
   const [updateBatchId, setUpdateBatchId] = useState("");
   const [updateCid, setUpdateCid] = useState("");
-  const [grantRoleHash, setGrantRoleHash] = useState(ROLES[0].value);
+  const [grantRoleHash, setGrantRoleHash] = useState("");
   const [grantAddress, setGrantAddress] = useState("");
-  const [revokeRoleHash, setRevokeRoleHash] = useState(ROLES[0].value);
+  const [revokeRoleHash, setRevokeRoleHash] = useState("");
   const [revokeAddress, setRevokeAddress] = useState("");
 
   const [roleAddress, setRoleAddress] = useState("");
@@ -22,18 +28,30 @@ const ContractFunctions = () => {
   const [batchNum, setBatchNum] = useState("");
   const [userBatchesAddress, setUserBatchesAddress] = useState("");
 
+  /* Set role hash defaults on load */
+  useEffect(() => {
+    if (roles && roles.length > 0 && !grantRoleHash) {
+      const defaultVal = roles[0].value?.toString() || "";
+      setGrantRoleHash(defaultVal);
+      setRevokeRoleHash(defaultVal);
+    }
+  }, [roles, grantRoleHash]);
+
   return (
     <div className="h-auto lg:h-full rounded-xl border border-base-300 bg-base-100 p-6 shadow-sm overflow-y-auto min-w-0 pb-10">
-      <FunctionSection title="Write Operations">
-        <FunctionRow label="verifyBatch" result={results["verifyBatch"]}>
-          <InputField
+      {/* Write Functions */}
+      <AdminFunctionSection title="Write Operations">
+        {/* Verify Batch */}
+        <AdminFunctionDisplay label="verifyBatch" result={results["verifyBatch"]}>
+          <AdminInputField
             value={verifyBatchId}
             onChange={setVerifyBatchId}
             placeholder="Batch ID (uint256)"
             type="text"
             inputMode="numeric"
           />
-          <SubmitButton
+
+          <AdminSubmitButton
             label="Write"
             isWrite
             disabled={isMining || !verifyBatchId}
@@ -42,22 +60,25 @@ const ContractFunctions = () => {
                 "verifyBatch",
                 "verifyBatch",
                 [BigInt(verifyBatchId)],
-                `Batch ${verifyBatchId} was successfully verified.`,
+                `Batch ${verifyBatchId} was successfully verified!`,
               )
             }
           />
-        </FunctionRow>
+        </AdminFunctionDisplay>
 
-        <FunctionRow label="updateMetadataCID" result={results["updateMetadataCID"]}>
-          <InputField
+        {/* Update Metadata CID */}
+        <AdminFunctionDisplay label="updateMetadataCID" result={results["updateMetadataCID"]}>
+          <AdminInputField
             value={updateBatchId}
             onChange={setUpdateBatchId}
             placeholder="Batch ID (uint256)"
             type="text"
             inputMode="numeric"
           />
-          <InputField value={updateCid} onChange={setUpdateCid} placeholder="New Metadata CID (string)" />
-          <SubmitButton
+
+          <AdminInputField value={updateCid} onChange={setUpdateCid} placeholder="Metadata CID (string)" />
+
+          <AdminSubmitButton
             label="Write"
             isWrite
             disabled={isMining || !updateBatchId || !updateCid}
@@ -66,96 +87,121 @@ const ContractFunctions = () => {
                 "updateMetadataCID",
                 "updateMetadataCID",
                 [BigInt(updateBatchId), updateCid],
-                `Metadata CID updated for batch ${updateBatchId}.`,
+                `Metadata CID updated for batch ${updateBatchId}!`,
               )
             }
           />
-        </FunctionRow>
+        </AdminFunctionDisplay>
 
-        <FunctionRow label="grantRole" result={results["grantRole"]}>
-          <RoleDropdown value={grantRoleHash} onChange={setGrantRoleHash} />
-          <InputField value={grantAddress} onChange={setGrantAddress} placeholder="Target Address (address)" />
-          <SubmitButton
+        {/* Grant Role */}
+        <AdminFunctionDisplay label="grantRole" result={results["grantRole"]}>
+          <AdminRoleDropdown value={grantRoleHash} onChange={setGrantRoleHash} options={roles} />
+
+          <AdminInputField value={grantAddress} onChange={setGrantAddress} placeholder="Target Address (address)" />
+
+          <AdminSubmitButton
             label="Write"
             isWrite
             disabled={isMining || !grantAddress}
             onClick={() =>
-              handleWrite("grantRole", "grantRole", [grantRoleHash, grantAddress], `Successfully granted role.`)
+              handleWrite("grantRole", "grantRole", [grantRoleHash, grantAddress], `Successfully granted role!`)
             }
           />
-        </FunctionRow>
+        </AdminFunctionDisplay>
 
-        <FunctionRow label="revokeRole" result={results["revokeRole"]}>
-          <RoleDropdown value={revokeRoleHash} onChange={setRevokeRoleHash} />
-          <InputField value={revokeAddress} onChange={setRevokeAddress} placeholder="Target Address (address)" />
-          <SubmitButton
+        {/* Revoke Role */}
+        <AdminFunctionDisplay label="revokeRole" result={results["revokeRole"]}>
+          <AdminRoleDropdown value={revokeRoleHash} onChange={setRevokeRoleHash} options={roles} />
+
+          <AdminInputField value={revokeAddress} onChange={setRevokeAddress} placeholder="Target Address (address)" />
+
+          <AdminSubmitButton
             label="Write"
             isWrite
             disabled={isMining || !revokeAddress}
             onClick={() =>
-              handleWrite("revokeRole", "revokeRole", [revokeRoleHash, revokeAddress], `Successfully revoked role.`)
+              handleWrite("revokeRole", "revokeRole", [revokeRoleHash, revokeAddress], `Successfully revoked role!`)
             }
           />
-        </FunctionRow>
-      </FunctionSection>
+        </AdminFunctionDisplay>
+      </AdminFunctionSection>
 
-      {/* --- READ FUNCTIONS --- */}
-      <FunctionSection title="Read Operations">
-        <FunctionRow label="getTransactionCount" result={results["getTransactionCount"]}>
-          <div className="flex-1 bg-base-200/50 px-3 py-2 text-sm text-base-content/60 italic grid place-items-center justify-start border-r border-base-300">
-            No arguments required
-          </div>
-          <SubmitButton label="Read" onClick={() => handleRead("getTransactionCount")} />
-        </FunctionRow>
+      {/* Read Functions */}
+      <AdminFunctionSection title="Read Operations">
+        {/* Get Transaction Count */}
+        <AdminFunctionDisplay label="getTransactionCount" result={results["getTransactionCount"]}>
+          <AdminNoArguments />
 
-        <FunctionRow label="getBatchCount" result={results["getBatchCount"]}>
-          <div className="flex-1 bg-base-200/50 px-3 py-2 text-sm text-base-content/60 italic grid place-items-center justify-start border-r border-base-300">
-            No arguments required
-          </div>
-          <SubmitButton label="Read" onClick={() => handleRead("getBatchCount")} />
-        </FunctionRow>
+          <AdminSubmitButton label="Read" onClick={() => handleRead("getTransactionCount")} />
+        </AdminFunctionDisplay>
 
-        <FunctionRow label="getFarmCount" result={results["getFarmCount"]}>
-          <div className="flex-1 bg-base-200/50 px-3 py-2 text-sm text-base-content/60 italic grid place-items-center justify-start border-r border-base-300">
-            No arguments required
-          </div>
-          <SubmitButton label="Read" onClick={() => handleRead("getFarmCount")} />
-        </FunctionRow>
+        {/* Get Batch Count */}
+        <AdminFunctionDisplay label="getBatchCount" result={results["getBatchCount"]}>
+          <AdminNoArguments />
 
-        <FunctionRow label="getRole" result={results["getRole"]}>
-          <InputField value={roleAddress} onChange={setRoleAddress} placeholder="Address (address)" />
-          <SubmitButton label="Read" disabled={!roleAddress} onClick={() => handleRead("getRole", [roleAddress])} />
-        </FunctionRow>
+          <AdminSubmitButton label="Read" onClick={() => handleRead("getBatchCount")} />
+        </AdminFunctionDisplay>
 
-        <FunctionRow label="getBatch" result={results["getBatch"]}>
-          <InputField
+        {/* Get Farm Count */}
+        <AdminFunctionDisplay label="getFarmCount" result={results["getFarmCount"]}>
+          <AdminNoArguments />
+
+          <AdminSubmitButton label="Read" onClick={() => handleRead("getFarmCount")} />
+        </AdminFunctionDisplay>
+
+        {/* Get Role */}
+        <AdminFunctionDisplay label="getRole" result={results["getRole"]}>
+          <AdminInputField value={roleAddress} onChange={setRoleAddress} placeholder="Address (address)" />
+
+          <AdminSubmitButton
+            label="Read"
+            disabled={!roleAddress}
+            onClick={() => handleRead("getRole", [roleAddress])}
+          />
+        </AdminFunctionDisplay>
+
+        {/* Get Batch by ID */}
+        <AdminFunctionDisplay label="getBatch" result={results["getBatch"]}>
+          <AdminInputField
             value={batchId}
             onChange={setBatchId}
             placeholder="Batch ID (uint256)"
             type="text"
             inputMode="numeric"
           />
-          <SubmitButton
+
+          <AdminSubmitButton
             label="Read"
             disabled={!batchId}
             onClick={() => handleRead("getBatch", [BigInt(batchId || 0)])}
           />
-        </FunctionRow>
+        </AdminFunctionDisplay>
 
-        <FunctionRow label="getBatchByNumber" result={results["getBatchByNumber"]}>
-          <InputField value={batchNum} onChange={setBatchNum} placeholder="Batch Number (string: e.g. KONA-2026-01)" />
-          <SubmitButton label="Read" disabled={!batchNum} onClick={() => handleRead("getBatchByNumber", [batchNum])} />
-        </FunctionRow>
+        {/* Get Batch by Number */}
+        <AdminFunctionDisplay label="getBatchByNumber" result={results["getBatchByNumber"]}>
+          <AdminInputField value={batchNum} onChange={setBatchNum} placeholder="Batch Number (string)" />
 
-        <FunctionRow label="getUserBatches" result={results["getUserBatches"]}>
-          <InputField value={userBatchesAddress} onChange={setUserBatchesAddress} placeholder="Address (address)" />
-          <SubmitButton
+          <AdminSubmitButton
+            label="Read"
+            disabled={!batchNum}
+            onClick={() => handleRead("getBatchByNumber", [batchNum])}
+          />
+        </AdminFunctionDisplay>
+
+        {/* Get User Batches */}
+        <AdminFunctionDisplay label="getUserBatches" result={results["getUserBatches"]}>
+          <AdminInputField
+            value={userBatchesAddress}
+            onChange={setUserBatchesAddress}
+            placeholder="Address (address)"
+          />
+          <AdminSubmitButton
             label="Read"
             disabled={!userBatchesAddress}
             onClick={() => handleRead("getUserBatches", [userBatchesAddress])}
           />
-        </FunctionRow>
-      </FunctionSection>
+        </AdminFunctionDisplay>
+      </AdminFunctionSection>
     </div>
   );
 };

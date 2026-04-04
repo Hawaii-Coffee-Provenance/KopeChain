@@ -15,17 +15,18 @@ const AdminPage: NextPage = () => {
 
   return (
     <RoleClient allowedRoles={["Admin"]}>
-      <div className="w-full min-h-[calc(100vh-4rem)] lg:h-[calc(100vh-4rem)] bg-base-200 overflow-y-auto lg:overflow-hidden">
+      <div className="w-full min-h-[calc(100vh-4rem)] lg:h-[calc(100vh-4rem)] bg-base-200">
         <section className="max-w-7xl mx-auto h-full flex flex-col section-padding">
           <ContractStatusDashboard />
 
+          {/* Role and Functions Widgets */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 flex-1 min-h-0 min-w-0 pb-10 lg:pb-0">
             <div className="lg:col-span-1 h-fit min-w-0">
               {primaryContractName ? <ContractRolesWidget contractName={primaryContractName} /> : null}
             </div>
 
             <div className="lg:col-span-2 h-auto lg:h-full min-h-0 min-w-0 lg:overflow-hidden">
-              <ContractFunctions />
+              {primaryContractName ? <ContractFunctions contractName={primaryContractName} /> : null}
             </div>
           </div>
         </section>
