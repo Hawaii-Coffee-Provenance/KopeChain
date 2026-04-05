@@ -3,16 +3,17 @@ import { DeployFunction } from "hardhat-deploy/types";
 import defaultData from "../data/default-data.json";
 import { CoffeeTracker } from "../typechain-types";
 import { pinJSON, pinFile, findExistingPin, getOrCreateGroup } from "../utils/pinata";
-import { buildFullMetadata } from "../utils/buildMetadata";
 import { generateQRBuffer } from "../utils/qrcode";
+import { REGIONS, ROAST_LEVELS, buildFullMetadata } from "../utils/buildMetadata";
+import { BAND_TRAITS, MUG_TRAITS, STEAM_TRAITS, generateNftBuffer, getRandomTrait } from "../utils/nft";
 
-const DATA = defaultData.slice(0, 50);
+const DATA = defaultData;
 const TOTAL = DATA.length;
 
-const PROCESSED_COUNT = Math.floor(TOTAL * 0.8);
-const ROASTED_COUNT = Math.floor(TOTAL * 0.7);
-const DISTRIBUTED_COUNT = Math.floor(TOTAL * 0.6);
-const VERIFIED_COUNT = TOTAL;
+const HARVESTED_ONLY_COUNT = 2;
+const PROCESSED_ONLY_COUNT = 3;
+const ROASTED_ONLY_COUNT = 3;
+const DISTRIBUTED_COUNT = 2;
 
 function hashCode(s: string): number {
   let h = 0;
@@ -38,17 +39,27 @@ const seedCoffeeTracker: DeployFunction = async function (hre: HardhatRuntimeEnv
 
   const groupId = await getOrCreateGroup("CoffeeTracker-local-batch");
   const qrGroupId = await getOrCreateGroup("CoffeeTracker-local-qr");
+  const nftGroupId = await getOrCreateGroup("CoffeeTracker-local-nft");
 
   const allIndices = Array.from({ length: TOTAL }, (_, i) => i);
-  const processedIndices = chooseSubset(allIndices, PROCESSED_COUNT, "processed");
-  const roastedIndices = chooseSubset(processedIndices, ROASTED_COUNT, "roasted");
-  const distributedIndices = chooseSubset(roastedIndices, DISTRIBUTED_COUNT, "distributed");
-  const verifiedIndices = chooseSubset(allIndices, VERIFIED_COUNT, "verified");
+  if (TOTAL !== HARVESTED_ONLY_COUNT + PROCESSED_ONLY_COUNT + ROASTED_ONLY_COUNT + DISTRIBUTED_COUNT) {
+    throw new Error("Seed counts must sum to the number of batches.");
+  }
 
-  const processedSet = new Set(processedIndices);
-  const roastedSet = new Set(roastedIndices);
+  const distributedIndices = chooseSubset(allIndices, DISTRIBUTED_COUNT, "distributed");
+  const remainingAfterDistributed = allIndices.filter(i => !distributedIndices.includes(i));
+
+  const roastedOnlyIndices = chooseSubset(remainingAfterDistributed, ROASTED_ONLY_COUNT, "roasted");
+  const remainingAfterRoasted = remainingAfterDistributed.filter(i => !roastedOnlyIndices.includes(i));
+
+  const processedOnlyIndices = chooseSubset(remainingAfterRoasted, PROCESSED_ONLY_COUNT, "processed");
+  const processedSet = new Set([...processedOnlyIndices, ...roastedOnlyIndices, ...distributedIndices]);
+
+  const roastedSet = new Set([...roastedOnlyIndices, ...distributedIndices]);
+
   const distributedSet = new Set(distributedIndices);
-  const verifiedSet = new Set(verifiedIndices);
+
+  const verifiedSet = new Set(allIndices);
 
   console.log(`Pinning ${TOTAL} metadata files...`);
   const batchCIDs: string[] = [];
@@ -68,11 +79,49 @@ const seedCoffeeTracker: DeployFunction = async function (hre: HardhatRuntimeEnv
     const qrBuffer = await generateQRBuffer(data.batchNumber);
     const qrCID = await pinFile(qrBuffer, `qr-${data.batchNumber}.png`, "image/png", qrGroupId);
 
+    const stage = (
+      distributedSet.has(i)
+        ? "Distributed"
+        : roastedSet.has(i)
+          ? "Roasted"
+          : processedSet.has(i)
+            ? "Processed"
+            : "Harvested"
+    ) as "Harvested" | "Processed" | "Roasted" | "Distributed";
+
+    const regionName = REGIONS[data.harvestData.region] ?? "Other";
+    const roastLevelName = ROAST_LEVELS[data.roastingData.roastLevel] ?? ROAST_LEVELS[1];
+
+    const mug = getRandomTrait(MUG_TRAITS).name;
+    const band = getRandomTrait(BAND_TRAITS).name;
+    const steam = getRandomTrait(STEAM_TRAITS).name;
+
+    const nftBuffer = await generateNftBuffer({
+      region: regionName,
+      stage,
+      roastLevel: roastLevelName,
+      mug,
+      band,
+      steam,
+    });
+
+    const nftCID = await pinFile(
+      nftBuffer,
+      `nft-${data.batchNumber}-${stage.toLowerCase()}.png`,
+      "image/png",
+      nftGroupId,
+    );
+
     const fullMetadata = buildFullMetadata(data, {
       processed: processedSet.has(i),
       roasted: roastedSet.has(i),
       distributed: distributedSet.has(i),
       qrCID,
+      nftCID,
+      verified: verifiedSet.has(i),
+      stage,
+      traits: { mug, band, steam },
+      roastLevel: stage === "Roasted" || stage === "Distributed" ? roastLevelName : undefined,
     });
 
     const cid = await pinJSON(fullMetadata, `batch-${data.batchNumber}`, data.batchNumber, groupId);

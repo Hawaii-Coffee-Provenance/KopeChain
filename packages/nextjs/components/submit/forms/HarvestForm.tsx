@@ -81,13 +81,11 @@ const HarvestForm = () => {
         external_url: `${APP_URL}/explore/batch/${form.batchNumber.trim()}`,
 
         attributes: [
-          { trait_type: "Stage", value: "Harvested" },
           { trait_type: "Region", value: REGIONS[Number(form.region)] },
-          { trait_type: "Variety", value: VARIETIES[Number(form.variety)] },
-          { trait_type: "Elevation (m)", value: form.elevation },
-          { trait_type: "Harvest Weight (kg)", value: form.harvestWeight },
+          { trait_type: "Stage", value: "Harvested" },
           { trait_type: "Mug", value: traits.mug },
           { trait_type: "Band", value: traits.band },
+          ...(traits.steam ? [{ trait_type: "Steam", value: traits.steam }] : []),
         ],
 
         properties: {

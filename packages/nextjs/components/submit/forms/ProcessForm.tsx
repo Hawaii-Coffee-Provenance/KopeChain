@@ -132,12 +132,6 @@ const ProcessForm = () => {
       metadata.attributes = mapTraitsToAttributes(metadata.attributes, "Processed", traits);
 
       // Merge processing data
-      metadata.attributes.push({
-        trait_type: "Processing Method",
-        value: PROCESSING_METHODS[Number(form.processingMethod)],
-      });
-      metadata.attributes.push({ trait_type: "SCA Score", value: scaScore });
-
       metadata.properties.processing = {
         processingMethod: PROCESSING_METHODS[Number(form.processingMethod)],
         moistureContent,

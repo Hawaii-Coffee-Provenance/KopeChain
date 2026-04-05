@@ -112,7 +112,10 @@ const RoastForm = () => {
       metadata.attributes = mapTraitsToAttributes(metadata.attributes, "Roasted", traits);
 
       // Merge roasting data
-      metadata.attributes.push({ trait_type: "Roast Level", value: ROAST_LEVELS[Number(form.roastLevel)] });
+      metadata.attributes = [
+        ...metadata.attributes.filter((attr: any) => attr.trait_type !== "Roast Level"),
+        { trait_type: "Roast Level", value: ROAST_LEVELS[Number(form.roastLevel)] },
+      ];
 
       metadata.properties.roasting = {
         roastingMethod: ROASTING_METHODS[Number(form.roastingMethod)],

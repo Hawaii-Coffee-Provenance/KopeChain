@@ -1,7 +1,6 @@
 import defaultData from "../data/default-data.json";
 import { BatchMetadata } from "./pinata";
 
-const REGIONS = ["Kona", "Kau", "Puna", "Hamakua", "Maui", "Kauai", "Molokai", "Oahu", "Other"];
 const VARIETIES = [
   "Typica",
   "Geisha",
@@ -14,19 +13,23 @@ const VARIETIES = [
   "MundoNovo",
   "Other",
 ];
+export const REGIONS = ["Kona", "Kau", "Puna", "Hamakua", "Maui", "Kauai", "Molokai", "Oahu", "Other"];
 export const PROCESSING_METHODS = ["Natural", "Washed", "Honey", "Anaerobic", "Other"];
 export const ROASTING_METHODS = ["Drum", "HotAir", "FluidBed", "Infrared", "Other"];
 export const ROAST_LEVELS = ["Light", "Medium", "Dark"];
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
-const PLACEHOLDER_IMAGE_CID = "bafybeidw72h3yqxdx2rzd2sxolcexquoqgovpj6lnwhbvit75bouznbkd4";
-
 export type SeedStages = {
   processed: boolean;
   roasted: boolean;
   distributed: boolean;
   qrCID: string;
+  nftCID: string;
+  verified: boolean;
+  stage: "Harvested" | "Processed" | "Roasted" | "Distributed";
+  traits: { mug: string; band: string; steam?: string };
+  roastLevel?: string;
 };
 
 export function buildFullMetadata(data: (typeof defaultData)[0], stages: SeedStages): BatchMetadata {
@@ -40,16 +43,16 @@ export function buildFullMetadata(data: (typeof defaultData)[0], stages: SeedSta
   return {
     name: `${regionName} ${varietyName} — ${data.batchNumber}`,
     description: `Single origin ${varietyName} harvested at ${h.elevation}m. Farm: ${h.farmName}.`,
-    image: `ipfs://${PLACEHOLDER_IMAGE_CID}`,
+    image: `ipfs://${stages.nftCID}`,
     external_url: `${APP_URL}/explore/batch/${data.batchNumber}`,
 
     attributes: [
       { trait_type: "Region", value: regionName },
-      { trait_type: "Variety", value: varietyName },
-      { trait_type: "Elevation (m)", value: h.elevation, display_type: "number" },
-      { trait_type: "Harvest Weight (kg)", value: h.harvestWeight, display_type: "number" },
-      { trait_type: "SCA Score", value: p.scaScore, display_type: "number" },
-      { trait_type: "Verified", value: data.verified ? "Yes" : "No" },
+      { trait_type: "Stage", value: stages.stage },
+      { trait_type: "Mug", value: stages.traits.mug },
+      { trait_type: "Band", value: stages.traits.band },
+      ...(stages.traits.steam ? [{ trait_type: "Steam", value: stages.traits.steam }] : []),
+      ...(stages.roastLevel ? [{ trait_type: "Roast Level", value: stages.roastLevel }] : []),
     ],
 
     properties: {
@@ -101,13 +104,9 @@ export function buildFullMetadata(data: (typeof defaultData)[0], stages: SeedSta
         },
       }),
       images: {
-        nft: { cid: `ipfs://${PLACEHOLDER_IMAGE_CID}`, description: "Batch NFT Certificate" },
-        qrCode: { cid: `ipfs://${stages.qrCID}`, description: `Scan to view batch ${data.batchNumber}` },
-        gallery: [
-          { cid: `ipfs://${PLACEHOLDER_IMAGE_CID}`, description: "Image 1" },
-          { cid: `ipfs://${PLACEHOLDER_IMAGE_CID}`, description: "Image 2" },
-          { cid: `ipfs://${PLACEHOLDER_IMAGE_CID}`, description: "Image 3" },
-        ],
+        nft: { cid: `ipfs://${stages.nftCID}`, description: "Batch NFT Certificate" },
+        qrCode: { cid: `ipfs://${stages.qrCID}`, description: "Batch QR Code" },
+        gallery: [],
       },
     },
   };

@@ -120,9 +120,12 @@ const Map3D = ({
     allCoords.forEach(c => bounds.extend([c.longitude, c.latitude]));
 
     setTimeout(() => {
+      const container = containerRef.current?.getBoundingClientRect();
+      const paddingValue = container ? Math.max(60, Math.min(140, Math.round(container.width * 0.12))) : 100;
+
       map.fitBounds(bounds.toArray() as [[number, number], [number, number]], {
-        padding: { top: 100, bottom: 100, left: 100, right: 100 },
-        maxZoom: 15,
+        padding: { top: paddingValue, bottom: paddingValue, left: paddingValue, right: paddingValue },
+        maxZoom: 12,
         duration: 1000,
       });
       hasFittedMap.current = true;

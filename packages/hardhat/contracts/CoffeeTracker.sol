@@ -141,7 +141,7 @@ contract CoffeeTracker is ERC1155, AccessControl {
             variety: _variety,
             processingMethod: ProcessingMethod.Other,
             roastingMethod: RoastingMethod.Other,
-            roastLevel: RoastLevel.Other,
+            roastLevel: RoastLevel.Medium,
             farmer: msg.sender,
             processor: address(0),
             roaster: address(0),
