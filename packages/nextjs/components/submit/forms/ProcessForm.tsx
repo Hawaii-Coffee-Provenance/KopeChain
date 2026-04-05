@@ -12,7 +12,16 @@ import { useFormFields } from "~~/hooks/useFormFields";
 import { useMediaFiles } from "~~/hooks/useMediaFiles";
 import { PROCESSING_METHODS, toUnixSeconds } from "~~/utils/coffee";
 import { PROCESS_INITIAL_FORM } from "~~/utils/forms";
-import { ensureQrCode, fetchMetadata, getOrCreateGroup, mergeGallery, pinJSON, uploadGallery } from "~~/utils/pinata";
+import { mapTraitsToAttributes } from "~~/utils/nft";
+import {
+  ensureQrCode,
+  fetchMetadata,
+  getOrCreateGroup,
+  mergeGallery,
+  pinJSON,
+  pinNFT,
+  uploadGallery,
+} from "~~/utils/pinata";
 import { notification } from "~~/utils/scaffold-eth";
 
 const ProcessForm = () => {
@@ -57,6 +66,7 @@ const ProcessForm = () => {
 
     if (batchData.processor !== zeroAddress) {
       notification.warning("This batch already has a processor assigned!");
+      return;
     }
 
     const moistureContent = Number(form.moistureContent);
@@ -87,7 +97,7 @@ const ProcessForm = () => {
     }
 
     setIsUploading(true);
-    const notificationId = notification.loading("Adding processing data and pinning to IPFS...");
+    const notificationId = notification.loading("Generating new NFT and pinning to IPFS...");
     let newMetadataCID = "";
 
     try {
@@ -97,8 +107,31 @@ const ProcessForm = () => {
 
       await ensureQrCode(metadata, batchData.batchNumber);
 
+      // Get existing NFT traits (region, mug, band, steam)
+      const region = metadata.attributes.find((a: any) => a.trait_type === "Region")?.value;
+      const existingMug = metadata.attributes.find((a: any) => a.trait_type === "Mug")?.value;
+      const existingSteam = metadata.attributes.find((a: any) => a.trait_type === "Steam")?.value;
+
+      if (!region || !existingMug || false) {
+        throw new Error("Metadata is missing required NFT traits (Region, Mug, or Band).");
+      }
+
+      // Generate new NFT
+      const { IpfsHash: nftCID, traits } = await pinNFT({
+        region: region as string,
+        stage: "Processed",
+        batchNumber: form.batchNumber.trim(),
+        groupId,
+        existingMug: existingMug as string,
+
+        existingSteam: existingSteam as string,
+      });
+      metadata.image = `ipfs://${nftCID}`;
+      metadata.properties.images = metadata.properties.images || {};
+      metadata.properties.images.nft = { cid: nftCID, description: "NFT Certificate" };
+      metadata.attributes = mapTraitsToAttributes(metadata.attributes, "Processed", traits);
+
       // Merge processing data
-      metadata.attributes.push({ trait_type: "Stage", value: "Processed" });
       metadata.attributes.push({
         trait_type: "Processing Method",
         value: PROCESSING_METHODS[Number(form.processingMethod)],
@@ -138,7 +171,7 @@ const ProcessForm = () => {
         },
         {
           onBlockConfirmation: () => {
-            notification.success(`Batch ${form.batchNumber.trim()} was processed onchain.`);
+            notification.success(`Batch ${form.batchNumber.trim()} was processed on-chain.`);
             resetForm();
             setTimeout(() => {
               router.push("/explore");
@@ -333,7 +366,9 @@ const ProcessForm = () => {
           <button
             type="submit"
             className="btn btn-primary flex-1 text-base tracking-wide whitespace-nowrap"
-            disabled={isDisabled || !batchData || (batchData?.batchId ?? 0n) === 0n}
+            disabled={
+              isDisabled || !batchData || (batchData?.batchId ?? 0n) === 0n || batchData?.processor !== zeroAddress
+            }
           >
             {isUploading ? "Uploading..." : isMining ? "Submitting..." : "Process Batch"}
           </button>

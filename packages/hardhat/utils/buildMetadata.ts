@@ -16,7 +16,7 @@ const VARIETIES = [
 ];
 export const PROCESSING_METHODS = ["Natural", "Washed", "Honey", "Anaerobic", "Other"];
 export const ROASTING_METHODS = ["Drum", "HotAir", "FluidBed", "Infrared", "Other"];
-export const ROAST_LEVELS = ["Light", "Medium", "Dark", "Other"];
+export const ROAST_LEVELS = ["Light", "Medium", "Dark"];
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 

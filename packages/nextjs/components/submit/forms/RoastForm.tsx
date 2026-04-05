@@ -11,7 +11,16 @@ import { useFormFields } from "~~/hooks/useFormFields";
 import { useMediaFiles } from "~~/hooks/useMediaFiles";
 import { ROASTING_METHODS, ROAST_LEVELS, toUnixSeconds } from "~~/utils/coffee";
 import { ROAST_INITIAL_FORM } from "~~/utils/forms";
-import { ensureQrCode, fetchMetadata, getOrCreateGroup, mergeGallery, pinJSON, uploadGallery } from "~~/utils/pinata";
+import { mapTraitsToAttributes } from "~~/utils/nft";
+import {
+  ensureQrCode,
+  fetchMetadata,
+  getOrCreateGroup,
+  mergeGallery,
+  pinJSON,
+  pinNFT,
+  uploadGallery,
+} from "~~/utils/pinata";
 import { notification } from "~~/utils/scaffold-eth";
 
 const RoastForm = () => {
@@ -67,7 +76,7 @@ const RoastForm = () => {
     }
 
     setIsUploading(true);
-    const notificationId = notification.loading("Adding roasting data and pinning to IPFS...");
+    const notificationId = notification.loading("Generating new NFT and pinning to IPFS...");
     let newMetadataCID = "";
 
     try {
@@ -77,8 +86,32 @@ const RoastForm = () => {
 
       await ensureQrCode(metadata, batchData.batchNumber);
 
+      // Get existing NFT traits (region, mug, band, steam)
+      const region = metadata.attributes.find((a: any) => a.trait_type === "Region")?.value;
+      const existingMug = metadata.attributes.find((a: any) => a.trait_type === "Mug")?.value;
+      const existingSteam = metadata.attributes.find((a: any) => a.trait_type === "Steam")?.value;
+
+      if (!region || !existingMug || false) {
+        throw new Error("Metadata is missing required NFT traits (Region, Mug, or Band).");
+      }
+
+      // Generate new  NFT
+      const { IpfsHash: nftCID, traits } = await pinNFT({
+        region: region as string,
+        stage: "Roasted",
+        batchNumber: form.batchNumber.trim(),
+        groupId,
+        roastLevel: ROAST_LEVELS[Number(form.roastLevel)],
+        existingMug: existingMug as string,
+
+        existingSteam: existingSteam as string,
+      });
+      metadata.image = `ipfs://${nftCID}`;
+      metadata.properties.images = metadata.properties.images || {};
+      metadata.properties.images.nft = { cid: nftCID, description: "NFT Certificate" };
+      metadata.attributes = mapTraitsToAttributes(metadata.attributes, "Roasted", traits);
+
       // Merge roasting data
-      metadata.attributes.push({ trait_type: "Stage", value: "Roasted" });
       metadata.attributes.push({ trait_type: "Roast Level", value: ROAST_LEVELS[Number(form.roastLevel)] });
 
       metadata.properties.roasting = {
@@ -113,7 +146,7 @@ const RoastForm = () => {
         },
         {
           onBlockConfirmation: () => {
-            notification.success(`Batch ${form.batchNumber.trim()} was roasted onchain.`);
+            notification.success(`Batch ${form.batchNumber.trim()} was roasted on-chain.`);
             resetForm();
             setTimeout(() => {
               router.push("/explore");

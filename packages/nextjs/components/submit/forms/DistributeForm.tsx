@@ -11,7 +11,16 @@ import { useFormFields } from "~~/hooks/useFormFields";
 import { useMediaFiles } from "~~/hooks/useMediaFiles";
 import { toUnixSeconds } from "~~/utils/coffee";
 import { DISTRIBUTE_INITIAL_FORM } from "~~/utils/forms";
-import { ensureQrCode, fetchMetadata, getOrCreateGroup, mergeGallery, pinJSON, uploadGallery } from "~~/utils/pinata";
+import { mapTraitsToAttributes } from "~~/utils/nft";
+import {
+  ensureQrCode,
+  fetchMetadata,
+  getOrCreateGroup,
+  mergeGallery,
+  pinJSON,
+  pinNFT,
+  uploadGallery,
+} from "~~/utils/pinata";
 import { notification } from "~~/utils/scaffold-eth";
 
 const DistributeForm = () => {
@@ -63,7 +72,7 @@ const DistributeForm = () => {
     }
 
     setIsUploading(true);
-    const notificationId = notification.loading("Finalizing distribution data and pinning to IPFS...");
+    const notificationId = notification.loading("Generating new NFT and pinning to IPFS...");
     let newMetadataCID = "";
 
     try {
@@ -73,8 +82,31 @@ const DistributeForm = () => {
 
       await ensureQrCode(metadata, batchData.batchNumber);
 
-      // Merge distribution data
-      metadata.attributes.push({ trait_type: "Stage", value: "Distributed" });
+      // Get existing NFT traits (region, roast level, mug, band, steam)
+      const region = metadata.attributes.find((a: any) => a.trait_type === "Region")?.value;
+      const roastLevel = metadata.attributes.find((a: any) => a.trait_type === "Roast Level")?.value;
+
+      const existingMug = metadata.attributes.find((a: any) => a.trait_type === "Mug")?.value;
+      const existingSteam = metadata.attributes.find((a: any) => a.trait_type === "Steam")?.value;
+
+      if (!region || !roastLevel || !existingMug || false) {
+        throw new Error("Metadata is missing required distribution traits (Region, Roast Level, Mug, or Band).");
+      }
+
+      // Generate new NFT
+      const { IpfsHash: nftCID, traits } = await pinNFT({
+        region: region as string,
+        stage: "Distributed",
+        batchNumber: form.batchNumber.trim(),
+        groupId,
+        roastLevel: roastLevel as string,
+        existingSteam: existingSteam as string,
+        existingMug: existingMug as string,
+      });
+      metadata.image = `ipfs://${nftCID}`;
+      metadata.properties.images = metadata.properties.images || {};
+      metadata.properties.images.nft = { cid: nftCID, description: "NFT Certificate" };
+      metadata.attributes = mapTraitsToAttributes(metadata.attributes, "Distributed", traits);
 
       metadata.properties.distribution = {
         distributionDate,
@@ -105,7 +137,7 @@ const DistributeForm = () => {
         },
         {
           onBlockConfirmation: () => {
-            notification.success(`Batch ${form.batchNumber.trim()} was distributed onchain.`);
+            notification.success(`Batch ${form.batchNumber.trim()} was distributed on-chain.`);
             resetForm();
             setTimeout(() => {
               router.push("/explore");

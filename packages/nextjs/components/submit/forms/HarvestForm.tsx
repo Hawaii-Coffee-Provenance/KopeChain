@@ -11,7 +11,7 @@ import { useMediaFiles } from "~~/hooks/useMediaFiles";
 import { BatchMetadata } from "~~/types/batch";
 import { REGIONS, VARIETIES, toUnixSeconds } from "~~/utils/coffee";
 import { HARVEST_INITIAL_FORM } from "~~/utils/forms";
-import { getOrCreateGroup, pinJSON, pinQR, uploadGallery } from "~~/utils/pinata";
+import { getOrCreateGroup, pinJSON, pinNFT, pinQR, uploadGallery } from "~~/utils/pinata";
 import { notification } from "~~/utils/scaffold-eth";
 
 const HarvestForm = () => {
@@ -57,7 +57,7 @@ const HarvestForm = () => {
     }
 
     setIsUploading(true);
-    const notificationId = notification.loading("Uploading batch data and media to IPFS...");
+    const notificationId = notification.loading("Generating NFT and uploading data to IPFS...");
     let metadataCID = "";
 
     try {
@@ -66,10 +66,18 @@ const HarvestForm = () => {
       const qrCID = await pinQR(form.batchNumber.trim(), qrGroupId);
       const galleryCIDs = await uploadGallery(mediaFiles, form.batchNumber.trim());
 
+      // Generate NFT
+      const { IpfsHash: nftCID, traits } = await pinNFT({
+        region: REGIONS[Number(form.region)],
+        stage: "Harvested",
+        batchNumber: form.batchNumber.trim(),
+        groupId,
+      });
+
       const metadata: BatchMetadata = {
         name: `${REGIONS[Number(form.region)]} ${VARIETIES[Number(form.variety)]} - ${form.batchNumber.trim()}`,
         description: `Single origin ${VARIETIES[Number(form.variety)]} harvested at ${form.elevation}m. Farm: ${form.farmName.trim()}.`,
-        image: `ipfs://${qrCID}`,
+        image: `ipfs://${nftCID}`,
         external_url: `${APP_URL}/explore/batch/${form.batchNumber.trim()}`,
 
         attributes: [
@@ -78,6 +86,8 @@ const HarvestForm = () => {
           { trait_type: "Variety", value: VARIETIES[Number(form.variety)] },
           { trait_type: "Elevation (m)", value: form.elevation },
           { trait_type: "Harvest Weight (kg)", value: form.harvestWeight },
+          { trait_type: "Mug", value: traits.mug },
+          { trait_type: "Band", value: traits.band },
         ],
 
         properties: {
@@ -92,6 +102,7 @@ const HarvestForm = () => {
             location: { latitude, longitude },
           },
           images: {
+            nft: { cid: nftCID, description: "NFT Certificate" },
             qrCode: { cid: qrCID, description: "Batch QR Code" },
             ...(galleryCIDs.length > 0 && { gallery: galleryCIDs }),
           },
@@ -117,7 +128,7 @@ const HarvestForm = () => {
         },
         {
           onBlockConfirmation: () => {
-            notification.success(`Batch ${form.batchNumber.trim()} was harvested onchain.`);
+            notification.success(`Batch ${form.batchNumber.trim()} was harvested on-chain.`);
             resetForm();
             setTimeout(() => {
               router.push("/explore");

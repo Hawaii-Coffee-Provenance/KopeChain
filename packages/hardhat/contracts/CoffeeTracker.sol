@@ -58,8 +58,7 @@ contract CoffeeTracker is ERC1155, AccessControl {
     enum RoastLevel {
         Light,
         Medium,
-        Dark,
-        Other
+        Dark
     }
 
     struct CoffeeBatch {

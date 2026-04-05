@@ -41,6 +41,49 @@ export async function getOrCreateGroup(name: string): Promise<string> {
   return data.id;
 }
 
+export type PinNFTParams = {
+  region: string;
+  stage: string;
+  isVerified?: boolean;
+  batchNumber: string;
+  groupId: string;
+  roastLevel?: string;
+  existingSteam?: string;
+  existingMug?: string;
+  existingBand?: string;
+};
+
+export async function pinNFT(
+  params: PinNFTParams,
+): Promise<{ IpfsHash: string; traits: { mug: string; steam: string; band: string } }> {
+  const res = await fetch("/api/pin/nft", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(params),
+  });
+
+  if (!res.ok) {
+    throw new Error(`NFT generation failed: ${await res.text()}`);
+  }
+
+  const { buffer, traits } = await res.json();
+
+  // Convert base64 buffer back to Blob
+  const byteCharacters = atob(buffer);
+  const byteNumbers = new Array(byteCharacters.length);
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
+  }
+  const byteArray = new Uint8Array(byteNumbers);
+  const blob = new Blob([byteArray], { type: "image/png" });
+
+  // Generate a File to upload (mocking browser File object usage)
+  const file = new File([blob], `nft-${params.batchNumber}-${params.stage}.png`, { type: "image/png" });
+
+  const cid = await pinFile(file, file.name, params.groupId);
+  return { IpfsHash: cid, traits };
+}
+
 export async function pinQR(batchNumber: string, groupId: string): Promise<string> {
   const blob = await generateQRBlob(batchNumber, process.env.NEXT_PUBLIC_APP_URL);
 

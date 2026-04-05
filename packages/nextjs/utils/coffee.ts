@@ -114,7 +114,6 @@ export const ROAST_LEVELS: Record<number, string> = {
   0: "Light",
   1: "Medium",
   2: "Dark",
-  3: "Other",
 };
 
 export const STAGE_COLORS = {
@@ -175,6 +174,7 @@ export function mapBatch(raw: RawBatch, metadata?: BatchMetadata | null): Coffee
   const d = metadata?.properties?.distribution;
 
   const DEFAULT_COORDS: Coordinates = { latitude: 0, longitude: 0 };
+  const mappedImages = { ...(metadata?.properties?.images ?? {}) };
 
   return {
     batchId: raw.batchId,
@@ -220,6 +220,6 @@ export function mapBatch(raw: RawBatch, metadata?: BatchMetadata | null): Coffee
     destination: d?.destination ?? "",
     distributionLocation: d?.location ?? DEFAULT_COORDS,
 
-    images: metadata?.properties?.images ?? {},
+    images: mappedImages,
   };
 }
