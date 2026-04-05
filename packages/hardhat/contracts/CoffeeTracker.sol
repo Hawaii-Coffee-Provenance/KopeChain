@@ -259,21 +259,11 @@ contract CoffeeTracker is ERC1155, AccessControl {
         _transactionCount++;
     }
 
-    function updateMetadataCID(uint256 _batchId, string calldata _metadataCID) public {
+    function updateMetadataCID(uint256 _batchId, string calldata _metadataCID) public onlyRole(DEFAULT_ADMIN_ROLE) {
         CoffeeBatch storage batch = batches[_batchId];
-
-        require(batch.farmer != address(0), "Batch Number does not exist!");
-        require(
-            hasRole(DEFAULT_ADMIN_ROLE, msg.sender) ||
-                batch.farmer == msg.sender ||
-                batch.processor == msg.sender ||
-                batch.roaster == msg.sender ||
-                batch.distributor == msg.sender,
-            "Not Authorized!"
-        );
+        require(batch.farmer != address(0), "Batch does not exist!");
 
         batch.metadataCID = _metadataCID;
-
         emit MetadataUpdated(_batchId, batch.batchNumber, _metadataCID);
     }
 
@@ -290,6 +280,8 @@ contract CoffeeTracker is ERC1155, AccessControl {
     }
 
     function getBatches(uint256 offset, uint256 limit) public view returns (CoffeeBatch[] memory) {
+        require(limit <= 100, "Limit too high");
+
         uint256 total = _batchIdCounter - 1;
         if (offset >= total) return new CoffeeBatch[](0);
 
@@ -343,5 +335,23 @@ contract CoffeeTracker is ERC1155, AccessControl {
 
     function supportsInterface(bytes4 interfaceId) public view override(ERC1155, AccessControl) returns (bool) {
         return super.supportsInterface(interfaceId);
+    }
+
+    function safeTransferFrom(address, address, uint256, uint256, bytes memory) public pure override {
+        revert("Batch NFTs are non-transferable");
+    }
+
+    function safeBatchTransferFrom(
+        address,
+        address,
+        uint256[] memory,
+        uint256[] memory,
+        bytes memory
+    ) public pure override {
+        revert("Batch NFTs are non-transferable");
+    }
+
+    function setApprovalForAll(address, bool) public pure override {
+        revert("Batch NFTs are non-transferable");
     }
 }

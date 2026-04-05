@@ -18,7 +18,7 @@ const Home: NextPage = () => {
   return (
     <div className="min-h-screen bg-base-200">
       <QrModal isOpen={qrOpen} onClose={handleQrClose} />
-      <section className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] section-padding w-full">
+      <section className="relative flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] section-padding w-full">
         <HeroSection onOpenQr={() => setQrOpen(true)} />
       </section>
 

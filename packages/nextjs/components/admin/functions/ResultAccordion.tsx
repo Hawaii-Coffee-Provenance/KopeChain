@@ -7,7 +7,7 @@ const ResultAccordion = ({ result }: { result: NonNullable<ResultData> }) => {
     <div className="collapse collapse-plus bg-base-100 border border-base-300 mt-2 w-full max-w-full overflow-hidden shadow-sm rounded-xl">
       <input type="checkbox" defaultChecked />
 
-      <div className="collapse-title font-bold min-h-0 flex items-center text-lg text-base-content/80">
+      <div className="collapse-title font-bold min-h-0 flex items-center text-lg text-muted">
         <span className="text-xs tracking-widest uppercase">View Results {result.isError ? "(Error)" : ""}</span>
       </div>
 

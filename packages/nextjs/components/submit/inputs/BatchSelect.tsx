@@ -82,9 +82,9 @@ const BatchSelect = ({ value, onSelect, requiredStage, isDisabled }: BatchSelect
           ) : (
             <div className="tooltip tooltip-left" data-tip={message}>
               {status === "valid" ? (
-                <CheckIcon className="w-5 h-5 text-success" />
+                <CheckIcon className="h-4 w-4 text-success" />
               ) : (
-                <XMarkIcon className="w-5 h-5 text-error" />
+                <XMarkIcon className="h-4 w-4 text-error" />
               )}
             </div>
           )}

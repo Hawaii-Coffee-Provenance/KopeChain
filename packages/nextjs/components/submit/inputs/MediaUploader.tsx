@@ -39,10 +39,10 @@ const MediaUploader = ({ onAddFiles, isDisabled = false }: MediaUploaderProps) =
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
       >
-        <ArrowUpTrayIcon className="w-7 h-7 text-base-content" />
+        <ArrowUpTrayIcon className="h-6 w-6 text-base-content" />
         <div className="text-center">
           <p className="text-sm font-semibold text-base-content m-0">Drop images here</p>
-          <p className="text-xs text-base-content/80 m-0 mt-0.5">or click to browse · PNG, JPG</p>
+          <p className="text-xs text-muted m-0 mt-0.5">or click to browse · PNG, JPG</p>
         </div>
       </div>
     </div>

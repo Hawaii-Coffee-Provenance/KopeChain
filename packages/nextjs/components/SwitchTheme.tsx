@@ -27,9 +27,9 @@ const SwitchTheme = ({ className }: { className?: string }) => {
   return (
     <button
       onClick={handleToggle}
-      className={`flex items-center justify-center p-2 rounded-full hover:bg-base-content/5 dark:hover:bg-base-content/5 transition-colors hover:cursor-pointer ${className}`}
+      className={`flex items-center justify-center p-2 rounded-full hover:bg-base-content/5 transition-colors hover:cursor-pointer ${className}`}
     >
-      {isDarkMode ? <MoonIcon className="h-5 w-5" /> : <SunIcon className="h-5 w-5" />}
+      {isDarkMode ? <MoonIcon className="h-6 w-6" /> : <SunIcon className="h-6 w-6" />}
     </button>
   );
 };

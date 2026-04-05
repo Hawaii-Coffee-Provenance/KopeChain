@@ -34,7 +34,7 @@ const BatchPagination = ({ currentPage, totalPages, totalItems, pageSize, goToPa
                 onClick={() => goToPage(currentPage - 1)}
                 disabled={currentPage === 1}
               >
-                <ChevronLeftIcon className="h-3 w-3" />
+                <ChevronLeftIcon className="h-4 w-4" />
               </button>
 
               {getPageWindow(currentPage, totalPages).map(p => (
@@ -52,7 +52,7 @@ const BatchPagination = ({ currentPage, totalPages, totalItems, pageSize, goToPa
                 onClick={() => goToPage(currentPage + 1)}
                 disabled={currentPage === totalPages}
               >
-                <ChevronRightIcon className="h-3 w-3" />
+                <ChevronRightIcon className="h-4 w-4" />
               </button>
             </div>
           </div>

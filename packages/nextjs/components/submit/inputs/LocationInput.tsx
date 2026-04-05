@@ -93,7 +93,7 @@ const LocationInput = ({
 
         <button
           type="button"
-          className="cursor-pointer text-nav-link text-primary border-b border-transparent hover:border-primary transition-colors"
+          className="cursor-pointer text-inline-action text-primary border-b border-transparent hover:border-primary transition-colors"
           onClick={() => {
             setMode(mode === "latlng" ? "tmk" : "latlng");
           }}
@@ -151,9 +151,9 @@ const LocationInput = ({
                 ) : (
                   <div className="tooltip tooltip-left" data-tip={tmkMessage}>
                     {tmkStatus === "valid" ? (
-                      <CheckIcon className="w-5 h-5 text-success" />
+                      <CheckIcon className="h-4 w-4 text-success" />
                     ) : (
-                      <XMarkIcon className="w-5 h-5 text-error" />
+                      <XMarkIcon className="h-4 w-4 text-error" />
                     )}
                   </div>
                 )}
@@ -167,7 +167,7 @@ const LocationInput = ({
       <div className="flex justify-end pr-1">
         <button
           type="button"
-          className="cursor-pointer text-nav-link text-primary border-b border-transparent hover:border-primary transition-colors"
+          className="cursor-pointer text-inline-action text-primary border-b border-transparent hover:border-primary transition-colors"
           onClick={handleCurrentLocation}
           disabled={disabled}
         >

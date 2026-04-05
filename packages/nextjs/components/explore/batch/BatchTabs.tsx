@@ -18,7 +18,7 @@ const BatchTabs = ({
           className={`pb-3 text-sm font-bold tracking-wide uppercase transition-all mb-[-1px] border-b-2 ${
             activeTab === tab
               ? "border-base-content text-base-content"
-              : "border-transparent text-base-content/50 hover:text-base-content/80"
+              : "border-transparent text-base-content/50 hover:text-muted"
           }`}
         >
           {tab}

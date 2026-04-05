@@ -45,7 +45,7 @@ const MapPopup = ({ batch, location, stage, onClose }: MapPopupProps) => {
                 className="text-base-content/50 hover:text-base-content transition-colors cursor-pointer flex-shrink-0"
                 aria-label="Close"
               >
-                <XMarkIcon className="w-5 h-5" />
+                <XMarkIcon className="h-6 w-6" />
               </button>
             </div>
             <p className="text-hint leading-none mt-1">

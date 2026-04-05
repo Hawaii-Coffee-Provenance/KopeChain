@@ -23,7 +23,7 @@ const Footer = () => {
             {nativeCurrencyPrice > 0 && (
               <div>
                 <div className="btn btn-primary btn-sm font-normal gap-1 cursor-auto">
-                  <CurrencyDollarIcon className="h-4 w-4" />
+                  <CurrencyDollarIcon className="h-6 w-6" />
                   <span>{nativeCurrencyPrice.toFixed(2)}</span>
                 </div>
               </div>
@@ -47,7 +47,7 @@ const Footer = () => {
             <span>·</span>
             <div className="flex justify-center items-center gap-2">
               <p className="m-0 text-center">
-                Built with <HeartIcon className="inline-block h-4 w-4" /> at
+                Built with <HeartIcon className="inline-block h-6 w-6" /> at
               </p>
               <a
                 className="flex justify-center items-center gap-1"

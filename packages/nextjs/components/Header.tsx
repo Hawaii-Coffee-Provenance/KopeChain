@@ -60,7 +60,7 @@ export const HeaderMenuLinks = () => {
               href={href}
               passHref
               className={`
-                text-xs font-medium tracking-[0.1em] uppercase p-2 transition-colors 
+                text-nav-link p-2 transition-colors 
                   ${isActive ? "text-base-content" : "text-muted hover:text-base-content"}
               `}
             >
@@ -86,8 +86,8 @@ const Header = () => {
   });
 
   return (
-    <header className="sticky top-0 z-20 flex items-center justify-between px-8 h-16 bg-base-100 border-b border-base-300 shadow-none">
-      <div className="flex items-center gap-8">
+    <header className="sticky top-0 z-20 flex items-center justify-between px-6 h-16 bg-base-100 border-b border-base-300 shadow-none">
+      <div className="flex items-center gap-6">
         <Link href="/" className="font-serif text-2xl font-semibold text-base-content tracking-tight">
           Kope<span className="italic text-accent">Chain</span>
         </Link>
@@ -99,14 +99,12 @@ const Header = () => {
 
       <div className="flex items-center gap-2">
         <div className="flex items-center">
-          <span className="text-xs font-medium tracking-[0.1em] uppercase p-2 text-muted hidden md:inline">
-            Scan QR Code
-          </span>
+          <span className="text-nav-link p-2 text-muted hidden md:inline">Scan QR Code</span>
           <button
             onClick={() => setQrOpen(true)}
-            className="flex items-center justify-center p-2 rounded-full hover:bg-base-content/5 dark:hover:bg-base-content/5 transition-colors hover:cursor-pointer"
+            className="flex items-center justify-center p-2 rounded-full hover:bg-base-content/5 transition-colors hover:cursor-pointer"
           >
-            <QrCodeIcon className="h-5 w-5" />
+            <QrCodeIcon className="h-6 w-6" />
           </button>
         </div>
 
@@ -116,7 +114,7 @@ const Header = () => {
 
         <details className="dropdown dropdown-end lg:hidden" ref={burgerMenuRef}>
           <summary className="btn btn-ghost btn-sm btn-borderless hover:border-base-300">
-            <Bars3Icon className="h-5 w-5" />
+            <Bars3Icon className="h-6 w-6" />
           </summary>
           <ul
             className="dropdown-content menu p-2 mt-2 bg-base-100 border border-base-300 rounded-xl shadow-lg w-44 list-none gap-1"

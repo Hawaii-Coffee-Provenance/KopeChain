@@ -189,8 +189,12 @@
   @apply text-xs text-base-content/80 tracking-wide;
 }
 
-.text-nav-link {
+.text-inline-action {
   @apply text-xs font-medium tracking-wide;
+}
+
+.text-nav-link {
+  @apply text-xs font-medium tracking-[0.1em] uppercase;
 }
 
 .heading-hero {
@@ -202,7 +206,7 @@
 }
 
 .heading-card {
-  @apply font-serif text-3xl lg:text-5xl font-light leading-[1.08];
+  @apply font-serif text-5xl font-light leading-[1.08];
 }
 
 .link {

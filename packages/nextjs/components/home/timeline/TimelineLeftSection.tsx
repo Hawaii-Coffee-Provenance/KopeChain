@@ -15,8 +15,10 @@ const TimelineLeftSection = ({ activeItem, activeIndex }: { activeItem: StepType
         transition={{ duration: 0.3, ease: "easeOut" }}
         className="w-full flex flex-col items-start max-w-sm ml-auto"
       >
-        <p className={`text-label ${activeItem.color} font-bold mb-3`}>
-          Step 0{activeItem.step} — {activeItem.title}
+        <p className="text-label text-sm!">
+          Step 0{activeItem.step}
+          <span className="mx-2">—</span>
+          <span className={activeItem.color}>{activeItem.title}</span>
         </p>
         <h3 className={`heading-card leading-tight text-base-content whitespace-pre-line m-0 font-bold`}>
           {activeItem.header}

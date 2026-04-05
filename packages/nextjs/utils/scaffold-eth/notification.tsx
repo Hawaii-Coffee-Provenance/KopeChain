@@ -23,11 +23,11 @@ type NotificationOptions = {
 };
 
 const ENUM_STATUSES = {
-  success: <CheckCircleIcon className="w-7 text-success" />,
+  success: <CheckCircleIcon className="h-6 w-6 text-success" />,
   loading: <span className="w-6 loading loading-spinner"></span>,
-  error: <ExclamationCircleIcon className="w-7 text-error" />,
-  info: <InformationCircleIcon className="w-7 text-info" />,
-  warning: <ExclamationTriangleIcon className="w-7 text-warning" />,
+  error: <ExclamationCircleIcon className="h-6 w-6 text-error" />,
+  info: <InformationCircleIcon className="h-6 w-6 text-info" />,
+  warning: <ExclamationTriangleIcon className="h-6 w-6 text-warning" />,
 };
 
 const DEFAULT_DURATION = 3000;
@@ -57,7 +57,7 @@ const Notification = ({
         <div className={`overflow-x-hidden break-words whitespace-pre-line ${icon ? "mt-1" : ""}`}>{content}</div>
 
         <div className={`cursor-pointer text-lg ${icon ? "mt-1" : ""}`} onClick={() => toast.dismiss(t.id)}>
-          <XMarkIcon className="w-6 cursor-pointer" onClick={() => toast.remove(t.id)} />
+          <XMarkIcon className="h-6 w-6 cursor-pointer" onClick={() => toast.remove(t.id)} />
         </div>
       </div>
     ),

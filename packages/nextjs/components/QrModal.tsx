@@ -68,7 +68,7 @@ const QrModal = ({ isOpen, onClose }: Props) => {
             className="absolute top-0 right-0 text-base-content/50 hover:text-base-content transition-colors cursor-pointer"
             aria-label="Close"
           >
-            <XMarkIcon className="w-7.5 h-7.5" />
+            <XMarkIcon className="h-6 w-6" />
           </button>
         </div>
 

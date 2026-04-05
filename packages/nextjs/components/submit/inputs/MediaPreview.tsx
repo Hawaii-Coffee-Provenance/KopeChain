@@ -39,7 +39,7 @@ const MediaPreview = ({ mediaFiles, onUpdateDescription, onRemoveFile, isDisable
               onClick={() => onRemoveFile(index)}
               disabled={isDisabled}
             >
-              <XMarkIcon className="w-3 h-3 text-base-content" />
+              <XMarkIcon className="h-4 w-4 text-base-content" />
             </button>
           </div>
         ))}

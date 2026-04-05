@@ -33,8 +33,8 @@ const ActivitySection = () => {
           onClick={() => router.push("/explore")}
           className="flex items-center gap-1.5 cursor-pointer text-primary border-b border-transparent hover:border-primary transition-colors"
         >
-          <span className="text-nav-link text-base!">Explore All</span>
-          <ArrowRightIcon className="w-3.5 h-3.5" />
+          <span className="text-inline-action text-base! whitespace-nowrap">Explore All</span>
+          <ArrowRightIcon className="h-4 w-4" />
         </div>
       </div>
 

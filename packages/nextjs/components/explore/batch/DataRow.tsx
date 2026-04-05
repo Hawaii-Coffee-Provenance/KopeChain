@@ -27,7 +27,7 @@ const DataRow = ({
       >
         {title}
       </span>
-      <div className="flex-1 px-4 font-medium text-md text-base-content/80 text-left">{content}</div>
+      <div className="flex-1 px-4 font-medium text-md text-muted text-left">{content}</div>
     </div>
   );
 };

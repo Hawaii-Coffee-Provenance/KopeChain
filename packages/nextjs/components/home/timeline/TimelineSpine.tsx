@@ -13,7 +13,7 @@ const TimelineSpine = ({
   fillHeight: any;
 }) => {
   return (
-    <div className="relative flex-shrink-0 order-1 lg:order-2 w-6 bg-base-300 rounded-full flex flex-col items-center overflow-visible mt-8 mb-8">
+    <div className="relative flex-shrink-0 order-1 lg:order-2 w-6 bg-base-300 dark:bg-base-100 rounded-full flex flex-col items-center overflow-visible mt-8 mb-8">
       {/* Step Nodes */}
       {Array.from({ length: stepsLength }).map((_, index) => {
         {
@@ -22,9 +22,7 @@ const TimelineSpine = ({
         const nodePosition = (index / (stepsLength - 1)) * 100;
         const isActive = activeProgress >= index / (stepsLength - 1) - 0.05;
 
-        // Inactive nodes use border-transparent so there is no visible ring during
-        // the colour transition when scrolling back up.
-        let dotColorClass = "border-transparent bg-base-300 text-base-content/50";
+        let dotColorClass = "border-transparent bg-base-300 dark:bg-base-100 text-base-content";
 
         if (isActive) {
           const stage = STAGES[index];
