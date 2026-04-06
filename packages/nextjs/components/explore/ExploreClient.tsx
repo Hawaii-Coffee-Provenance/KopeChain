@@ -18,7 +18,7 @@ type ExploreClientProps = {
 };
 
 const ExploreClient: React.FC<ExploreClientProps> = ({ initialSearchQuery = "" }) => {
-  const { stats, txHashMap, isLoading } = useCoffeeTracker();
+  const { stats, txHashMap, isLoading } = useCoffeeTracker({ includeTxHashes: true });
   const allBatches = useMemo(() => (stats?.allBatches ?? []) as CoffeeBatch[], [stats?.allBatches]);
   const [filters, setFilters] = useState<BatchFilterState>(DEFAULT_FILTERS);
   const [searchQuery, setSearchQuery] = useState(initialSearchQuery);

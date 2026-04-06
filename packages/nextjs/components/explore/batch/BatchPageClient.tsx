@@ -13,7 +13,7 @@ type BatchPageClientProps = {
 };
 
 const BatchPageClient = ({ batchNumber }: BatchPageClientProps) => {
-  const { stats, txHashMap, isLoading } = useCoffeeTracker();
+  const { stats, txHashMap, isLoading } = useCoffeeTracker({ includeTxHashes: true });
 
   const batch = useMemo(() => {
     if (!stats?.allBatches) return null;

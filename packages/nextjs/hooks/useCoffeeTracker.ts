@@ -44,7 +44,7 @@ async function fetchAllBatches(
   return results.flat();
 }
 
-export const useCoffeeTracker = () => {
+export const useCoffeeTracker = ({ includeTxHashes = false }: { includeTxHashes?: boolean } = {}) => {
   const { data: deployedContract } = useDeployedContractInfo({ contractName: "CoffeeTracker" });
   const publicClient = usePublicClient();
 
@@ -108,29 +108,39 @@ export const useCoffeeTracker = () => {
   }, [uniqueCIDs, metadataQueries]);
   const metadataLoading = metadataQueries.some(q => q.isLoading);
 
+  const eventQueryConfig = {
+    enabled: includeTxHashes,
+    blocksBatchSize: 5000,
+  } as const;
+
   const { data: harvestedEvents, isLoading: harvestedEventsLoading } = useScaffoldEventHistory({
     contractName: "CoffeeTracker",
     eventName: "Harvested",
+    ...eventQueryConfig,
   });
 
   const { data: processedEvents, isLoading: processedEventsLoading } = useScaffoldEventHistory({
     contractName: "CoffeeTracker",
     eventName: "Processed",
+    ...eventQueryConfig,
   });
 
   const { data: roastedEvents, isLoading: roastedEventsLoading } = useScaffoldEventHistory({
     contractName: "CoffeeTracker",
     eventName: "Roasted",
+    ...eventQueryConfig,
   });
 
   const { data: distributedEvents, isLoading: distributedEventsLoading } = useScaffoldEventHistory({
     contractName: "CoffeeTracker",
     eventName: "Distributed",
+    ...eventQueryConfig,
   });
 
   const { data: verifiedEvents, isLoading: verifiedEventsLoading } = useScaffoldEventHistory({
     contractName: "CoffeeTracker",
     eventName: "Verified",
+    ...eventQueryConfig,
   });
 
   const txHashMap = useMemo((): Record<string, BatchTxHashes> => {
@@ -278,11 +288,12 @@ export const useCoffeeTracker = () => {
       rawBatchesLoading ||
       combinedDataLoading ||
       metadataLoading ||
-      harvestedEventsLoading ||
-      processedEventsLoading ||
-      roastedEventsLoading ||
-      distributedEventsLoading ||
-      verifiedEventsLoading,
+      (includeTxHashes &&
+        (harvestedEventsLoading ||
+          processedEventsLoading ||
+          roastedEventsLoading ||
+          distributedEventsLoading ||
+          verifiedEventsLoading)),
   };
 };
 

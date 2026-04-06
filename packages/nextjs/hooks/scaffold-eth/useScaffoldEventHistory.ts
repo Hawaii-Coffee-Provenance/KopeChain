@@ -15,6 +15,11 @@ import {
   UseScaffoldEventHistoryData,
 } from "~~/utils/scaffold-eth/contract";
 
+const isRateLimitError = (error: unknown) => {
+  const message = error instanceof Error ? error.message : String(error ?? "");
+  return message.includes("429") || message.toLowerCase().includes("too many requests");
+};
+
 const getEvents = async (
   getLogsParams: GetLogsParameters<AbiEvent | undefined, AbiEvent[] | undefined, boolean, BlockNumber, BlockNumber>,
   publicClient?: UsePublicClientReturnType<Config, number>,
@@ -112,6 +117,13 @@ export const useScaffoldEventHistory = <
   const [lastFetchedBlock, setLastFetchedBlock] = useState<bigint | null>(null);
   const [isPollingActive, setIsPollingActive] = useState(false);
 
+  useEffect(() => {
+    // Reset incremental state whenever query identity changes.
+    setLiveEvents([]);
+    setLastFetchedBlock(null);
+    setIsPollingActive(false);
+  }, [contractName, eventName, chainId, toBlock, watch, enabled, JSON.stringify(filters, replacer)]);
+
   const { data: blockNumber } = useBlockNumber({ watch: watch, chainId: selectedNetwork.id });
 
   const { data: deployedContractData } = useDeployedContractInfo({
@@ -176,6 +188,13 @@ export const useScaffoldEventHistory = <
       return data;
     },
     enabled: enabled && isContractAddressAndClientReady && !isPollingActive, // Disable when polling starts
+    staleTime: 60_000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    retry: (failureCount, error) => {
+      if (isRateLimitError(error)) return false;
+      return failureCount < 1;
+    },
     initialPageParam: fromBlockValue,
     getNextPageParam: (lastPage, allPages, lastPageParam) => {
       if (!blockNumber || fromBlockValue >= blockNumber) return undefined;
@@ -218,6 +237,11 @@ export const useScaffoldEventHistory = <
     enabled: Boolean(
       watch && enabled && isContractAddressAndClientReady && blockNumber && (shouldStartPolling() || isPollingActive),
     ),
+    staleTime: 30_000,
+    retry: (failureCount, error) => {
+      if (isRateLimitError(error)) return false;
+      return failureCount < 1;
+    },
     queryFn: async () => {
       if (!isContractAddressAndClientReady || !blockNumber) return null;
 

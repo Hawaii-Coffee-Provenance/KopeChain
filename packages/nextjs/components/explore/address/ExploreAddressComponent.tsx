@@ -109,6 +109,7 @@ const ExploreAddressComponent = ({ address }: ExploreAddressComponentProps) => {
   const fromBlock = BigInt((deployedContractInfo as { deployedOnBlock?: number } | undefined)?.deployedOnBlock ?? 0);
   const { data: balanceData } = useBalance({ address });
   const { userRole, userBatches, isLoading } = useUserBatches(address);
+  const isActivityView = historyView === "activity";
 
   const harvestedEvents = useScaffoldEventHistory({
     contractName: "CoffeeTracker",
@@ -117,6 +118,8 @@ const ExploreAddressComponent = ({ address }: ExploreAddressComponentProps) => {
     filters: { farmer: address },
     blockData: true,
     transactionData: true,
+    enabled: isActivityView,
+    blocksBatchSize: 5000,
   });
 
   const processedEvents = useScaffoldEventHistory({
@@ -126,6 +129,8 @@ const ExploreAddressComponent = ({ address }: ExploreAddressComponentProps) => {
     filters: { processor: address },
     blockData: true,
     transactionData: true,
+    enabled: isActivityView,
+    blocksBatchSize: 5000,
   });
 
   const roastedEvents = useScaffoldEventHistory({
@@ -135,6 +140,8 @@ const ExploreAddressComponent = ({ address }: ExploreAddressComponentProps) => {
     filters: { roaster: address },
     blockData: true,
     transactionData: true,
+    enabled: isActivityView,
+    blocksBatchSize: 5000,
   });
 
   const distributedEvents = useScaffoldEventHistory({
@@ -144,6 +151,8 @@ const ExploreAddressComponent = ({ address }: ExploreAddressComponentProps) => {
     filters: { distributor: address },
     blockData: true,
     transactionData: true,
+    enabled: isActivityView,
+    blocksBatchSize: 5000,
   });
 
   const verifiedEvents = useScaffoldEventHistory({
@@ -153,6 +162,8 @@ const ExploreAddressComponent = ({ address }: ExploreAddressComponentProps) => {
     filters: { verifier: address },
     blockData: true,
     transactionData: true,
+    enabled: isActivityView,
+    blocksBatchSize: 5000,
   });
 
   const activity = useMemo(() => {
@@ -220,11 +231,20 @@ const ExploreAddressComponent = ({ address }: ExploreAddressComponentProps) => {
   const role = userRole && userRole !== "None" ? userRole : "User";
   const isPending =
     isLoading ||
-    harvestedEvents.isLoading ||
-    processedEvents.isLoading ||
-    roastedEvents.isLoading ||
-    distributedEvents.isLoading ||
-    verifiedEvents.isLoading;
+    (isActivityView &&
+      (harvestedEvents.isLoading ||
+        processedEvents.isLoading ||
+        roastedEvents.isLoading ||
+        distributedEvents.isLoading ||
+        verifiedEvents.isLoading));
+
+  const eventError = isActivityView
+    ? harvestedEvents.error ||
+      processedEvents.error ||
+      roastedEvents.error ||
+      distributedEvents.error ||
+      verifiedEvents.error
+    : null;
 
   return (
     <div className="w-full min-h-[calc(100vh-4rem)] bg-base-200/50">
@@ -296,6 +316,10 @@ const ExploreAddressComponent = ({ address }: ExploreAddressComponentProps) => {
             isPending ? (
               <div className="flex items-center justify-center py-20">
                 <span className="loading loading-spinner loading-lg text-primary"></span>
+              </div>
+            ) : eventError ? (
+              <div className="mt-8 rounded-2xl border border-dashed border-warning/30 bg-warning/10 p-6 text-sm text-base-content">
+                Unable to load on-chain activity right now. The RPC provider may be rate-limiting requests.
               </div>
             ) : activity.length === 0 ? (
               <div className="mt-8 rounded-2xl border border-dashed border-base-300 bg-base-200/40 p-6 text-sm text-muted">

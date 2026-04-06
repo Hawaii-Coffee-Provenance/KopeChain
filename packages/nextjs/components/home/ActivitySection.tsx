@@ -10,7 +10,7 @@ import { CoffeeBatch } from "~~/types/coffee";
 const RECENT_LIMIT = 5;
 
 const ActivitySection = () => {
-  const { stats, txHashMap, isLoading } = useCoffeeTracker();
+  const { stats, txHashMap, isLoading } = useCoffeeTracker({ includeTxHashes: true });
   const allBatches = stats?.allBatches;
   const router = useRouter();
 

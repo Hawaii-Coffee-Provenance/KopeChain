@@ -541,6 +541,10 @@ const deployedContracts = {
           type: "event",
         },
         {
+          stateMutability: "payable",
+          type: "fallback",
+        },
+        {
           inputs: [],
           name: "DEFAULT_ADMIN_ROLE",
           outputs: [
@@ -1474,6 +1478,10 @@ const deployedContracts = {
           outputs: [],
           stateMutability: "nonpayable",
           type: "function",
+        },
+        {
+          stateMutability: "payable",
+          type: "receive",
         },
       ],
       inheritedFunctions: {
