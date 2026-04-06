@@ -45,7 +45,6 @@ const QrModal = ({ isOpen, onClose }: Props) => {
           if (hasHandledScanRef.current) return;
 
           const isValid = decodedText.includes("/explore/batch/");
-
           if (!isValid) {
             setError("Unable to parse QR code! Please scan a valid KopeChain batch.");
             return;
@@ -58,12 +57,12 @@ const QrModal = ({ isOpen, onClose }: Props) => {
           setTimeout(() => {
             onClose();
             try {
-              const targetPath = decodedText.startsWith("http")
-                ? new URL(decodedText).pathname
-                : decodedText.startsWith("/")
-                  ? decodedText
-                  : `/${decodedText}`;
-              window.location.href = targetPath;
+              const trimmedText = decodedText.trim();
+              const url = trimmedText.startsWith("http")
+                ? new URL(trimmedText)
+                : new URL(trimmedText, window.location.origin);
+
+              window.location.href = window.location.origin + url.pathname;
             } catch {
               setError("Unable to parse QR code destination. Please try another code.");
               hasHandledScanRef.current = false;
