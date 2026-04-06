@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Html5Qrcode } from "html5-qrcode";
+import { Html5Qrcode, Html5QrcodeScannerState } from "html5-qrcode";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 
 type Props = {
@@ -11,14 +11,29 @@ type Props = {
 
 const QrModal = ({ isOpen, onClose }: Props) => {
   const scannerRef = useRef<Html5Qrcode | null>(null);
+  const hasHandledScanRef = useRef(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<string | null>(null);
+
+  const stopScannerSafely = async (scanner: Html5Qrcode | null) => {
+    if (!scanner) return;
+
+    try {
+      const state = scanner.getState();
+      if (state === Html5QrcodeScannerState.SCANNING || state === Html5QrcodeScannerState.PAUSED) {
+        await scanner.stop();
+      }
+    } catch {
+      // Ignore scanner shutdown race conditions when modal closes quickly.
+    }
+  };
 
   useEffect(() => {
     if (!isOpen) return;
 
     const scanner = new Html5Qrcode("qr-reader");
     scannerRef.current = scanner;
+    hasHandledScanRef.current = false;
     setError(null);
     setResult(null);
 
@@ -27,20 +42,32 @@ const QrModal = ({ isOpen, onClose }: Props) => {
         { facingMode: "environment" },
         { fps: 10, qrbox: { width: 250, height: 250 } },
         decodedText => {
+          if (hasHandledScanRef.current) return;
+
           const isValid = decodedText.includes("/explore/batch/");
 
           if (!isValid) {
             setError("Unable to parse QR code! Please scan a valid KopeChain batch.");
-            scanner.stop().catch(() => {});
             return;
           }
 
+          hasHandledScanRef.current = true;
           setResult(decodedText);
-          scanner.stop().catch(() => {});
+          void stopScannerSafely(scanner);
 
           setTimeout(() => {
             onClose();
-            window.location.href = new URL(decodedText).pathname;
+            try {
+              const targetPath = decodedText.startsWith("http")
+                ? new URL(decodedText).pathname
+                : decodedText.startsWith("/")
+                  ? decodedText
+                  : `/${decodedText}`;
+              window.location.href = targetPath;
+            } catch {
+              setError("Unable to parse QR code destination. Please try another code.");
+              hasHandledScanRef.current = false;
+            }
           }, 1000);
         },
         undefined,
@@ -50,7 +77,8 @@ const QrModal = ({ isOpen, onClose }: Props) => {
       });
 
     return () => {
-      scannerRef.current?.stop().catch(() => {});
+      void stopScannerSafely(scannerRef.current);
+      scannerRef.current = null;
     };
   }, [isOpen, onClose]);
 

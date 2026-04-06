@@ -106,13 +106,14 @@ const ExploreAddressComponent = ({ address }: ExploreAddressComponentProps) => {
   const [historyView, setHistoryView] = useState<HistoryView>("activity");
   const targetNetwork = useSelectedNetwork();
   const { data: deployedContractInfo } = useDeployedContractInfo({ contractName: "CoffeeTracker" });
+  const fromBlock = BigInt((deployedContractInfo as { deployedOnBlock?: number } | undefined)?.deployedOnBlock ?? 0);
   const { data: balanceData } = useBalance({ address });
   const { userRole, userBatches, isLoading } = useUserBatches(address);
 
   const harvestedEvents = useScaffoldEventHistory({
     contractName: "CoffeeTracker",
     eventName: "Harvested",
-    fromBlock: 0n,
+    fromBlock,
     filters: { farmer: address },
     blockData: true,
     transactionData: true,
@@ -121,7 +122,7 @@ const ExploreAddressComponent = ({ address }: ExploreAddressComponentProps) => {
   const processedEvents = useScaffoldEventHistory({
     contractName: "CoffeeTracker",
     eventName: "Processed",
-    fromBlock: 0n,
+    fromBlock,
     filters: { processor: address },
     blockData: true,
     transactionData: true,
@@ -130,7 +131,7 @@ const ExploreAddressComponent = ({ address }: ExploreAddressComponentProps) => {
   const roastedEvents = useScaffoldEventHistory({
     contractName: "CoffeeTracker",
     eventName: "Roasted",
-    fromBlock: 0n,
+    fromBlock,
     filters: { roaster: address },
     blockData: true,
     transactionData: true,
@@ -139,7 +140,7 @@ const ExploreAddressComponent = ({ address }: ExploreAddressComponentProps) => {
   const distributedEvents = useScaffoldEventHistory({
     contractName: "CoffeeTracker",
     eventName: "Distributed",
-    fromBlock: 0n,
+    fromBlock,
     filters: { distributor: address },
     blockData: true,
     transactionData: true,
@@ -148,7 +149,7 @@ const ExploreAddressComponent = ({ address }: ExploreAddressComponentProps) => {
   const verifiedEvents = useScaffoldEventHistory({
     contractName: "CoffeeTracker",
     eventName: "Verified",
-    fromBlock: 0n,
+    fromBlock,
     filters: { verifier: address },
     blockData: true,
     transactionData: true,
