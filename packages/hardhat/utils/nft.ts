@@ -103,12 +103,10 @@ export const generateNftBuffer = async (params: {
   const regionKey = sanitize(params.region);
   const regionBgPath = path.join(baseDir, "backgrounds", `${regionKey}.png`);
   const bgPath = fs.existsSync(regionBgPath) ? regionBgPath : path.join(baseDir, "backgrounds", "other.png");
+  const mugPath = path.join(baseDir, "mugs", `${params.mug}.png`);
+  const bandPath = path.join(baseDir, "bands", STAGE_FOLDERS[params.stage], `${params.band}.png`);
 
-  const layerPaths = [
-    bgPath,
-    path.join(baseDir, "mugs", `${params.mug}.png`),
-    path.join(baseDir, "bands", STAGE_FOLDERS[params.stage], `${params.band}.png`),
-  ];
+  const layerPaths = [bgPath, mugPath, bandPath];
 
   const showLiquid = params.stage === "Roasted" || params.stage === "Distributed";
   if (showLiquid) {

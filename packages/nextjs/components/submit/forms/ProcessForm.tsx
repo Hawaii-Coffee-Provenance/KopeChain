@@ -7,7 +7,7 @@ import LocationInput from "../inputs/LocationInput";
 import MediaPreview from "../inputs/MediaPreview";
 import MediaUploader from "../inputs/MediaUploader";
 import { zeroAddress } from "viem";
-import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
+import { useScaffoldReadContract, useScaffoldWriteContract, useTargetNetwork } from "~~/hooks/scaffold-eth";
 import { useFormFields } from "~~/hooks/useFormFields";
 import { useMediaFiles } from "~~/hooks/useMediaFiles";
 import { PROCESSING_METHODS, toUnixSeconds } from "~~/utils/coffee";
@@ -16,6 +16,7 @@ import { mapTraitsToAttributes } from "~~/utils/nft";
 import {
   ensureQrCode,
   fetchMetadata,
+  getCoffeeTrackerGroupName,
   getOrCreateGroup,
   mergeGallery,
   pinJSON,
@@ -29,6 +30,7 @@ const ProcessForm = () => {
   const { mediaFiles, addFiles, updateDescription, removeFile, resetFiles } = useMediaFiles();
   const [isUploading, setIsUploading] = useState(false);
   const router = useRouter();
+  const { targetNetwork } = useTargetNetwork();
 
   const { data: batchData } = useScaffoldReadContract({
     contractName: "CoffeeTracker",
@@ -101,19 +103,21 @@ const ProcessForm = () => {
     let newMetadataCID = "";
 
     try {
-      const groupId = await getOrCreateGroup("CoffeeTracker-local-batch");
+      const networkName = (targetNetwork as { network?: string }).network ?? targetNetwork.name;
+      const groupId = await getOrCreateGroup(getCoffeeTrackerGroupName(networkName, "batch"));
+      const nftGroupId = await getOrCreateGroup(getCoffeeTrackerGroupName(networkName, "nft"));
       const metadata = await fetchMetadata(batchData.metadataCID);
-      const galleryCIDs = await uploadGallery(mediaFiles, form.batchNumber.trim());
+      const galleryCIDs = await uploadGallery(mediaFiles, form.batchNumber.trim(), networkName);
 
-      await ensureQrCode(metadata, batchData.batchNumber);
+      await ensureQrCode(metadata, batchData.batchNumber, networkName);
 
       // Get existing NFT traits (region, mug, band, steam)
       const region = metadata.attributes.find((a: any) => a.trait_type === "Region")?.value;
       const existingMug = metadata.attributes.find((a: any) => a.trait_type === "Mug")?.value;
       const existingSteam = metadata.attributes.find((a: any) => a.trait_type === "Steam")?.value;
 
-      if (!region || !existingMug || false) {
-        throw new Error("Metadata is missing required NFT traits (Region, Mug, or Band).");
+      if (!region || !existingMug) {
+        throw new Error("Metadata is missing required NFT traits (Region or Mug).");
       }
 
       // Generate new NFT
@@ -121,7 +125,7 @@ const ProcessForm = () => {
         region: region as string,
         stage: "Processed",
         batchNumber: form.batchNumber.trim(),
-        groupId,
+        groupId: nftGroupId,
         existingMug: existingMug as string,
 
         existingSteam: existingSteam as string,

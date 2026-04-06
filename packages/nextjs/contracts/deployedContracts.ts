@@ -10,33 +10,7 @@ const deployedContracts = {
       address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
       abi: [
         {
-          inputs: [
-            {
-              internalType: "address",
-              name: "admin",
-              type: "address",
-            },
-            {
-              internalType: "address",
-              name: "farmer",
-              type: "address",
-            },
-            {
-              internalType: "address",
-              name: "processor",
-              type: "address",
-            },
-            {
-              internalType: "address",
-              name: "roaster",
-              type: "address",
-            },
-            {
-              internalType: "address",
-              name: "distributor",
-              type: "address",
-            },
-          ],
+          inputs: [],
           stateMutability: "nonpayable",
           type: "constructor",
         },
@@ -1523,12 +1497,33 @@ const deployedContracts = {
   },
   84532: {
     CoffeeTracker: {
-      address: "0xb293E5cd1836C62EDD273E56488b7a140D696F16",
+      address: "0x3FE2E5291A505547668e02157F17764E397Df1bc",
       abi: [
         {
           inputs: [],
           stateMutability: "nonpayable",
           type: "constructor",
+        },
+        {
+          inputs: [],
+          name: "AccessControlBadConfirmation",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "account",
+              type: "address",
+            },
+            {
+              internalType: "bytes32",
+              name: "neededRole",
+              type: "bytes32",
+            },
+          ],
+          name: "AccessControlUnauthorizedAccount",
+          type: "error",
         },
         {
           inputs: [
@@ -1669,29 +1664,246 @@ const deployedContracts = {
             {
               indexed: false,
               internalType: "string",
-              name: "farmName",
+              name: "batchNumber",
               type: "string",
             },
             {
               indexed: false,
               internalType: "string",
-              name: "region",
+              name: "metadataCID",
               type: "string",
             },
             {
-              indexed: false,
-              internalType: "string",
-              name: "variety",
-              type: "string",
+              indexed: true,
+              internalType: "address",
+              name: "distributor",
+              type: "address",
             },
+          ],
+          name: "Distributed",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
             {
-              indexed: false,
+              indexed: true,
               internalType: "uint256",
-              name: "harvestDate",
+              name: "batchId",
               type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "batchNumber",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "metadataCID",
+              type: "string",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "farmer",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "enum CoffeeTracker.Region",
+              name: "region",
+              type: "uint8",
+            },
+            {
+              indexed: false,
+              internalType: "enum CoffeeTracker.Variety",
+              name: "variety",
+              type: "uint8",
             },
           ],
           name: "Harvested",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "batchId",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "batchNumber",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "metadataCID",
+              type: "string",
+            },
+          ],
+          name: "MetadataUpdated",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "batchId",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "batchNumber",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "metadataCID",
+              type: "string",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "processor",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "enum CoffeeTracker.ProcessingMethod",
+              name: "processingMethod",
+              type: "uint8",
+            },
+          ],
+          name: "Processed",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "batchId",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "batchNumber",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "metadataCID",
+              type: "string",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "roaster",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "enum CoffeeTracker.RoastingMethod",
+              name: "roastingMethod",
+              type: "uint8",
+            },
+            {
+              indexed: false,
+              internalType: "enum CoffeeTracker.RoastLevel",
+              name: "roastLevel",
+              type: "uint8",
+            },
+          ],
+          name: "Roasted",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "role",
+              type: "bytes32",
+            },
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "previousAdminRole",
+              type: "bytes32",
+            },
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "newAdminRole",
+              type: "bytes32",
+            },
+          ],
+          name: "RoleAdminChanged",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "role",
+              type: "bytes32",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "account",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "sender",
+              type: "address",
+            },
+          ],
+          name: "RoleGranted",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "role",
+              type: "bytes32",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "account",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "sender",
+              type: "address",
+            },
+          ],
+          name: "RoleRevoked",
           type: "event",
         },
         {
@@ -1788,6 +2000,106 @@ const deployedContracts = {
           type: "event",
         },
         {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "batchId",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "batchNumber",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "metadataCID",
+              type: "string",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "verifier",
+              type: "address",
+            },
+          ],
+          name: "Verified",
+          type: "event",
+        },
+        {
+          stateMutability: "payable",
+          type: "fallback",
+        },
+        {
+          inputs: [],
+          name: "DEFAULT_ADMIN_ROLE",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "DISTRIBUTOR_ROLE",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "FARMER_ROLE",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "PROCESSOR_ROLE",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "ROASTER_ROLE",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
           inputs: [
             {
               internalType: "address",
@@ -1838,40 +2150,12 @@ const deployedContracts = {
         {
           inputs: [
             {
-              internalType: "uint256",
+              internalType: "string",
               name: "",
-              type: "uint256",
+              type: "string",
             },
           ],
-          name: "batches",
-          outputs: [
-            {
-              internalType: "string",
-              name: "farmName",
-              type: "string",
-            },
-            {
-              internalType: "string",
-              name: "region",
-              type: "string",
-            },
-            {
-              internalType: "string",
-              name: "variety",
-              type: "string",
-            },
-            {
-              internalType: "uint256",
-              name: "harvestDate",
-              type: "uint256",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "currentBatchId",
+          name: "batchNumberToId",
           outputs: [
             {
               internalType: "uint256",
@@ -1885,29 +2169,540 @@ const deployedContracts = {
         {
           inputs: [
             {
-              internalType: "string",
-              name: "_farm",
-              type: "string",
+              internalType: "uint256",
+              name: "_batchId",
+              type: "uint256",
             },
             {
               internalType: "string",
-              name: "_region",
+              name: "_metadataCID",
               type: "string",
             },
+          ],
+          name: "distributeBatch",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_batchId",
+              type: "uint256",
+            },
+          ],
+          name: "getBatch",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "uint64",
+                  name: "batchId",
+                  type: "uint64",
+                },
+                {
+                  internalType: "uint32",
+                  name: "mintTimestamp",
+                  type: "uint32",
+                },
+                {
+                  internalType: "bool",
+                  name: "verified",
+                  type: "bool",
+                },
+                {
+                  internalType: "enum CoffeeTracker.Region",
+                  name: "region",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.Variety",
+                  name: "variety",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.ProcessingMethod",
+                  name: "processingMethod",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.RoastingMethod",
+                  name: "roastingMethod",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.RoastLevel",
+                  name: "roastLevel",
+                  type: "uint8",
+                },
+                {
+                  internalType: "address",
+                  name: "farmer",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "processor",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "roaster",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "distributor",
+                  type: "address",
+                },
+                {
+                  internalType: "string",
+                  name: "batchNumber",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "metadataCID",
+                  type: "string",
+                },
+              ],
+              internalType: "struct CoffeeTracker.CoffeeBatch",
+              name: "",
+              type: "tuple",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
             {
               internalType: "string",
-              name: "_variety",
+              name: "_batchNumber",
               type: "string",
+            },
+          ],
+          name: "getBatchByNumber",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "uint64",
+                  name: "batchId",
+                  type: "uint64",
+                },
+                {
+                  internalType: "uint32",
+                  name: "mintTimestamp",
+                  type: "uint32",
+                },
+                {
+                  internalType: "bool",
+                  name: "verified",
+                  type: "bool",
+                },
+                {
+                  internalType: "enum CoffeeTracker.Region",
+                  name: "region",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.Variety",
+                  name: "variety",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.ProcessingMethod",
+                  name: "processingMethod",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.RoastingMethod",
+                  name: "roastingMethod",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.RoastLevel",
+                  name: "roastLevel",
+                  type: "uint8",
+                },
+                {
+                  internalType: "address",
+                  name: "farmer",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "processor",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "roaster",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "distributor",
+                  type: "address",
+                },
+                {
+                  internalType: "string",
+                  name: "batchNumber",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "metadataCID",
+                  type: "string",
+                },
+              ],
+              internalType: "struct CoffeeTracker.CoffeeBatch",
+              name: "",
+              type: "tuple",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getBatchCount",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "offset",
+              type: "uint256",
             },
             {
               internalType: "uint256",
-              name: "_quantity",
+              name: "limit",
               type: "uint256",
+            },
+          ],
+          name: "getBatches",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "uint64",
+                  name: "batchId",
+                  type: "uint64",
+                },
+                {
+                  internalType: "uint32",
+                  name: "mintTimestamp",
+                  type: "uint32",
+                },
+                {
+                  internalType: "bool",
+                  name: "verified",
+                  type: "bool",
+                },
+                {
+                  internalType: "enum CoffeeTracker.Region",
+                  name: "region",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.Variety",
+                  name: "variety",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.ProcessingMethod",
+                  name: "processingMethod",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.RoastingMethod",
+                  name: "roastingMethod",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.RoastLevel",
+                  name: "roastLevel",
+                  type: "uint8",
+                },
+                {
+                  internalType: "address",
+                  name: "farmer",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "processor",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "roaster",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "distributor",
+                  type: "address",
+                },
+                {
+                  internalType: "string",
+                  name: "batchNumber",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "metadataCID",
+                  type: "string",
+                },
+              ],
+              internalType: "struct CoffeeTracker.CoffeeBatch[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getFarmCount",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "account",
+              type: "address",
+            },
+          ],
+          name: "getRole",
+          outputs: [
+            {
+              internalType: "string",
+              name: "",
+              type: "string",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "role",
+              type: "bytes32",
+            },
+          ],
+          name: "getRoleAdmin",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getTransactionCount",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "user",
+              type: "address",
+            },
+          ],
+          name: "getUserBatches",
+          outputs: [
+            {
+              internalType: "string",
+              name: "userRole",
+              type: "string",
+            },
+            {
+              components: [
+                {
+                  internalType: "uint64",
+                  name: "batchId",
+                  type: "uint64",
+                },
+                {
+                  internalType: "uint32",
+                  name: "mintTimestamp",
+                  type: "uint32",
+                },
+                {
+                  internalType: "bool",
+                  name: "verified",
+                  type: "bool",
+                },
+                {
+                  internalType: "enum CoffeeTracker.Region",
+                  name: "region",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.Variety",
+                  name: "variety",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.ProcessingMethod",
+                  name: "processingMethod",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.RoastingMethod",
+                  name: "roastingMethod",
+                  type: "uint8",
+                },
+                {
+                  internalType: "enum CoffeeTracker.RoastLevel",
+                  name: "roastLevel",
+                  type: "uint8",
+                },
+                {
+                  internalType: "address",
+                  name: "farmer",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "processor",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "roaster",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "distributor",
+                  type: "address",
+                },
+                {
+                  internalType: "string",
+                  name: "batchNumber",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "metadataCID",
+                  type: "string",
+                },
+              ],
+              internalType: "struct CoffeeTracker.CoffeeBatch[]",
+              name: "history",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "role",
+              type: "bytes32",
+            },
+            {
+              internalType: "address",
+              name: "account",
+              type: "address",
+            },
+          ],
+          name: "grantRole",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "_batchNumber",
+              type: "string",
+            },
+            {
+              internalType: "enum CoffeeTracker.Region",
+              name: "_region",
+              type: "uint8",
+            },
+            {
+              internalType: "enum CoffeeTracker.Variety",
+              name: "_variety",
+              type: "uint8",
+            },
+            {
+              internalType: "string",
+              name: "_metadataCID",
+              type: "string",
             },
           ],
           name: "harvestBatch",
           outputs: [],
           stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "role",
+              type: "bytes32",
+            },
+            {
+              internalType: "address",
+              name: "account",
+              type: "address",
+            },
+          ],
+          name: "hasRole",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
           type: "function",
         },
         {
@@ -1937,85 +2732,172 @@ const deployedContracts = {
         {
           inputs: [
             {
+              internalType: "uint256",
+              name: "_batchId",
+              type: "uint256",
+            },
+            {
+              internalType: "enum CoffeeTracker.ProcessingMethod",
+              name: "_processingMethod",
+              type: "uint8",
+            },
+            {
+              internalType: "string",
+              name: "_metadataCID",
+              type: "string",
+            },
+          ],
+          name: "processBatch",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "role",
+              type: "bytes32",
+            },
+            {
               internalType: "address",
-              name: "from",
+              name: "callerConfirmation",
+              type: "address",
+            },
+          ],
+          name: "renounceRole",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "role",
+              type: "bytes32",
+            },
+            {
+              internalType: "address",
+              name: "account",
+              type: "address",
+            },
+          ],
+          name: "revokeRole",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_batchId",
+              type: "uint256",
+            },
+            {
+              internalType: "enum CoffeeTracker.RoastingMethod",
+              name: "_roastingMethod",
+              type: "uint8",
+            },
+            {
+              internalType: "enum CoffeeTracker.RoastLevel",
+              name: "_roastLevel",
+              type: "uint8",
+            },
+            {
+              internalType: "string",
+              name: "_metadataCID",
+              type: "string",
+            },
+          ],
+          name: "roastBatch",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "",
               type: "address",
             },
             {
               internalType: "address",
-              name: "to",
+              name: "",
               type: "address",
             },
             {
               internalType: "uint256[]",
-              name: "ids",
+              name: "",
               type: "uint256[]",
             },
             {
               internalType: "uint256[]",
-              name: "values",
+              name: "",
               type: "uint256[]",
             },
             {
               internalType: "bytes",
-              name: "data",
+              name: "",
               type: "bytes",
             },
           ],
           name: "safeBatchTransferFrom",
           outputs: [],
-          stateMutability: "nonpayable",
+          stateMutability: "pure",
           type: "function",
         },
         {
           inputs: [
             {
               internalType: "address",
-              name: "from",
+              name: "",
               type: "address",
             },
             {
               internalType: "address",
-              name: "to",
+              name: "",
               type: "address",
             },
             {
               internalType: "uint256",
-              name: "id",
+              name: "",
               type: "uint256",
             },
             {
               internalType: "uint256",
-              name: "value",
+              name: "",
               type: "uint256",
             },
             {
               internalType: "bytes",
-              name: "data",
+              name: "",
               type: "bytes",
             },
           ],
           name: "safeTransferFrom",
           outputs: [],
-          stateMutability: "nonpayable",
+          stateMutability: "pure",
           type: "function",
         },
         {
           inputs: [
             {
               internalType: "address",
-              name: "operator",
+              name: "",
               type: "address",
             },
             {
               internalType: "bool",
-              name: "approved",
+              name: "",
               type: "bool",
             },
           ],
           name: "setApprovalForAll",
           outputs: [],
-          stateMutability: "nonpayable",
+          stateMutability: "pure",
           type: "function",
         },
         {
@@ -2041,7 +2923,25 @@ const deployedContracts = {
           inputs: [
             {
               internalType: "uint256",
-              name: "",
+              name: "_batchId",
+              type: "uint256",
+            },
+            {
+              internalType: "string",
+              name: "_metadataCID",
+              type: "string",
+            },
+          ],
+          name: "updateMetadataCID",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_batchId",
               type: "uint256",
             },
           ],
@@ -2056,9 +2956,41 @@ const deployedContracts = {
           stateMutability: "view",
           type: "function",
         },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_batchId",
+              type: "uint256",
+            },
+          ],
+          name: "verifyBatch",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          stateMutability: "payable",
+          type: "receive",
+        },
       ],
-      inheritedFunctions: {},
-      deployedOnBlock: 38080710,
+      inheritedFunctions: {
+        balanceOf: "@openzeppelin/contracts/token/ERC1155/ERC1155.sol",
+        balanceOfBatch: "@openzeppelin/contracts/token/ERC1155/ERC1155.sol",
+        isApprovedForAll: "@openzeppelin/contracts/token/ERC1155/ERC1155.sol",
+        safeBatchTransferFrom: "@openzeppelin/contracts/token/ERC1155/ERC1155.sol",
+        safeTransferFrom: "@openzeppelin/contracts/token/ERC1155/ERC1155.sol",
+        setApprovalForAll: "@openzeppelin/contracts/token/ERC1155/ERC1155.sol",
+        supportsInterface: "@openzeppelin/contracts/access/AccessControl.sol",
+        uri: "@openzeppelin/contracts/token/ERC1155/ERC1155.sol",
+        DEFAULT_ADMIN_ROLE: "@openzeppelin/contracts/access/AccessControl.sol",
+        getRoleAdmin: "@openzeppelin/contracts/access/AccessControl.sol",
+        grantRole: "@openzeppelin/contracts/access/AccessControl.sol",
+        hasRole: "@openzeppelin/contracts/access/AccessControl.sol",
+        renounceRole: "@openzeppelin/contracts/access/AccessControl.sol",
+        revokeRole: "@openzeppelin/contracts/access/AccessControl.sol",
+      },
+      deployedOnBlock: 39845029,
     },
   },
 } as const;

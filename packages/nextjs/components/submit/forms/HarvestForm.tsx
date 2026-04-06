@@ -5,13 +5,13 @@ import { useRouter } from "next/navigation";
 import LocationInput from "../inputs/LocationInput";
 import MediaPreview from "../inputs/MediaPreview";
 import MediaUploader from "../inputs/MediaUploader";
-import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
+import { useScaffoldWriteContract, useTargetNetwork } from "~~/hooks/scaffold-eth";
 import { useFormFields } from "~~/hooks/useFormFields";
 import { useMediaFiles } from "~~/hooks/useMediaFiles";
 import { BatchMetadata } from "~~/types/batch";
 import { REGIONS, VARIETIES, toUnixSeconds } from "~~/utils/coffee";
 import { HARVEST_INITIAL_FORM } from "~~/utils/forms";
-import { getOrCreateGroup, pinJSON, pinNFT, pinQR, uploadGallery } from "~~/utils/pinata";
+import { getCoffeeTrackerGroupName, getOrCreateGroup, pinJSON, pinNFT, pinQR, uploadGallery } from "~~/utils/pinata";
 import { notification } from "~~/utils/scaffold-eth";
 
 const HarvestForm = () => {
@@ -21,6 +21,7 @@ const HarvestForm = () => {
   const router = useRouter();
 
   const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
+  const { targetNetwork } = useTargetNetwork();
 
   const { writeContractAsync, isMining } = useScaffoldWriteContract({ contractName: "CoffeeTracker" });
 
@@ -61,17 +62,19 @@ const HarvestForm = () => {
     let metadataCID = "";
 
     try {
-      const groupId = await getOrCreateGroup("CoffeeTracker-local-batch");
-      const qrGroupId = await getOrCreateGroup("CoffeeTracker-local-qr");
+      const networkName = (targetNetwork as { network?: string }).network ?? targetNetwork.name;
+      const groupId = await getOrCreateGroup(getCoffeeTrackerGroupName(networkName, "batch"));
+      const qrGroupId = await getOrCreateGroup(getCoffeeTrackerGroupName(networkName, "qr"));
+      const nftGroupId = await getOrCreateGroup(getCoffeeTrackerGroupName(networkName, "nft"));
       const qrCID = await pinQR(form.batchNumber.trim(), qrGroupId);
-      const galleryCIDs = await uploadGallery(mediaFiles, form.batchNumber.trim());
+      const galleryCIDs = await uploadGallery(mediaFiles, form.batchNumber.trim(), networkName);
 
       // Generate NFT
       const { IpfsHash: nftCID, traits } = await pinNFT({
         region: REGIONS[Number(form.region)],
         stage: "Harvested",
         batchNumber: form.batchNumber.trim(),
-        groupId,
+        groupId: nftGroupId,
       });
 
       const metadata: BatchMetadata = {

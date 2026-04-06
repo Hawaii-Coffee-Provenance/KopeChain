@@ -4,6 +4,18 @@ import { MediaFile } from "~~/types/forms";
 
 export const PINATA_GATEWAY = process.env.NEXT_PUBLIC_PINATA_GATEWAY ?? "https://gateway.pinata.cloud";
 
+const normalizeNetworkName = (networkName?: string): string => {
+  if (!networkName?.trim()) return "localhost";
+  return networkName.trim();
+};
+
+export const getCoffeeTrackerGroupName = (
+  networkName: string | undefined,
+  scope: "batch" | "qr" | "media" | "nft",
+): string => {
+  return `CoffeeTracker-${normalizeNetworkName(networkName)}-${scope}`;
+};
+
 export async function fetchMetadata(cid: string): Promise<BatchMetadata> {
   const url = `${PINATA_GATEWAY}/ipfs/${cid}`;
 
@@ -138,10 +150,11 @@ export const ipfsToHTTP = (uri: string) => {
 export const uploadGallery = async (
   mediaFiles: MediaFile[],
   batchNumber: string,
+  networkName?: string,
 ): Promise<{ cid: string; description: string }[]> => {
   if (mediaFiles.length === 0) return [];
 
-  const mediaGroupId = await getOrCreateGroup("CoffeeTracker-local-media");
+  const mediaGroupId = await getOrCreateGroup(getCoffeeTrackerGroupName(networkName, "media"));
 
   return Promise.all(
     mediaFiles.map(async ({ file, description }) => {
@@ -151,10 +164,14 @@ export const uploadGallery = async (
   );
 };
 
-export const ensureQrCode = async (metadata: BatchMetadata, batchNumber: string): Promise<void> => {
+export const ensureQrCode = async (
+  metadata: BatchMetadata,
+  batchNumber: string,
+  networkName?: string,
+): Promise<void> => {
   if (metadata.properties.images?.qrCode) return;
 
-  const qrGroupId = await getOrCreateGroup("CoffeeTracker-local-qr");
+  const qrGroupId = await getOrCreateGroup(getCoffeeTrackerGroupName(networkName, "qr"));
   const qrCID = await pinQR(batchNumber, qrGroupId);
 
   metadata.properties.images = metadata.properties.images || {};

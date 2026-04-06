@@ -115,12 +115,12 @@ contract CoffeeTracker is ERC1155, AccessControl {
 
     event MetadataUpdated(uint256 indexed batchId, string batchNumber, string metadataCID);
 
-    constructor(address admin, address farmer, address processor, address roaster, address distributor) ERC1155("") {
-        _grantRole(DEFAULT_ADMIN_ROLE, admin);
-        _grantRole(FARMER_ROLE, farmer);
-        _grantRole(PROCESSOR_ROLE, processor);
-        _grantRole(ROASTER_ROLE, roaster);
-        _grantRole(DISTRIBUTOR_ROLE, distributor);
+    constructor() ERC1155("") {
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _grantRole(FARMER_ROLE, msg.sender);
+        _grantRole(PROCESSOR_ROLE, msg.sender);
+        _grantRole(ROASTER_ROLE, msg.sender);
+        _grantRole(DISTRIBUTOR_ROLE, msg.sender);
     }
 
     function harvestBatch(
@@ -337,8 +337,13 @@ contract CoffeeTracker is ERC1155, AccessControl {
         return super.supportsInterface(interfaceId);
     }
 
+    function _update(address from, address to, uint256[] memory ids, uint256[] memory values) internal override {
+        require(to != address(this), "Batch NFTs are non-transferable!");
+        super._update(from, to, ids, values);
+    }
+
     function safeTransferFrom(address, address, uint256, uint256, bytes memory) public pure override {
-        revert("Batch NFTs are non-transferable");
+        revert("Batch NFTs are non-transferable!");
     }
 
     function safeBatchTransferFrom(
@@ -348,10 +353,18 @@ contract CoffeeTracker is ERC1155, AccessControl {
         uint256[] memory,
         bytes memory
     ) public pure override {
-        revert("Batch NFTs are non-transferable");
+        revert("Batch NFTs are non-transferable!");
     }
 
     function setApprovalForAll(address, bool) public pure override {
-        revert("Batch NFTs are non-transferable");
+        revert("Batch NFTs are non-transferable!");
+    }
+
+    receive() external payable {
+        revert("Contract does not accept payments!");
+    }
+
+    fallback() external payable {
+        revert("Contract does not accept payments!");
     }
 }

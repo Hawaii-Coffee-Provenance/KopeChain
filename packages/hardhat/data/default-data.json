@@ -8,7 +8,7 @@
       "elevation": 1850,
       "harvestDate": 1762041600,
       "harvestWeight": 412,
-      "farmName": "Ka'u Coffee Mill",
+      "farmName": "Ka'u Coffee Mill (Demo)",
       "location": {
         "latitude": 19097200,
         "longitude": -155609800
@@ -61,7 +61,7 @@
       "elevation": 610,
       "harvestDate": 1763251200,
       "harvestWeight": 228,
-      "farmName": "MauiGrown Coffee - Lahaina Estate",
+      "farmName": "MauiGrown Coffee - Lahaina Estate (Demo)",
       "location": {
         "latitude": 20916700,
         "longitude": -156691200
@@ -114,7 +114,7 @@
       "elevation": 488,
       "harvestDate": 1761436800,
       "harvestWeight": 3240,
-      "farmName": "Kauai Coffee Company",
+      "farmName": "Kauai Coffee Company (Demo)",
       "location": {
         "latitude": 21904600,
         "longitude": -159527800
@@ -167,7 +167,7 @@
       "elevation": 372,
       "harvestDate": 1764288000,
       "harvestWeight": 594,
-      "farmName": "Hamakua Heritage Farms",
+      "farmName": "Hamakua Heritage Farms (Demo)",
       "location": {
         "latitude": 19994300,
         "longitude": -155327600
@@ -220,7 +220,7 @@
       "elevation": 1143,
       "harvestDate": 1765497600,
       "harvestWeight": 781,
-      "farmName": "Rusty's Hawaiian",
+      "farmName": "Rusty's Hawaiian (Demo)",
       "location": {
         "latitude": 19083600,
         "longitude": -155573400
@@ -273,7 +273,7 @@
       "elevation": 512,
       "harvestDate": 1762646400,
       "harvestWeight": 1103,
-      "farmName": "Volcano Island Coffee",
+      "farmName": "Volcano Island Coffee (Demo)",
       "location": {
         "latitude": 19430100,
         "longitude": -154994700
@@ -326,7 +326,7 @@
       "elevation": 823,
       "harvestDate": 1766102400,
       "harvestWeight": 338,
-      "farmName": "Big Island Coffee Roasters - Kona",
+      "farmName": "Big Island Coffee Roasters - Kona (Demo)",
       "location": {
         "latitude": 19491300,
         "longitude": -155858600
@@ -379,7 +379,7 @@
       "elevation": 457,
       "harvestDate": 1763856000,
       "harvestWeight": 196,
-      "farmName": "Coffees of Hawaii - Kualapu'u",
+      "farmName": "Coffees of Hawaii - Kualapu'u (Demo)",
       "location": {
         "latitude": 21161300,
         "longitude": -157017200
@@ -432,7 +432,7 @@
       "elevation": 290,
       "harvestDate": 1760832000,
       "harvestWeight": 2871,
-      "farmName": "Honokaa Coffee Cooperative",
+      "farmName": "Honokaa Coffee Cooperative (Demo)",
       "location": {
         "latitude": 20075800,
         "longitude": -155471300
@@ -485,7 +485,7 @@
       "elevation": 731,
       "harvestDate": 1766707200,
       "harvestWeight": 649,
-      "farmName": "Waialua Estate - Kauai",
+      "farmName": "Waialua Estate - Kauai (Demo)",
       "location": {
         "latitude": 22207600,
         "longitude": -159491800

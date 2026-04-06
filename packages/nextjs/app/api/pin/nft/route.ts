@@ -34,13 +34,11 @@ export async function POST(req: NextRequest) {
     // Resolve background (fallback to "other")
     const regionBgPath = path.join(baseDir, "backgrounds", `${regionKey}.png`);
     const bgPath = fs.existsSync(regionBgPath) ? regionBgPath : path.join(baseDir, "backgrounds", "other.png");
+    const mugPath = path.join(baseDir, "mugs", `${mug}.png`);
+    const bandPath = path.join(baseDir, "bands", STAGE_FOLDERS[stage as Stage], `${band}.png`);
 
     // Build layer stack
-    const layerPaths = [
-      bgPath,
-      path.join(baseDir, "mugs", `${mug}.png`),
-      path.join(baseDir, "bands", STAGE_FOLDERS[stage as Stage], `${band}.png`),
-    ];
+    const layerPaths = [bgPath, mugPath, bandPath];
 
     // Add liquid + steam for roasted/distributed stages
     const showLiquid = stage === "Roasted" || (stage === "Distributed" && roastLevel);

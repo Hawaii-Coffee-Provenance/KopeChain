@@ -26,20 +26,17 @@ function chooseSubset(pool: number[], num: number, seed: string): number[] {
 }
 
 const seedCoffeeTracker: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  const { ethers } = hre;
-  const [deployer, farmer, processor, roaster, distributor] = await ethers.getSigners();
+  const { ethers, network } = hre;
+  const [deployer] = await ethers.getSigners();
+
+  console.log(`Network: ${network.name}`);
+  console.log(`Seeding with deployer: ${deployer.address}`);
 
   const coffeeTracker = await ethers.getContract<CoffeeTracker>("CoffeeTracker", deployer);
 
-  console.log("Granting roles...");
-  await coffeeTracker.grantRole(await coffeeTracker.FARMER_ROLE(), farmer.address, { gasLimit: 500000 });
-  await coffeeTracker.grantRole(await coffeeTracker.PROCESSOR_ROLE(), processor.address, { gasLimit: 500000 });
-  await coffeeTracker.grantRole(await coffeeTracker.ROASTER_ROLE(), roaster.address, { gasLimit: 500000 });
-  await coffeeTracker.grantRole(await coffeeTracker.DISTRIBUTOR_ROLE(), distributor.address, { gasLimit: 500000 });
-
-  const groupId = await getOrCreateGroup("CoffeeTracker-local-batch");
-  const qrGroupId = await getOrCreateGroup("CoffeeTracker-local-qr");
-  const nftGroupId = await getOrCreateGroup("CoffeeTracker-local-nft");
+  const groupId = await getOrCreateGroup(`CoffeeTracker-${network.name}-batch`);
+  const qrGroupId = await getOrCreateGroup(`CoffeeTracker-${network.name}-qr`);
+  const nftGroupId = await getOrCreateGroup(`CoffeeTracker-${network.name}-nft`);
 
   const allIndices = Array.from({ length: TOTAL }, (_, i) => i);
   if (TOTAL !== HARVESTED_ONLY_COUNT + PROCESSED_ONLY_COUNT + ROASTED_ONLY_COUNT + DISTRIBUTED_COUNT) {
@@ -54,11 +51,8 @@ const seedCoffeeTracker: DeployFunction = async function (hre: HardhatRuntimeEnv
 
   const processedOnlyIndices = chooseSubset(remainingAfterRoasted, PROCESSED_ONLY_COUNT, "processed");
   const processedSet = new Set([...processedOnlyIndices, ...roastedOnlyIndices, ...distributedIndices]);
-
   const roastedSet = new Set([...roastedOnlyIndices, ...distributedIndices]);
-
   const distributedSet = new Set(distributedIndices);
-
   const verifiedSet = new Set(allIndices);
 
   console.log(`Pinning ${TOTAL} metadata files...`);
@@ -70,14 +64,9 @@ const seedCoffeeTracker: DeployFunction = async function (hre: HardhatRuntimeEnv
     const existing = await findExistingPin(data.batchNumber);
     if (existing) {
       console.log(`[${i + 1}/${TOTAL}] ${data.batchNumber} - REUSING CID`);
-
       batchCIDs.push(existing);
-
       continue;
     }
-
-    const qrBuffer = await generateQRBuffer(data.batchNumber);
-    const qrCID = await pinFile(qrBuffer, `qr-${data.batchNumber}.png`, "image/png", qrGroupId);
 
     const stage = (
       distributedSet.has(i)
@@ -91,26 +80,19 @@ const seedCoffeeTracker: DeployFunction = async function (hre: HardhatRuntimeEnv
 
     const regionName = REGIONS[data.harvestData.region] ?? "Other";
     const roastLevelName = ROAST_LEVELS[data.roastingData.roastLevel] ?? ROAST_LEVELS[1];
-
     const mug = getRandomTrait(MUG_TRAITS).name;
     const band = getRandomTrait(BAND_TRAITS).name;
     const steam = getRandomTrait(STEAM_TRAITS).name;
 
-    const nftBuffer = await generateNftBuffer({
-      region: regionName,
-      stage,
-      roastLevel: roastLevelName,
-      mug,
-      band,
-      steam,
-    });
+    const [qrBuffer, nftBuffer] = await Promise.all([
+      generateQRBuffer(data.batchNumber),
+      generateNftBuffer({ region: regionName, stage, roastLevel: roastLevelName, mug, band, steam }),
+    ]);
 
-    const nftCID = await pinFile(
-      nftBuffer,
-      `nft-${data.batchNumber}-${stage.toLowerCase()}.png`,
-      "image/png",
-      nftGroupId,
-    );
+    const [qrCID, nftCID] = await Promise.all([
+      pinFile(qrBuffer, `qr-${data.batchNumber}.png`, "image/png", qrGroupId),
+      pinFile(nftBuffer, `nft-${data.batchNumber}-${stage.toLowerCase()}.png`, "image/png", nftGroupId),
+    ]);
 
     const fullMetadata = buildFullMetadata(data, {
       processed: processedSet.has(i),
@@ -125,14 +107,11 @@ const seedCoffeeTracker: DeployFunction = async function (hre: HardhatRuntimeEnv
     });
 
     const cid = await pinJSON(fullMetadata, `batch-${data.batchNumber}`, data.batchNumber, groupId);
-
-    console.log(`[${i + 1}/${TOTAL}] ${data.batchNumber} - NEW CID (QR: ${qrCID})`);
-
+    console.log(`[${i + 1}/${TOTAL}] ${data.batchNumber} - NEW CID`);
     batchCIDs.push(cid);
   }
 
   console.log(`Seeding ${TOTAL} batches on-chain...`);
-  let batchId = 1;
 
   for (let i = 0; i < TOTAL; i++) {
     const data = DATA[i];
@@ -140,29 +119,28 @@ const seedCoffeeTracker: DeployFunction = async function (hre: HardhatRuntimeEnv
     const p = data.processingData;
     const r = data.roastingData;
     const cid = batchCIDs[i];
+    const batchId = i + 1;
 
     console.log(`[${i + 1}/${TOTAL}] ${batchNumber}`);
 
-    await coffeeTracker
-      .connect(farmer)
-      .harvestBatch(batchNumber, data.harvestData.region, data.harvestData.variety, cid, { gasLimit: 500000 });
+    await (
+      await coffeeTracker.harvestBatch(batchNumber, data.harvestData.region, data.harvestData.variety, cid, {
+        gasLimit: 500000,
+      })
+    ).wait();
 
     if (processedSet.has(i)) {
-      await coffeeTracker.connect(processor).processBatch(batchId, p.processingMethod, cid, { gasLimit: 500000 });
+      await (await coffeeTracker.processBatch(batchId, p.processingMethod, cid, { gasLimit: 500000 })).wait();
     }
     if (roastedSet.has(i)) {
-      await coffeeTracker
-        .connect(roaster)
-        .roastBatch(batchId, r.roastingMethod, r.roastLevel, cid, { gasLimit: 500000 });
+      await (await coffeeTracker.roastBatch(batchId, r.roastingMethod, r.roastLevel, cid, { gasLimit: 500000 })).wait();
     }
     if (distributedSet.has(i)) {
-      await coffeeTracker.connect(distributor).distributeBatch(batchId, cid, { gasLimit: 500000 });
+      await (await coffeeTracker.distributeBatch(batchId, cid, { gasLimit: 500000 })).wait();
     }
     if (verifiedSet.has(i)) {
-      await coffeeTracker.connect(deployer).verifyBatch(batchId, { gasLimit: 500000 });
+      await (await coffeeTracker.verifyBatch(batchId, { gasLimit: 500000 })).wait();
     }
-
-    batchId++;
   }
 
   console.log("Seeding complete.");
