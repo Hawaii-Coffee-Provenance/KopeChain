@@ -51,7 +51,7 @@ export const ScaffoldEthAppWithProviders = ({ children }: { children: React.Reac
     return (
       <>
         <ProgressBar height="3px" color="#2299dd" />
-        <div className="flex min-h-screen w-full items-center justify-center bg-base-100">
+        <div className="flex min-h-screen w-full items-center justify-center bg-base-200">
           <span className="loading loading-spinner loading-xl text-primary" />
         </div>
       </>

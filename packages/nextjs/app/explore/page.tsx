@@ -8,14 +8,9 @@ type Props = {
 const ExplorePage = async ({ searchParams }: Props) => {
   const resolvedSearchParams = await searchParams;
   const q = typeof resolvedSearchParams?.q === "string" ? resolvedSearchParams.q : "";
+
   return (
-    <Suspense
-      fallback={
-        <div className="w-full flex justify-center py-8">
-          <span className="loading loading-spinner loading-lg text-primary" />
-        </div>
-      }
-    >
+    <Suspense fallback={null}>
       <ExploreClient initialSearchQuery={q} />
     </Suspense>
   );

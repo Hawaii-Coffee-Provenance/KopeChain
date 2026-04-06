@@ -1,27 +1,32 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useRoleProtection } from "~~/hooks/useRoleProtection";
 
 type RoleClientProps = {
-  children: React.ReactNode;
+  children: React.ReactNode | ((props: { userRole: string | undefined }) => React.ReactNode);
   allowedRoles: string[];
-  loadingComponent?: React.ReactNode;
 };
 
-const RoleClient = ({ children, allowedRoles, loadingComponent }: RoleClientProps) => {
-  const { userRole, isLoading, isReady } = useRoleProtection(allowedRoles);
+const RoleClient = ({ children, allowedRoles }: RoleClientProps) => {
+  const router = useRouter();
+  const { userRole, isLoading, isReady, isAuthorized, isUnauthorized } = useRoleProtection(allowedRoles);
+
+  useEffect(() => {
+    if (!isUnauthorized) return;
+    router.replace("/forbidden");
+  }, [isUnauthorized, router]);
 
   if (!isReady || isLoading) {
-    return (
-      loadingComponent ?? (
-        <div className="flex h-full w-full items-center justify-center min-h-[calc(100vh-4rem)]">
-          <span className="loading loading-spinner loading-xl text-primary"></span>
-        </div>
-      )
-    );
+    return null;
   }
 
-  if (userRole && allowedRoles.includes(userRole)) {
+  if (isAuthorized) {
+    if (typeof children === "function") {
+      return <>{children({ userRole })}</>;
+    }
+
     return <>{children}</>;
   }
 
