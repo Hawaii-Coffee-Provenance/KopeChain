@@ -50,7 +50,7 @@ const BatchInfo = ({ batch, txHashes }: { batch: any; txHashes: BatchTxHashes })
           <p className="font-serif text-2xl font-light italic text-base-content leading-snug">
             {batch.cuppingNotes && batch.cuppingNotes.length > 0
               ? `“${batch.cuppingNotes}”`
-              : `"To Be Processed & roasted..."`}
+              : `"To Be Processed & Roasted..."`}
           </p>
         </div>
 

@@ -98,11 +98,13 @@ const Header = () => {
       </div>
 
       <div className="flex items-center gap-2">
-        <div className="flex items-center">
-          <span className="text-nav-link p-2 text-muted hidden md:inline">Scan QR Code</span>
+        <div className="flex items-center gap-1">
+          <span className="text-nav-link text-muted hidden md:inline">Scan QR Code</span>
           <button
+            type="button"
             onClick={() => setQrOpen(true)}
-            className="flex items-center justify-center p-2 rounded-full hover:bg-base-content/5 transition-colors hover:cursor-pointer"
+            className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-base-content/5 transition-colors hover:cursor-pointer"
+            aria-label="Scan QR Code"
           >
             <QrCodeIcon className="h-6 w-6" />
           </button>
@@ -113,7 +115,10 @@ const Header = () => {
         <RainbowKitCustomConnectButton />
 
         <details className="dropdown dropdown-end lg:hidden" ref={burgerMenuRef}>
-          <summary className="btn btn-ghost btn-sm btn-borderless hover:border-base-300">
+          <summary
+            className="btn btn-ghost btn-sm h-10 min-h-10 w-10 p-0 hover:border-base-300"
+            aria-label="Open navigation menu"
+          >
             <Bars3Icon className="h-6 w-6" />
           </summary>
           <ul

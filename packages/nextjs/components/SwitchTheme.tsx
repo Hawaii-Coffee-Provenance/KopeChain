@@ -22,12 +22,23 @@ const SwitchTheme = ({ className }: { className?: string }) => {
     setMounted(true);
   }, []);
 
-  if (!mounted) return null;
+  if (!mounted) {
+    return (
+      <button
+        type="button"
+        className={`flex h-10 w-10 items-center justify-center invisible ${className ?? ""}`}
+        aria-hidden
+        tabIndex={-1}
+      />
+    );
+  }
 
   return (
     <button
+      type="button"
       onClick={handleToggle}
-      className={`flex items-center justify-center p-2 rounded-full hover:bg-base-content/5 transition-colors hover:cursor-pointer ${className}`}
+      className={`flex h-10 w-10 items-center justify-center rounded-full hover:bg-base-content/5 transition-colors hover:cursor-pointer ${className ?? ""}`}
+      aria-label="Toggle theme"
     >
       {isDarkMode ? <MoonIcon className="h-6 w-6" /> : <SunIcon className="h-6 w-6" />}
     </button>
