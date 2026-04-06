@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useLocalStorage } from "usehooks-ts";
 import { useAccount } from "wagmi";
 import { Bars3Icon, QrCodeIcon } from "@heroicons/react/24/outline";
 import QrModal from "~~/components/QrModal";
@@ -36,32 +35,23 @@ export const menuLinks: HeaderMenuLink[] = [
   },
 ];
 
-const allowedSubmitRoles = ["Admin", "Farmer", "Processor", "Roaster", "Distributor"];
-
 export const HeaderMenuLinks = () => {
   const pathname = usePathname();
   const { address } = useAccount();
   const { userRole } = useUserRole(address);
 
-  const cacheKey = address ? `kopechain_role_${address.toLowerCase()}` : "kopechain_role_none";
-  const [cachedRole, setCachedRole] = useLocalStorage<string | null>(cacheKey, null);
-
-  useEffect(() => {
-    if (userRole) setCachedRole(userRole);
-  }, [userRole, setCachedRole]);
-
-  useEffect(() => {
-    if (!address) setCachedRole(null);
-  }, [address, setCachedRole]);
-
-  const displayRole = userRole ?? cachedRole;
+  const allowedSubmitRoles = ["Admin", "Farmer", "Processor", "Roaster", "Distributor"];
 
   return (
     <>
       {menuLinks.map(({ label, href }) => {
-        if (label === "Admin" && displayRole !== "Admin") return null;
+        if (label === "Admin" && userRole !== "Admin") {
+          return null;
+        }
 
-        if (label === "Submit" && (!displayRole || !allowedSubmitRoles.includes(displayRole))) return null;
+        if (label === "Submit" && (!userRole || !allowedSubmitRoles.includes(userRole))) {
+          return null;
+        }
 
         const isActive = pathname === href;
         return (

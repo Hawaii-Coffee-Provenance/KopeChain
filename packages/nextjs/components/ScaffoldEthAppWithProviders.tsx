@@ -6,11 +6,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AppProgressBar as ProgressBar } from "next-nprogress-bar";
 import { useTheme } from "next-themes";
 import { Toaster } from "react-hot-toast";
-import { WagmiProvider } from "wagmi";
+import { type Config, WagmiProvider } from "wagmi";
 import Footer from "~~/components/Footer";
 import Header from "~~/components/Header";
 import { BlockieAvatar } from "~~/components/scaffold-eth";
-import { wagmiConfig } from "~~/services/web3/wagmiConfig";
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -37,10 +36,27 @@ export const ScaffoldEthAppWithProviders = ({ children }: { children: React.Reac
   const { resolvedTheme } = useTheme();
   const isDarkMode = resolvedTheme === "dark";
   const [mounted, setMounted] = useState(false);
+  const [wagmiConfig, setWagmiConfig] = useState<Config | null>(null);
 
   useEffect(() => {
     setMounted(true);
+
+    // Defer wallet config loading to the browser to avoid SSR evaluating wallet storage internals.
+    void import("~~/services/web3/wagmiConfig").then(module => {
+      setWagmiConfig(module.wagmiConfig);
+    });
   }, []);
+
+  if (!wagmiConfig) {
+    return (
+      <>
+        <ProgressBar height="3px" color="#2299dd" />
+        <div className="flex min-h-screen w-full items-center justify-center bg-base-100">
+          <span className="loading loading-spinner loading-xl text-primary" />
+        </div>
+      </>
+    );
+  }
 
   return (
     <WagmiProvider config={wagmiConfig}>
