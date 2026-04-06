@@ -2,11 +2,12 @@ import React, { Suspense } from "react";
 import ExploreClient from "../../components/explore/ExploreClient";
 
 type Props = {
-  searchParams?: { [key: string]: string | string[] | undefined };
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-const ExplorePage = ({ searchParams }: Props) => {
-  const q = typeof searchParams?.q === "string" ? searchParams.q : "";
+const ExplorePage = async ({ searchParams }: Props) => {
+  const resolvedSearchParams = await searchParams;
+  const q = typeof resolvedSearchParams?.q === "string" ? resolvedSearchParams.q : "";
   return (
     <Suspense
       fallback={

@@ -7,6 +7,7 @@ import BatchFilterBar from "~~/components/explore/table/BatchFilterBar";
 import BatchTable from "~~/components/explore/table/BatchTable";
 import { useBatchPagination } from "~~/hooks/useBatchPagination";
 import { useCoffeeTracker } from "~~/hooks/useCoffeeTracker";
+import { BatchTxHashes } from "~~/types/batch";
 import { BatchFilterState, CoffeeBatch } from "~~/types/coffee";
 import { getStage } from "~~/utils/coffee";
 
@@ -18,7 +19,7 @@ type ExploreClientProps = {
 
 const ExploreClient: React.FC<ExploreClientProps> = ({ initialSearchQuery = "" }) => {
   const { stats, txHashMap, isLoading } = useCoffeeTracker();
-  const allBatches = stats?.allBatches;
+  const allBatches = useMemo(() => (stats?.allBatches ?? []) as CoffeeBatch[], [stats?.allBatches]);
   const [filters, setFilters] = useState<BatchFilterState>(DEFAULT_FILTERS);
   const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
 
@@ -27,7 +28,7 @@ const ExploreClient: React.FC<ExploreClientProps> = ({ initialSearchQuery = "" }
   }, [initialSearchQuery]);
 
   const batches = useMemo(() => {
-    let list = [...((allBatches as unknown as CoffeeBatch[]) ?? [])];
+    let list = [...allBatches];
 
     if (filters.stage === "Verified") {
       list = list.filter(b => b.verified);
@@ -61,12 +62,19 @@ const ExploreClient: React.FC<ExploreClientProps> = ({ initialSearchQuery = "" }
     return filters.sort === "oldest" ? list : list.reverse();
   }, [allBatches, filters, searchQuery, txHashMap]);
 
-  const tableTxHashMap = useMemo(() => {
+  const tableTxHashMap = useMemo<Record<string, `0x${string}` | undefined>>(() => {
     return Object.fromEntries(
-      Object.entries(txHashMap).map(([batchId, hashes]) => [
-        batchId,
-        hashes?.verified || hashes?.distributed || hashes?.roasted || hashes?.processed || hashes?.harvested,
-      ]),
+      Object.entries(txHashMap).map(([batchId, hashes]) => {
+        const typedHashes = hashes as BatchTxHashes | undefined;
+        return [
+          batchId,
+          typedHashes?.verified ??
+            typedHashes?.distributed ??
+            typedHashes?.roasted ??
+            typedHashes?.processed ??
+            typedHashes?.harvested,
+        ];
+      }),
     );
   }, [txHashMap]);
 
