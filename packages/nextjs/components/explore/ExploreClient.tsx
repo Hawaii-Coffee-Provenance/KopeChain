@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import React, { useEffect, useMemo, useState } from "react";
 import ChartDashboard from "~~/components/explore/dashboard/ChartDashboard";
 import DataDashboard from "~~/components/explore/dashboard/DataDashboard";
 import BatchFilterBar from "~~/components/explore/table/BatchFilterBar";
@@ -13,12 +12,19 @@ import { getStage } from "~~/utils/coffee";
 
 const DEFAULT_FILTERS: BatchFilterState = { stage: "All", region: "all", sort: "newest" };
 
-const ExploreClient: React.FC = () => {
-  const searchParams = useSearchParams();
+type ExploreClientProps = {
+  initialSearchQuery?: string;
+};
+
+const ExploreClient: React.FC<ExploreClientProps> = ({ initialSearchQuery = "" }) => {
   const { stats, txHashMap, isLoading } = useCoffeeTracker();
   const allBatches = stats?.allBatches;
   const [filters, setFilters] = useState<BatchFilterState>(DEFAULT_FILTERS);
-  const [searchQuery, setSearchQuery] = useState(searchParams.get("q") ?? "");
+  const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
+
+  useEffect(() => {
+    setSearchQuery(initialSearchQuery);
+  }, [initialSearchQuery]);
 
   const batches = useMemo(() => {
     let list = [...((allBatches as unknown as CoffeeBatch[]) ?? [])];
