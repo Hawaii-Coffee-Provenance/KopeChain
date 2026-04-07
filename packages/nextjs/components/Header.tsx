@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAccount } from "wagmi";
@@ -88,8 +89,8 @@ const Header = () => {
   return (
     <header className="sticky top-0 z-20 flex items-center justify-between px-6 h-16 bg-base-100 border-b border-base-300 shadow-none">
       <div className="flex items-center gap-6">
-        <Link href="/" className="font-serif text-2xl font-semibold text-base-content tracking-tight">
-          Kope<span className="italic text-accent">Chain</span>
+        <Link href="/" className="inline-flex items-center" aria-label="home">
+          <Image src="/kopechain.png" alt="KopeChain" width={1200} height={346} className="h-8 w-auto" priority />
         </Link>
 
         <ul className="hidden lg:flex items-center gap-1 list-none">
