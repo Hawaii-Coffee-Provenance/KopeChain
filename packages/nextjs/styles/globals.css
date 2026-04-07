@@ -178,7 +178,7 @@
 }
 
 .text-col-header {
-  @apply font-bold tracking-wide text-cream uppercase;
+  @apply font-bold tracking-wide uppercase;
 }
 
 .text-muted {
