@@ -16,7 +16,11 @@ const BatchRow = memo(({ batch, txHash }: BatchRowProps) => {
   return (
     <tr>
       <td className="px-4 py-2">
-        <TxHashLink txHash={txHash} href={`/explore/batch/${batch.batchNumber}`} />
+        <TxHashLink
+          txHash={txHash}
+          href={`/explore/batch/${batch.batchNumber}`}
+          ariaLabel={`Open batch ${batch.batchNumber} details`}
+        />
       </td>
 
       <td className="px-4 py-2">

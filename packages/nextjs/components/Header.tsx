@@ -91,11 +91,19 @@ const Header = () => {
       <div className="flex items-center gap-6">
         <Link href="/" className="inline-flex items-center" aria-label="home">
           <Image
-            src="/kopechain.png"
+            src="/kopechain-light.png"
             alt="KopeChain"
             width={1200}
             height={346}
-            className="h-[32px] w-auto shrink-0 object-contain"
+            className="h-[32px] w-auto shrink-0 object-contain dark:hidden"
+            priority
+          />
+          <Image
+            src="/kopechain-dark.png"
+            alt="KopeChain"
+            width={1200}
+            height={346}
+            className="hidden h-[32px] w-auto shrink-0 object-contain dark:block"
             priority
           />
         </Link>

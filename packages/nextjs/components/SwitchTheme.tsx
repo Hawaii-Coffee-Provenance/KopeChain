@@ -1,26 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useTheme } from "next-themes";
 import { MoonIcon, SunIcon } from "@heroicons/react/24/outline";
+import { useThemeChange } from "~~/hooks/useThemeChange";
 
 const SwitchTheme = ({ className }: { className?: string }) => {
-  const { setTheme, resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  const isDarkMode = resolvedTheme === "dark";
-
-  const handleToggle = () => {
-    if (isDarkMode) {
-      setTheme("light");
-      return;
-    }
-    setTheme("dark");
-  };
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const { isDarkMode, mounted, toggleTheme } = useThemeChange();
 
   if (!mounted) {
     return (
@@ -36,7 +20,7 @@ const SwitchTheme = ({ className }: { className?: string }) => {
   return (
     <button
       type="button"
-      onClick={handleToggle}
+      onClick={toggleTheme}
       className={`flex h-10 w-10 items-center justify-center rounded-full hover:bg-base-content/5 transition-colors hover:cursor-pointer ${className ?? ""}`}
       aria-label="Toggle theme"
     >
