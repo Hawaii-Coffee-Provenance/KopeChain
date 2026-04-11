@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import ChartTooltip from "./ChartTooltip";
-import { Cell, Pie, PieChart as RechartsPieChart, ResponsiveContainer, Tooltip } from "recharts";
+import { Cell, Pie, PieChart as RechartsPieChart, Tooltip } from "recharts";
 import { RegionData } from "~~/types/coffee";
 import { getRegionColor } from "~~/utils/coffee";
 
@@ -25,14 +25,14 @@ const RegionChart = ({ data, isLoading }: { data: RegionData; isLoading?: boolea
   if (isLoading) {
     return (
       <div className="w-full h-full flex items-center justify-center">
-        <div className="w-[80%] aspect-square rounded-full bg-base-300 animate-pulse" />
+        <div className="w-full aspect-square rounded-full bg-base-300 animate-pulse" />
       </div>
     );
   }
 
   return (
-    <ResponsiveContainer width="100%" height="100%">
-      <RechartsPieChart>
+    <div className="w-full h-full">
+      <RechartsPieChart width={200} height={200} style={{ width: "100%", height: "100%" }}>
         <Tooltip content={renderTooltip} cursor={false} />
         <Pie
           data={displayData}
@@ -58,7 +58,7 @@ const RegionChart = ({ data, isLoading }: { data: RegionData; isLoading?: boolea
           ))}
         </Pie>
       </RechartsPieChart>
-    </ResponsiveContainer>
+    </div>
   );
 };
 

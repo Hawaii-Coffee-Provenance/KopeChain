@@ -13,6 +13,10 @@ const BatchInfo = ({ batch, txHashes }: { batch: any; txHashes: BatchTxHashes })
   const [activeTab, setActiveTab] = useState<"Overview" | "Journey" | "On Chain">("Overview");
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
+  const hasOnChainData = Boolean(
+    txHashes?.harvested || txHashes?.processed || txHashes?.roasted || txHashes?.distributed || txHashes?.verified,
+  );
+
   useEffect(() => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollTop = 0;
@@ -72,20 +76,32 @@ const BatchInfo = ({ batch, txHashes }: { batch: any; txHashes: BatchTxHashes })
         </div>
 
         <div className={`animate-fadeIn mt-4 ${activeTab === "On Chain" ? "block" : "hidden"}`}>
-          {txHashes?.harvested && (
-            <BatchData txHash={txHashes.harvested} title="Harvested Transaction" batchNumber={batch.batchNumber} />
-          )}
-          {txHashes?.processed && (
-            <BatchData txHash={txHashes.processed} title="Processed Transaction" batchNumber={batch.batchNumber} />
-          )}
-          {txHashes?.roasted && (
-            <BatchData txHash={txHashes.roasted} title="Roasted Transaction" batchNumber={batch.batchNumber} />
-          )}
-          {txHashes?.distributed && (
-            <BatchData txHash={txHashes.distributed} title="Distributed Transaction" batchNumber={batch.batchNumber} />
-          )}
-          {txHashes?.verified && (
-            <BatchData txHash={txHashes.verified} title="Verified Transaction" batchNumber={batch.batchNumber} />
+          {hasOnChainData ? (
+            <>
+              {txHashes?.harvested && (
+                <BatchData txHash={txHashes.harvested} title="Harvested Transaction" batchNumber={batch.batchNumber} />
+              )}
+              {txHashes?.processed && (
+                <BatchData txHash={txHashes.processed} title="Processed Transaction" batchNumber={batch.batchNumber} />
+              )}
+              {txHashes?.roasted && (
+                <BatchData txHash={txHashes.roasted} title="Roasted Transaction" batchNumber={batch.batchNumber} />
+              )}
+              {txHashes?.distributed && (
+                <BatchData
+                  txHash={txHashes.distributed}
+                  title="Distributed Transaction"
+                  batchNumber={batch.batchNumber}
+                />
+              )}
+              {txHashes?.verified && (
+                <BatchData txHash={txHashes.verified} title="Verified Transaction" batchNumber={batch.batchNumber} />
+              )}
+            </>
+          ) : (
+            <div className="min-h-[50vh] w-full flex items-center justify-center">
+              <span className="loading loading-spinner loading-md text-primary" />
+            </div>
           )}
         </div>
       </div>

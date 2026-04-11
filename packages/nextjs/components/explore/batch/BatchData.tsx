@@ -30,13 +30,16 @@ const BatchData = ({ txHash, title, batchNumber }: { txHash: Hash; title?: strin
     const fetchTx = async () => {
       try {
         setIsLoading(true);
-        const tx = await client.getTransaction({ hash: txHash });
-        const receipt = await client.getTransactionReceipt({ hash: txHash });
+        const [tx, receipt] = await Promise.all([
+          client.getTransaction({ hash: txHash }),
+          client.getTransactionReceipt({ hash: txHash }),
+        ]);
         const decoded = decodeFunction(tx as any) as DecodedTx;
 
         setTxData({ tx: decoded, receipt });
       } catch (e) {
         console.error("Error fetching transaction:", e);
+        setTxData(null);
       } finally {
         setIsLoading(false);
       }

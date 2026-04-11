@@ -86,7 +86,7 @@ const RegionLegend = ({ stats, isLoading }: CardProps) => {
   const total = displayData.reduce((s, d) => s + d.count, 0);
 
   return (
-    <div className="flex-1 flex flex-col justify-center gap-2 min-w-0">
+    <div className="w-full flex-1 flex flex-col justify-center gap-2 min-w-0 pb-1">
       {displayData.map(entry => {
         const pct = total > 0 ? Math.round((entry.count / total) * 100) : 0;
 
@@ -122,12 +122,12 @@ const RegionCard = ({ stats, isLoading }: CardProps) => {
       {/* Header */}
       <div className="flex items-center justify-between mb-2">
         <div className="text-label text-muted">Batches By Region</div>
-        <div className="text-muted text-xs">{stats?.regionCounters?.length ?? "—"} regions</div>
+        <div className="text-muted text-xs">{isLoading ? "—" : (stats?.regionCounters?.length ?? "—")} regions</div>
       </div>
 
-      <div className="flex-1 flex flex-row items-center justify-between w-full h-full gap-2">
+      <div className="flex-1 flex flex-col lg:flex-row items-center justify-between w-full gap-2 lg:gap-10">
         {/* Chart / Skeleton */}
-        <div className="w-[50%] h-full shrink-0">
+        <div className="w-44 lg:w-2/5 aspect-square shrink-0 mx-auto lg:mx-0">
           <RegionChart data={stats?.regionCounters ?? []} isLoading={isLoading} />
         </div>
 

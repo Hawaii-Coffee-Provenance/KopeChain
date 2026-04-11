@@ -7,9 +7,8 @@ import BatchFilterBar from "~~/components/explore/table/BatchFilterBar";
 import BatchTable from "~~/components/explore/table/BatchTable";
 import { useBatchPagination } from "~~/hooks/useBatchPagination";
 import { useCoffeeTracker } from "~~/hooks/useCoffeeTracker";
-import { BatchTxHashes } from "~~/types/batch";
 import { BatchFilterState, CoffeeBatch } from "~~/types/coffee";
-import { getStage } from "~~/utils/coffee";
+import { getStage, toTableTxHashMap } from "~~/utils/coffee";
 
 const DEFAULT_FILTERS: BatchFilterState = { stage: "All", region: "all", sort: "newest" };
 
@@ -63,19 +62,7 @@ const ExploreClient: React.FC<ExploreClientProps> = ({ initialSearchQuery = "" }
   }, [allBatches, filters, searchQuery, txHashMap]);
 
   const tableTxHashMap = useMemo<Record<string, `0x${string}` | undefined>>(() => {
-    return Object.fromEntries(
-      Object.entries(txHashMap).map(([batchId, hashes]) => {
-        const typedHashes = hashes as BatchTxHashes | undefined;
-        return [
-          batchId,
-          typedHashes?.verified ??
-            typedHashes?.distributed ??
-            typedHashes?.roasted ??
-            typedHashes?.processed ??
-            typedHashes?.harvested,
-        ];
-      }),
-    );
+    return toTableTxHashMap(txHashMap);
   }, [txHashMap]);
 
   const { paginatedItems, currentPage, totalPages, pageSize, goToPage, setPageSize } = useBatchPagination(batches);
