@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-// import Link from "next/link";
+import Link from "next/link";
 import { NetworkOptions } from "./NetworkOptions";
 import { getAddress } from "viem";
 import { Address } from "viem";
@@ -57,7 +57,6 @@ export const AddressInfoDropdown = ({ address, ensAvatar, displayName }: Address
         <ul className="dropdown-content menu p-2 mt-2 bg-base-100 border border-base-300 rounded-xl shadow-lg w-52 list-none gap-1 z-50">
           <NetworkOptions hidden={!selectingNetwork} />
 
-          {/* TODO: FINISH PROFILE PAGE
           <li className={selectingNetwork ? "hidden" : ""}>
             <Link
               href="/profile"
@@ -67,7 +66,6 @@ export const AddressInfoDropdown = ({ address, ensAvatar, displayName }: Address
               <span className="whitespace-nowrap">Profile</span>
             </Link>
           </li>
-          */}
 
           <li className={selectingNetwork ? "hidden" : ""}>
             <button
