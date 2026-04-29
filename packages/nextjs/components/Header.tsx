@@ -39,7 +39,7 @@ export const menuLinks: HeaderMenuLink[] = [
 export const HeaderMenuLinks = () => {
   const pathname = usePathname();
   const { address } = useAccount();
-  const { userRole } = useUserRole(address);
+  const { userRole, isLoading } = useUserRole(address);
 
   const allowedSubmitRoles = ["Admin", "Farmer", "Processor", "Roaster", "Distributor"];
 
@@ -50,8 +50,9 @@ export const HeaderMenuLinks = () => {
           return null;
         }
 
-        if (label === "Submit" && (!userRole || !allowedSubmitRoles.includes(userRole))) {
-          return null;
+        if (label === "Submit") {
+          if (!address) return null;
+          if (!isLoading && !allowedSubmitRoles.includes(userRole as string)) return null;
         }
 
         const isActive = pathname === href;

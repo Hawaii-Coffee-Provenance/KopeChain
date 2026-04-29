@@ -24,7 +24,7 @@ export const useRoleProtection = (allowedRoles: string[]) => {
       return;
     }
 
-    if (hasConnectedAddress && (isLoading || normalizedUserRole.length === 0)) return;
+    if (hasConnectedAddress && isLoading) return;
 
     const t = setTimeout(() => setIsSettled(true), 100);
     return () => clearTimeout(t);
