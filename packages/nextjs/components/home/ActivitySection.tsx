@@ -6,12 +6,11 @@ import BatchTable from "../explore/table/BatchTable";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { useCoffeeTracker } from "~~/hooks/useCoffeeTracker";
 import { CoffeeBatch } from "~~/types/coffee";
-import { toTableTxHashMap } from "~~/utils/coffee";
 
 const RECENT_LIMIT = 5;
 
 const ActivitySection = () => {
-  const { stats, txHashMap, isLoading } = useCoffeeTracker({ includeTxHashes: true });
+  const { stats, isLoading } = useCoffeeTracker();
   const allBatches = stats?.allBatches;
   const router = useRouter();
 
@@ -19,7 +18,6 @@ const ActivitySection = () => {
     () => [...((allBatches as unknown as CoffeeBatch[]) ?? [])].reverse().slice(0, RECENT_LIMIT),
     [allBatches],
   );
-  const tableTxHashMap = useMemo(() => toTableTxHashMap(txHashMap), [txHashMap]);
 
   return (
     <div className="max-w-7xl w-full">
@@ -40,7 +38,7 @@ const ActivitySection = () => {
         </div>
       </div>
 
-      <BatchTable batches={isLoading ? undefined : recentBatches} isLoading={isLoading} txHashMap={tableTxHashMap} />
+      <BatchTable batches={isLoading ? undefined : recentBatches} isLoading={isLoading} />
     </div>
   );
 };

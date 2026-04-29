@@ -1,5 +1,5 @@
 import { zeroAddress } from "viem";
-import { BatchMetadata, BatchTxHashes, CoffeeBatch, Coordinates, RawBatch } from "~~/types/batch";
+import { BatchMetadata, CoffeeBatch, Coordinates, RawBatch } from "~~/types/batch";
 import { Stage } from "~~/types/coffee";
 
 export type { CoffeeBatch, Coordinates };
@@ -41,17 +41,6 @@ export const toUnixSeconds = (value: string) => Math.floor(new Date(`${value}T00
 export const truncateAddress = (address: string) => {
   if (!address) return "";
   return `${address.slice(0, 6)}...${address.slice(-6)}`;
-};
-
-export const toTableTxHashMap = (
-  txHashMap: Record<string, BatchTxHashes | undefined>,
-): Record<string, `0x${string}` | undefined> => {
-  return Object.fromEntries(
-    Object.entries(txHashMap).map(([batchId, hashes]) => [
-      batchId,
-      hashes?.verified ?? hashes?.distributed ?? hashes?.roasted ?? hashes?.processed ?? hashes?.harvested,
-    ]),
-  );
 };
 
 export const REGIONS: Record<number, string> = {

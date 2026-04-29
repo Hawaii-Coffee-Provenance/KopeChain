@@ -214,7 +214,8 @@ export const useCoffeeTracker = ({ includeTxHashes = false }: { includeTxHashes?
 
     const scaBuckets = [80, 82, 84, 86, 88, 90, 92, 94, 96].map(floor => ({
       score: `${floor}`,
-      count: scoredBatches.filter(b => b.scaScore >= floor && b.scaScore < floor + 2).length,
+      count: scoredBatches.filter(b => (floor === 80 ? b.scaScore < 82 : b.scaScore >= floor && b.scaScore < floor + 2))
+        .length,
     }));
 
     const recentBatches = [...batches].sort((a, b) => Number(b.mintTimestamp) - Number(a.mintTimestamp));

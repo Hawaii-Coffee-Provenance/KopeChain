@@ -37,7 +37,7 @@ const BatchInfo = ({ batch, txHashes }: { batch: any; txHashes: BatchTxHashes })
 
           <div className="flex flex-row items-center gap-2 flex-shrink-0">
             <span className={`text-sm font-medium ${batch.verified ? "text-primary" : "text-accent"}`}>
-              {batch.verified ? "Verified" : "Pending"}
+              {batch.verified ? "Verified" : "Unverified"}
             </span>
 
             <span

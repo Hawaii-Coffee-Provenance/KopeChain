@@ -76,7 +76,7 @@ const MapPopup = ({ batch, location, stage, onClose }: MapPopupProps) => {
 
           <div className="flex items-center gap-1.5">
             <span className={`text-xs font-medium ${batch.verified ? "text-primary" : "text-accent"}`}>
-              {batch.verified ? "Verified" : "Pending"}
+              {batch.verified ? "Verified" : "Unverified"}
             </span>
             <span
               className={`inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium ${STAGE_STYLES[stage]}`}
