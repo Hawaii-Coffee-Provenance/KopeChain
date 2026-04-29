@@ -140,6 +140,8 @@ export async function getOrCreateGroup(name: string): Promise<string> {
     headers: { Authorization: `Bearer ${PINATA_JWT}` },
   });
 
+  if (!listRes.ok) throw new Error(`Pinata list groups failed (${listRes.status}): ${await listRes.text()}`);
+
   const listData = await listRes.json();
   if (listData.groups && listData.groups.length > 0) {
     return listData.groups[0].id;
@@ -154,7 +156,11 @@ export async function getOrCreateGroup(name: string): Promise<string> {
     body: JSON.stringify({ name }),
   });
 
+  if (!createRes.ok) throw new Error(`Pinata create group failed (${createRes.status}): ${await createRes.text()}`);
+
   const group = await createRes.json();
+  if (!group.id) throw new Error(`Pinata create group returned no ID: ${JSON.stringify(group)}`);
+
   return group.id;
 }
 
