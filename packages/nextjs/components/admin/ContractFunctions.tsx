@@ -149,14 +149,14 @@ const ContractFunctions = ({ contractName }: AdminContractProps) => {
           <AdminSubmitButton label="Read" onClick={() => handleRead("getFarmCount")} />
         </AdminFunctionDisplay>
 
-        {/* Get Role */}
-        <AdminFunctionDisplay label="getRole" result={results["getRole"]}>
+        {/* Get Roles */}
+        <AdminFunctionDisplay label="getRoles" result={results["getRoles"]}>
           <AdminInputField value={roleAddress} onChange={setRoleAddress} placeholder="Address (address)" />
 
           <AdminSubmitButton
             label="Read"
             disabled={!roleAddress}
-            onClick={() => handleRead("getRole", [roleAddress])}
+            onClick={() => handleRead("getRoles", [roleAddress])}
           />
         </AdminFunctionDisplay>
 

@@ -123,12 +123,20 @@ contract CoffeeTracker is ERC1155, AccessControl {
         _grantRole(DISTRIBUTOR_ROLE, msg.sender);
     }
 
+    modifier onlyRoleOrAdmin(bytes32 role) {
+        require(
+            hasRole(role, msg.sender) || hasRole(DEFAULT_ADMIN_ROLE, msg.sender),
+            "AccessControl: unauthorized account"
+        );
+        _;
+    }
+
     function harvestBatch(
         string calldata _batchNumber,
         Region _region,
         Variety _variety,
         string calldata _metadataCID
-    ) public onlyRole(FARMER_ROLE) {
+    ) public onlyRoleOrAdmin(FARMER_ROLE) {
         require(batchNumberToId[_batchNumber] == 0, "This coffee batch number already exists!");
 
         uint256 _batchId = _batchIdCounter;
@@ -170,7 +178,7 @@ contract CoffeeTracker is ERC1155, AccessControl {
         uint256 _batchId,
         ProcessingMethod _processingMethod,
         string calldata _metadataCID
-    ) public onlyRole(PROCESSOR_ROLE) {
+    ) public onlyRoleOrAdmin(PROCESSOR_ROLE) {
         CoffeeBatch storage batch = batches[_batchId];
 
         require(batch.farmer != address(0), "This coffee batch must be harvested!");
@@ -197,7 +205,7 @@ contract CoffeeTracker is ERC1155, AccessControl {
         RoastingMethod _roastingMethod,
         RoastLevel _roastLevel,
         string calldata _metadataCID
-    ) public onlyRole(ROASTER_ROLE) {
+    ) public onlyRoleOrAdmin(ROASTER_ROLE) {
         CoffeeBatch storage batch = batches[_batchId];
 
         require(batch.farmer != address(0), "This coffee batch must be harvested!");
@@ -221,7 +229,7 @@ contract CoffeeTracker is ERC1155, AccessControl {
         _transactionCount++;
     }
 
-    function distributeBatch(uint256 _batchId, string calldata _metadataCID) public onlyRole(DISTRIBUTOR_ROLE) {
+    function distributeBatch(uint256 _batchId, string calldata _metadataCID) public onlyRoleOrAdmin(DISTRIBUTOR_ROLE) {
         CoffeeBatch storage batch = batches[_batchId];
 
         require(batch.farmer != address(0), "This coffee batch must be harvested!");
@@ -319,13 +327,29 @@ contract CoffeeTracker is ERC1155, AccessControl {
         return _farmCount;
     }
 
-    function getRole(address account) public view returns (string memory) {
-        if (hasRole(DEFAULT_ADMIN_ROLE, account)) return "Admin";
-        if (hasRole(FARMER_ROLE, account)) return "Farmer";
-        if (hasRole(PROCESSOR_ROLE, account)) return "Processor";
-        if (hasRole(ROASTER_ROLE, account)) return "Roaster";
-        if (hasRole(DISTRIBUTOR_ROLE, account)) return "Distributor";
-        return "User";
+    function getRoles(address account) public view returns (string[] memory) {
+        uint256 count = 0;
+        
+        if (hasRole(DEFAULT_ADMIN_ROLE, account)) count++;
+        if (hasRole(FARMER_ROLE, account)) count++;
+        if (hasRole(PROCESSOR_ROLE, account)) count++;
+        if (hasRole(ROASTER_ROLE, account)) count++;
+        if (hasRole(DISTRIBUTOR_ROLE, account)) count++;
+
+        if (count == 0) {
+            string[] memory none = new string[](1);
+            none[0] = "User";
+            return none;
+        }
+
+        string[] memory roles = new string[](count);
+        uint256 idx = 0;
+        if (hasRole(DEFAULT_ADMIN_ROLE, account)) roles[idx++] = "Admin";
+        if (hasRole(FARMER_ROLE, account)) roles[idx++] = "Farmer";
+        if (hasRole(PROCESSOR_ROLE, account)) roles[idx++] = "Processor";
+        if (hasRole(ROASTER_ROLE, account)) roles[idx++] = "Roaster";
+        if (hasRole(DISTRIBUTOR_ROLE, account)) roles[idx++] = "Distributor";
+        return roles;
     }
 
     function uri(uint256 _batchId) public view override returns (string memory) {
