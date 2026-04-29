@@ -7,7 +7,8 @@ import LocationInput from "../inputs/LocationInput";
 import MediaPreview from "../inputs/MediaPreview";
 import MediaUploader from "../inputs/MediaUploader";
 import { zeroAddress } from "viem";
-import { useScaffoldReadContract, useScaffoldWriteContract, useTargetNetwork } from "~~/hooks/scaffold-eth";
+import { useScaffoldWriteContract, useTargetNetwork } from "~~/hooks/scaffold-eth";
+import { useRawBatch } from "~~/hooks/useCoffeeTracker";
 import { useFormFields } from "~~/hooks/useFormFields";
 import { useMediaFiles } from "~~/hooks/useMediaFiles";
 import { PROCESSING_METHODS, toUnixSeconds } from "~~/utils/coffee";
@@ -32,11 +33,7 @@ const ProcessForm = () => {
   const router = useRouter();
   const { targetNetwork } = useTargetNetwork();
 
-  const { data: batchData } = useScaffoldReadContract({
-    contractName: "CoffeeTracker",
-    functionName: "getBatchByNumber",
-    args: [form.batchNumber?.trim()],
-  });
+  const { batchData } = useRawBatch(form.batchName);
 
   const { writeContractAsync, isMining } = useScaffoldWriteContract({ contractName: "CoffeeTracker" });
 
@@ -49,7 +46,7 @@ const ProcessForm = () => {
     event.preventDefault();
 
     if (
-      !form.batchNumber ||
+      !form.batchName ||
       !form.moistureContent ||
       !form.scaScore ||
       !form.humidity ||
@@ -107,9 +104,9 @@ const ProcessForm = () => {
       const groupId = await getOrCreateGroup(getCoffeeTrackerGroupName(networkName, "batch"));
       const nftGroupId = await getOrCreateGroup(getCoffeeTrackerGroupName(networkName, "nft"));
       const metadata = await fetchMetadata(batchData.metadataCID);
-      const galleryCIDs = await uploadGallery(mediaFiles, form.batchNumber.trim(), networkName);
+      const galleryCIDs = await uploadGallery(mediaFiles, form.batchName.trim(), networkName);
 
-      await ensureQrCode(metadata, batchData.batchNumber, networkName);
+      await ensureQrCode(metadata, batchData.batchName, networkName);
 
       // Get existing NFT traits (region, mug, band, steam)
       const region = metadata.attributes.find((a: any) => a.trait_type === "Region")?.value;
@@ -124,7 +121,7 @@ const ProcessForm = () => {
       const { IpfsHash: nftCID, traits } = await pinNFT({
         region: region as string,
         stage: "Processed",
-        batchNumber: form.batchNumber.trim(),
+        batchName: form.batchName.trim(),
         groupId: nftGroupId,
         existingMug: existingMug as string,
 
@@ -150,7 +147,7 @@ const ProcessForm = () => {
 
       mergeGallery(metadata, galleryCIDs);
 
-      newMetadataCID = await pinJSON(metadata, `batch-${form.batchNumber.trim()}`, form.batchNumber.trim(), groupId);
+      newMetadataCID = await pinJSON(metadata, `batch-${form.batchName.trim()}`, form.batchName.trim(), groupId);
     } catch (error) {
       console.error(error);
       notification.error("Failed to upload to Pinata. See console for details.");
@@ -169,7 +166,7 @@ const ProcessForm = () => {
         },
         {
           onBlockConfirmation: () => {
-            notification.success(`Batch ${form.batchNumber.trim()} was processed on-chain.`);
+            notification.success(`Batch ${form.batchName.trim()} was processed on-chain.`);
             resetForm();
             setTimeout(() => {
               router.push("/explore");
@@ -198,10 +195,10 @@ const ProcessForm = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 gap-x-6">
           {/* Row 1, Col 1 */}
           <div className="flex flex-col gap-2 w-full">
-            <span className="text-label">Batch Number</span>
+            <span className="text-label">Batch Name</span>
             <BatchSelect
-              value={form.batchNumber}
-              onSelect={val => updateField("batchNumber", val)}
+              value={form.batchName}
+              onSelect={val => updateField("batchName", val)}
               requiredStage="Harvested"
               isDisabled={isDisabled}
             />

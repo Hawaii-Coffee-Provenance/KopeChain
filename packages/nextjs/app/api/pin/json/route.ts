@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
-    const { content, name, batchNumber, groupId } = await req.json();
+    const { content, name, batchName, groupId } = await req.json();
 
     const res = await fetch("https://api.pinata.cloud/pinning/pinJSONToIPFS", {
       method: "POST",
@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
         pinataContent: content,
         pinataMetadata: {
           name,
-          keyvalues: { batchNumber },
+          keyvalues: { batchName },
         },
         pinataOptions: {
           groupId: groupId ?? undefined,

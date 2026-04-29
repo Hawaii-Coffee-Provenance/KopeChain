@@ -26,10 +26,10 @@ const BatchInfo = ({ batch, txHashes }: { batch: any; txHashes: BatchTxHashes })
   return (
     <div className="flex flex-col h-full overflow-hidden">
       <div className="flex flex-col gap-8 pb-0 shrink-0">
-        {/* Batch Number, Farm Name, Region + Status */}
+        {/* Batch Name, Farm Name, Region + Status */}
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="heading-hero text-base-content">{batch.batchNumber}</h1>
+            <h1 className="heading-hero text-base-content">{batch.batchName}</h1>
             <span className="text-base-content font-medium">
               {batch.farmName} · {REGION_TO_ISLAND[batch.region] ?? "Unknown"}
             </span>
@@ -79,23 +79,19 @@ const BatchInfo = ({ batch, txHashes }: { batch: any; txHashes: BatchTxHashes })
           {hasOnChainData ? (
             <>
               {txHashes?.harvested && (
-                <BatchData txHash={txHashes.harvested} title="Harvested Transaction" batchNumber={batch.batchNumber} />
+                <BatchData txHash={txHashes.harvested} title="Harvested Transaction" batchName={batch.batchName} />
               )}
               {txHashes?.processed && (
-                <BatchData txHash={txHashes.processed} title="Processed Transaction" batchNumber={batch.batchNumber} />
+                <BatchData txHash={txHashes.processed} title="Processed Transaction" batchName={batch.batchName} />
               )}
               {txHashes?.roasted && (
-                <BatchData txHash={txHashes.roasted} title="Roasted Transaction" batchNumber={batch.batchNumber} />
+                <BatchData txHash={txHashes.roasted} title="Roasted Transaction" batchName={batch.batchName} />
               )}
               {txHashes?.distributed && (
-                <BatchData
-                  txHash={txHashes.distributed}
-                  title="Distributed Transaction"
-                  batchNumber={batch.batchNumber}
-                />
+                <BatchData txHash={txHashes.distributed} title="Distributed Transaction" batchName={batch.batchName} />
               )}
               {txHashes?.verified && (
-                <BatchData txHash={txHashes.verified} title="Verified Transaction" batchNumber={batch.batchNumber} />
+                <BatchData txHash={txHashes.verified} title="Verified Transaction" batchName={batch.batchName} />
               )}
             </>
           ) : (

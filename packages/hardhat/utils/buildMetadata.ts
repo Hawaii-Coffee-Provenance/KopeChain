@@ -41,10 +41,10 @@ export function buildFullMetadata(data: (typeof defaultData)[0], stages: SeedSta
   const varietyName = VARIETIES[h.variety] ?? "Other";
 
   return {
-    name: `${regionName} ${varietyName} — ${data.batchNumber}`,
+    name: `${regionName} ${varietyName} — ${data.batchName}`,
     description: `Single origin ${varietyName} harvested at ${h.elevation}m. Farm: ${h.farmName}.`,
     image: `ipfs://${stages.nftCID}`,
-    external_url: `${APP_URL}/explore/batch/${data.batchNumber}`,
+    external_url: `${APP_URL}/explore/batch/${data.batchName}`,
 
     attributes: [
       { trait_type: "Region", value: regionName },
@@ -56,7 +56,7 @@ export function buildFullMetadata(data: (typeof defaultData)[0], stages: SeedSta
     ],
 
     properties: {
-      batchNumber: data.batchNumber,
+      batchName: data.batchName,
       harvest: {
         farmName: h.farmName,
         region: regionName,

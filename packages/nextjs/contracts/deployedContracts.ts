@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   84532: {
     CoffeeTracker: {
-      address: "0xE16dd9938668D68fD94474D45383cbE7A5F104b7",
+      address: "0x6f521719B6F1e500B45491a24FAe1D8B631E763C",
       abi: [
         {
           inputs: [],
@@ -174,7 +174,7 @@ const deployedContracts = {
             {
               indexed: false,
               internalType: "string",
-              name: "batchNumber",
+              name: "batchName",
               type: "string",
             },
             {
@@ -205,7 +205,7 @@ const deployedContracts = {
             {
               indexed: false,
               internalType: "string",
-              name: "batchNumber",
+              name: "batchName",
               type: "string",
             },
             {
@@ -248,7 +248,7 @@ const deployedContracts = {
             {
               indexed: false,
               internalType: "string",
-              name: "batchNumber",
+              name: "batchName",
               type: "string",
             },
             {
@@ -273,7 +273,7 @@ const deployedContracts = {
             {
               indexed: false,
               internalType: "string",
-              name: "batchNumber",
+              name: "batchName",
               type: "string",
             },
             {
@@ -310,7 +310,7 @@ const deployedContracts = {
             {
               indexed: false,
               internalType: "string",
-              name: "batchNumber",
+              name: "batchName",
               type: "string",
             },
             {
@@ -521,7 +521,7 @@ const deployedContracts = {
             {
               indexed: false,
               internalType: "string",
-              name: "batchNumber",
+              name: "batchName",
               type: "string",
             },
             {
@@ -665,7 +665,7 @@ const deployedContracts = {
               type: "string",
             },
           ],
-          name: "batchNumberToId",
+          name: "batchNameToId",
           outputs: [
             {
               internalType: "uint256",
@@ -768,7 +768,7 @@ const deployedContracts = {
                 },
                 {
                   internalType: "string",
-                  name: "batchNumber",
+                  name: "batchName",
                   type: "string",
                 },
                 {
@@ -789,11 +789,11 @@ const deployedContracts = {
           inputs: [
             {
               internalType: "string",
-              name: "_batchNumber",
+              name: "_batchName",
               type: "string",
             },
           ],
-          name: "getBatchByNumber",
+          name: "getBatchByName",
           outputs: [
             {
               components: [
@@ -859,7 +859,7 @@ const deployedContracts = {
                 },
                 {
                   internalType: "string",
-                  name: "batchNumber",
+                  name: "batchName",
                   type: "string",
                 },
                 {
@@ -968,7 +968,7 @@ const deployedContracts = {
                 },
                 {
                   internalType: "string",
-                  name: "batchNumber",
+                  name: "batchName",
                   type: "string",
                 },
                 {
@@ -1001,25 +1001,6 @@ const deployedContracts = {
         {
           inputs: [
             {
-              internalType: "address",
-              name: "account",
-              type: "address",
-            },
-          ],
-          name: "getRole",
-          outputs: [
-            {
-              internalType: "string",
-              name: "",
-              type: "string",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
               internalType: "bytes32",
               name: "role",
               type: "bytes32",
@@ -1031,6 +1012,25 @@ const deployedContracts = {
               internalType: "bytes32",
               name: "",
               type: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "account",
+              type: "address",
+            },
+          ],
+          name: "getRoles",
+          outputs: [
+            {
+              internalType: "string[]",
+              name: "",
+              type: "string[]",
             },
           ],
           stateMutability: "view",
@@ -1059,11 +1059,6 @@ const deployedContracts = {
           ],
           name: "getUserBatches",
           outputs: [
-            {
-              internalType: "string",
-              name: "userRole",
-              type: "string",
-            },
             {
               components: [
                 {
@@ -1128,7 +1123,7 @@ const deployedContracts = {
                 },
                 {
                   internalType: "string",
-                  name: "batchNumber",
+                  name: "batchName",
                   type: "string",
                 },
                 {
@@ -1167,7 +1162,7 @@ const deployedContracts = {
           inputs: [
             {
               internalType: "string",
-              name: "_batchNumber",
+              name: "_batchName",
               type: "string",
             },
             {
@@ -1500,7 +1495,7 @@ const deployedContracts = {
         renounceRole: "@openzeppelin/contracts/access/AccessControl.sol",
         revokeRole: "@openzeppelin/contracts/access/AccessControl.sol",
       },
-      deployedOnBlock: 40826273,
+      deployedOnBlock: 40828882,
     },
   },
 } as const;

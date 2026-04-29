@@ -29,13 +29,13 @@ export async function fetchMetadata(cid: string): Promise<BatchMetadata> {
 export async function pinJSON(
   content: BatchMetadata,
   name: string,
-  batchNumber: string,
+  batchName: string,
   groupId?: string,
 ): Promise<string> {
   const res = await fetch("/api/pin/json", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ content, name, batchNumber, groupId }),
+    body: JSON.stringify({ content, name, batchName, groupId }),
   });
 
   if (!res.ok) throw new Error(`Pinata pinJSON failed: ${await res.text()}`);
@@ -57,7 +57,7 @@ export type PinNFTParams = {
   region: string;
   stage: string;
   isVerified?: boolean;
-  batchNumber: string;
+  batchName: string;
   groupId: string;
   roastLevel?: string;
   existingSteam?: string;
@@ -90,19 +90,19 @@ export async function pinNFT(
   const blob = new Blob([byteArray], { type: "image/png" });
 
   // Generate a File to upload (mocking browser File object usage)
-  const file = new File([blob], `nft-${params.batchNumber}-${params.stage}.png`, { type: "image/png" });
+  const file = new File([blob], `nft-${params.batchName}-${params.stage}.png`, { type: "image/png" });
 
   const cid = await pinFile(file, file.name, params.groupId);
   return { IpfsHash: cid, traits };
 }
 
-export async function pinQR(batchNumber: string, groupId: string): Promise<string> {
-  const blob = await generateQRBlob(batchNumber, process.env.NEXT_PUBLIC_APP_URL);
+export async function pinQR(batchName: string, groupId: string): Promise<string> {
+  const blob = await generateQRBlob(batchName, process.env.NEXT_PUBLIC_APP_URL);
 
   const formData = new FormData();
 
-  formData.append("file", blob, `qr-${batchNumber}.png`);
-  formData.append("pinataMetadata", JSON.stringify({ name: `qr-${batchNumber}.png` }));
+  formData.append("file", blob, `qr-${batchName}.png`);
+  formData.append("pinataMetadata", JSON.stringify({ name: `qr-${batchName}.png` }));
   formData.append("pinataOptions", JSON.stringify({ groupId }));
 
   const res = await fetch("/api/pin/qr", {
@@ -149,7 +149,7 @@ export const ipfsToHTTP = (uri: string) => {
 
 export const uploadGallery = async (
   mediaFiles: MediaFile[],
-  batchNumber: string,
+  batchName: string,
   networkName?: string,
 ): Promise<{ cid: string; description: string }[]> => {
   if (mediaFiles.length === 0) return [];
@@ -158,21 +158,17 @@ export const uploadGallery = async (
 
   return Promise.all(
     mediaFiles.map(async ({ file, description }) => {
-      const cid = await pinFile(file, `${batchNumber}-${file.name}`, mediaGroupId);
+      const cid = await pinFile(file, `${batchName}-${file.name}`, mediaGroupId);
       return { cid, description };
     }),
   );
 };
 
-export const ensureQrCode = async (
-  metadata: BatchMetadata,
-  batchNumber: string,
-  networkName?: string,
-): Promise<void> => {
+export const ensureQrCode = async (metadata: BatchMetadata, batchName: string, networkName?: string): Promise<void> => {
   if (metadata.properties.images?.qrCode) return;
 
   const qrGroupId = await getOrCreateGroup(getCoffeeTrackerGroupName(networkName, "qr"));
-  const qrCID = await pinQR(batchNumber, qrGroupId);
+  const qrCID = await pinQR(batchName, qrGroupId);
 
   metadata.properties.images = metadata.properties.images || {};
 

@@ -17,7 +17,7 @@ export type RawBatch = {
   processor: `0x${string}`;
   roaster: `0x${string}`;
   distributor: `0x${string}`;
-  batchNumber: string;
+  batchName: string;
   metadataCID: string;
 };
 
@@ -35,7 +35,7 @@ export type CoffeeBatch = {
   processor: string;
   roaster: string;
   distributor: string;
-  batchNumber: string;
+  batchName: string;
   metadataCID: string;
 
   farmName: string;
@@ -85,7 +85,7 @@ export type BatchMetadata = {
     display_type?: string;
   }>;
   properties: {
-    batchNumber: string;
+    batchName: string;
     harvest?: {
       farmName: string;
       region: string;

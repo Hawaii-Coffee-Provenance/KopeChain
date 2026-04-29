@@ -200,7 +200,7 @@ export function mapBatch(raw: RawBatch, metadata?: BatchMetadata | null): Coffee
     processor: raw.processor,
     roaster: raw.roaster,
     distributor: raw.distributor,
-    batchNumber: raw.batchNumber,
+    batchName: raw.batchName,
     metadataCID: raw.metadataCID,
 
     farmName: h?.farmName ?? "",

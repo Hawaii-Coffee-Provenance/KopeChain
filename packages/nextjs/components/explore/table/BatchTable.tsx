@@ -22,7 +22,7 @@ const BatchTable = ({ batches, isLoading = false, txHashMap, pagination }: Batch
         <table className="table text-left">
           <thead>
             <tr>
-              {["TX", "ID", "Batch", "Region", "Stage", "Verified", "From", "Minted"].map(col => (
+              {["TX", "ID", "Batch Name", "Region", "Stage", "Verified", "From", "Minted"].map(col => (
                 <th key={col} className="px-4 py-2 text-left text-col-header text-sm whitespace-nowrap bg-primary">
                   {col}
                 </th>

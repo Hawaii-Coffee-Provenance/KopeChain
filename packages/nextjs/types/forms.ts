@@ -26,13 +26,13 @@ export type BatchData = {
 
 export type BatchSelectProps = {
   value: string;
-  onSelect: (batchNumber: string) => void;
+  onSelect: (batchName: string) => void;
   requiredStage: "Harvested" | "Processed" | "Roasted";
   isDisabled?: boolean;
 };
 
 export type HarvestFormState = {
-  batchNumber: string;
+  batchName: string;
   farmName: string;
   region: string;
   variety: string;
@@ -44,7 +44,7 @@ export type HarvestFormState = {
 };
 
 export type ProcessFormState = {
-  batchNumber: string;
+  batchName: string;
   processingMethod: string;
   moistureContent: string;
   scaScore: string;
@@ -58,7 +58,7 @@ export type ProcessFormState = {
 };
 
 export type RoastFormState = {
-  batchNumber: string;
+  batchName: string;
   roastingMethod: string;
   roastLevel: string;
   cuppingNotes: string;
@@ -71,7 +71,7 @@ export type RoastFormState = {
 };
 
 export type DistributeFormState = {
-  batchNumber: string;
+  batchName: string;
   distributionDate: string;
   bagCount: string;
   distributionWeight: string;

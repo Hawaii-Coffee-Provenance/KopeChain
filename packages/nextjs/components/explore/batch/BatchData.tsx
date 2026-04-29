@@ -17,7 +17,7 @@ export type DecodedTx = Transaction & {
   functionArgs?: any[];
 };
 
-const BatchData = ({ txHash, title, batchNumber }: { txHash: Hash; title?: string; batchNumber: string }) => {
+const BatchData = ({ txHash, title, batchName }: { txHash: Hash; title?: string; batchName: string }) => {
   const client = usePublicClient();
   const { targetNetwork } = useTargetNetwork();
 
@@ -57,7 +57,7 @@ const BatchData = ({ txHash, title, batchNumber }: { txHash: Hash; title?: strin
       <div className="text-label text-base! mb-2 mt-2">{title || "Blockchain Data"}</div>
 
       <DataRow title="TX Hash">
-        <TxHashLink txHash={txDecoded.hash} disableTruncation={true} href={`/explore/batch/${batchNumber}`} />
+        <TxHashLink txHash={txDecoded.hash} disableTruncation={true} href={`/explore/batch/${batchName}`} />
       </DataRow>
 
       <DataRow title="Block" value={`#${Number(receipt.blockNumber)}`} />

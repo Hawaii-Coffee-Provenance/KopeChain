@@ -9,17 +9,17 @@ import { useCoffeeTracker } from "~~/hooks/useCoffeeTracker";
 import { CoffeeBatch } from "~~/types/coffee";
 
 type BatchPageClientProps = {
-  batchNumber: string;
+  batchName: string;
 };
 
-const BatchPageClient = ({ batchNumber }: BatchPageClientProps) => {
+const BatchPageClient = ({ batchName }: BatchPageClientProps) => {
   const { stats, txHashMap, isLoading } = useCoffeeTracker({ includeTxHashes: true });
 
   const batch = useMemo(() => {
     if (!stats?.allBatches) return null;
 
-    return stats.allBatches.find((b: CoffeeBatch) => b.batchNumber === batchNumber) ?? null;
-  }, [stats, batchNumber]);
+    return stats.allBatches.find((b: CoffeeBatch) => b.batchName === batchName) ?? null;
+  }, [stats, batchName]);
 
   const isDataLoading = isLoading || !batch;
 

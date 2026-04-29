@@ -1,8 +1,8 @@
 import QRCode from "qrcode";
 
-export async function generateQRBlob(batchNumber: string, appURL?: string): Promise<Blob> {
+export async function generateQRBlob(batchName: string, appURL?: string): Promise<Blob> {
   const base = (appURL ?? process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000").replace(/\/+$/, "");
-  const url = `${base}/explore/batch/${batchNumber}`;
+  const url = `${base}/explore/batch/${batchName}`;
 
   const dataURL = await QRCode.toDataURL(url, {
     errorCorrectionLevel: "H",

@@ -44,7 +44,7 @@ const MapMarker = ({ batch, isOpen, onOpen, onClose, onClick, displayLocation, d
         pitchAlignment="viewport"
         onClick={handleMarkerClick}
       >
-        <div className="cursor-pointer" title={batch.batchNumber}>
+        <div className="cursor-pointer" title={batch.batchName}>
           <MapPin color={color} />
         </div>
       </Marker>

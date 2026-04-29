@@ -1,7 +1,7 @@
 import QRCode from "qrcode";
 
-export async function generateQRBuffer(batchNumber: string, appURL?: string): Promise<Buffer> {
-  const url = `${appURL ?? process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/explore/batch/${batchNumber}`;
+export async function generateQRBuffer(batchName: string, appURL?: string): Promise<Buffer> {
+  const url = `${appURL ?? process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/explore/batch/${batchName}`;
 
   return Buffer.from(
     await QRCode.toBuffer(url, {
@@ -12,8 +12,8 @@ export async function generateQRBuffer(batchNumber: string, appURL?: string): Pr
   );
 }
 
-export async function generateQRDataURL(batchNumber: string, appURL?: string): Promise<string> {
-  const url = `${appURL ?? process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/explore/batch/${batchNumber}`;
+export async function generateQRDataURL(batchName: string, appURL?: string): Promise<string> {
+  const url = `${appURL ?? process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/explore/batch/${batchName}`;
 
   return QRCode.toDataURL(url, {
     errorCorrectionLevel: "H",

@@ -214,7 +214,7 @@ const ProfilePage: NextPage = () => {
               </div>
               <div className="text-sm text-muted">
                 {latestBatch
-                  ? `Latest batch ${latestBatch.batchNumber} added ${formatTimestamp(latestBatch.mintTimestamp)}`
+                  ? `Latest batch ${latestBatch.batchName} added ${formatTimestamp(latestBatch.mintTimestamp)}`
                   : "No batch history yet"}
               </div>
             </div>
@@ -288,8 +288,8 @@ const ProfilePage: NextPage = () => {
 
                 return (
                   <Link
-                    key={`${batch.batchId.toString()}-${batch.batchNumber}`}
-                    href={`/explore/batch/${batch.batchNumber}`}
+                    key={`${batch.batchId.toString()}-${batch.batchName}`}
+                    href={`/explore/batch/${batch.batchName}`}
                     className="rounded-3xl border border-base-300 bg-base-200/50 p-5 transition-transform hover:-translate-y-0.5 hover:border-primary/40"
                   >
                     <div className="flex items-start justify-between gap-4">
@@ -297,7 +297,7 @@ const ProfilePage: NextPage = () => {
                         <div className="text-xs uppercase tracking-[0.12em] text-muted">
                           Batch #{batch.batchId.toString()}
                         </div>
-                        <div className="mt-2 text-lg font-semibold break-words">{batch.batchNumber}</div>
+                        <div className="mt-2 text-lg font-semibold break-words">{batch.batchName}</div>
                         <div className="mt-1 text-sm text-muted">{getPrimaryLocation(batch)}</div>
                       </div>
                       <span

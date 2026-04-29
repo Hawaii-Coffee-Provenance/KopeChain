@@ -40,8 +40,8 @@ const HomeLiveScroller = () => {
               transition={{ duration: 100, ease: "linear", repeat: Infinity }}
             >
               {tickerItems.map((batch, i) => (
-                <span key={`${batch.batchNumber}-${i}`} className="flex items-center whitespace-nowrap">
-                  <span className="text-muted text-xs font-mono mr-3">{batch.batchNumber}</span>
+                <span key={`${batch.batchName}-${i}`} className="flex items-center whitespace-nowrap">
+                  <span className="text-muted text-xs font-mono mr-3">{batch.batchName}</span>
                   <span className="text-base-content font-medium">
                     {batch.farmName} · {REGIONS[batch.region] ?? "Unknown"}
                   </span>

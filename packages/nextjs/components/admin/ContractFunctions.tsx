@@ -9,14 +9,15 @@ import {
 } from "./functions/AdminFunctionInputs";
 import { AdminFunctionDisplay, AdminFunctionSection } from "./functions/AdminFunctions";
 import { useContractFunctions, useContractRoles } from "~~/hooks/useAdminPanel";
+import { useBatchId } from "~~/hooks/useCoffeeTracker";
 import { AdminContractProps } from "~~/types/admin";
 
 const ContractFunctions = ({ contractName }: AdminContractProps) => {
   const { results, handleWrite, handleRead, isMining } = useContractFunctions(contractName);
   const { roles } = useContractRoles(contractName);
 
-  const [verifyBatchId, setVerifyBatchId] = useState("");
-  const [updateBatchId, setUpdateBatchId] = useState("");
+  const [verifyBatchName, setVerifyBatchName] = useState("");
+  const [updateBatchName, setUpdateBatchName] = useState("");
   const [updateCid, setUpdateCid] = useState("");
   const [grantRoleHash, setGrantRoleHash] = useState("");
   const [grantAddress, setGrantAddress] = useState("");
@@ -25,8 +26,11 @@ const ContractFunctions = ({ contractName }: AdminContractProps) => {
 
   const [roleAddress, setRoleAddress] = useState("");
   const [batchId, setBatchId] = useState("");
-  const [batchNum, setBatchNum] = useState("");
+  const [lookupBatchName, setLookupBatchName] = useState("");
   const [userBatchesAddress, setUserBatchesAddress] = useState("");
+
+  const { batchId: verifyResolvedId } = useBatchId(verifyBatchName);
+  const { batchId: updateResolvedId } = useBatchId(updateBatchName);
 
   /* Set role hash defaults on load */
   useEffect(() => {
@@ -43,24 +47,18 @@ const ContractFunctions = ({ contractName }: AdminContractProps) => {
       <AdminFunctionSection title="Write Operations">
         {/* Verify Batch */}
         <AdminFunctionDisplay label="verifyBatch" result={results["verifyBatch"]}>
-          <AdminInputField
-            value={verifyBatchId}
-            onChange={setVerifyBatchId}
-            placeholder="Batch ID (uint256)"
-            type="text"
-            inputMode="numeric"
-          />
+          <AdminInputField value={verifyBatchName} onChange={setVerifyBatchName} placeholder="Batch Name (string)" />
 
           <AdminSubmitButton
             label="Write"
             isWrite
-            disabled={isMining || !verifyBatchId}
+            disabled={isMining || !verifyBatchName || !verifyResolvedId}
             onClick={() =>
               handleWrite(
                 "verifyBatch",
                 "verifyBatch",
-                [BigInt(verifyBatchId)],
-                `Batch ${verifyBatchId} was successfully verified!`,
+                [verifyResolvedId!],
+                `Batch "${verifyBatchName}" was successfully verified!`,
               )
             }
           />
@@ -68,26 +66,20 @@ const ContractFunctions = ({ contractName }: AdminContractProps) => {
 
         {/* Update Metadata CID */}
         <AdminFunctionDisplay label="updateMetadataCID" result={results["updateMetadataCID"]}>
-          <AdminInputField
-            value={updateBatchId}
-            onChange={setUpdateBatchId}
-            placeholder="Batch ID (uint256)"
-            type="text"
-            inputMode="numeric"
-          />
+          <AdminInputField value={updateBatchName} onChange={setUpdateBatchName} placeholder="Batch Name (string)" />
 
           <AdminInputField value={updateCid} onChange={setUpdateCid} placeholder="Metadata CID (string)" />
 
           <AdminSubmitButton
             label="Write"
             isWrite
-            disabled={isMining || !updateBatchId || !updateCid}
+            disabled={isMining || !updateBatchName || !updateCid || !updateResolvedId}
             onClick={() =>
               handleWrite(
                 "updateMetadataCID",
                 "updateMetadataCID",
-                [BigInt(updateBatchId), updateCid],
-                `Metadata CID updated for batch ${updateBatchId}!`,
+                [updateResolvedId!, updateCid],
+                `Metadata CID updated for batch "${updateBatchName}"!`,
               )
             }
           />
@@ -178,13 +170,13 @@ const ContractFunctions = ({ contractName }: AdminContractProps) => {
         </AdminFunctionDisplay>
 
         {/* Get Batch by Number */}
-        <AdminFunctionDisplay label="getBatchByNumber" result={results["getBatchByNumber"]}>
-          <AdminInputField value={batchNum} onChange={setBatchNum} placeholder="Batch Number (string)" />
+        <AdminFunctionDisplay label="getBatchByName" result={results["getBatchByName"]}>
+          <AdminInputField value={lookupBatchName} onChange={setLookupBatchName} placeholder="Batch Name (string)" />
 
           <AdminSubmitButton
             label="Read"
-            disabled={!batchNum}
-            onClick={() => handleRead("getBatchByNumber", [batchNum])}
+            disabled={!lookupBatchName}
+            onClick={() => handleRead("getBatchByName", [lookupBatchName])}
           />
         </AdminFunctionDisplay>
 

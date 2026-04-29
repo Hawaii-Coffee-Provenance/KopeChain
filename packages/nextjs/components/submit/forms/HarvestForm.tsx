@@ -34,7 +34,7 @@ const HarvestForm = () => {
     event.preventDefault();
 
     if (
-      !form.batchNumber ||
+      !form.batchName ||
       !form.farmName ||
       !form.elevation ||
       !form.harvestDate ||
@@ -66,22 +66,22 @@ const HarvestForm = () => {
       const groupId = await getOrCreateGroup(getCoffeeTrackerGroupName(networkName, "batch"));
       const qrGroupId = await getOrCreateGroup(getCoffeeTrackerGroupName(networkName, "qr"));
       const nftGroupId = await getOrCreateGroup(getCoffeeTrackerGroupName(networkName, "nft"));
-      const qrCID = await pinQR(form.batchNumber.trim(), qrGroupId);
-      const galleryCIDs = await uploadGallery(mediaFiles, form.batchNumber.trim(), networkName);
+      const qrCID = await pinQR(form.batchName.trim(), qrGroupId);
+      const galleryCIDs = await uploadGallery(mediaFiles, form.batchName.trim(), networkName);
 
       // Generate NFT
       const { IpfsHash: nftCID, traits } = await pinNFT({
         region: REGIONS[Number(form.region)],
         stage: "Harvested",
-        batchNumber: form.batchNumber.trim(),
+        batchName: form.batchName.trim(),
         groupId: nftGroupId,
       });
 
       const metadata: BatchMetadata = {
-        name: `${REGIONS[Number(form.region)]} ${VARIETIES[Number(form.variety)]} - ${form.batchNumber.trim()}`,
+        name: `${REGIONS[Number(form.region)]} ${VARIETIES[Number(form.variety)]} - ${form.batchName.trim()}`,
         description: `Single origin ${VARIETIES[Number(form.variety)]} harvested at ${form.elevation}m. Farm: ${form.farmName.trim()}.`,
         image: `ipfs://${nftCID}`,
-        external_url: `${APP_URL}/explore/batch/${form.batchNumber.trim()}`,
+        external_url: `${APP_URL}/explore/batch/${form.batchName.trim()}`,
 
         attributes: [
           { trait_type: "Region", value: REGIONS[Number(form.region)] },
@@ -92,7 +92,7 @@ const HarvestForm = () => {
         ],
 
         properties: {
-          batchNumber: form.batchNumber.trim(),
+          batchName: form.batchName.trim(),
           harvest: {
             farmName: form.farmName.trim(),
             region: REGIONS[Number(form.region)],
@@ -110,10 +110,10 @@ const HarvestForm = () => {
         },
       };
 
-      metadataCID = await pinJSON(metadata, `batch-${form.batchNumber.trim()}`, form.batchNumber.trim(), groupId);
+      metadataCID = await pinJSON(metadata, `batch-${form.batchName.trim()}`, form.batchName.trim(), groupId);
     } catch (error) {
       console.error(error);
-      notification.error(`Batch ${form.batchNumber.trim()} failed to harvest on-chain.`);
+      notification.error(`Batch ${form.batchName.trim()} failed to harvest on-chain.`);
       setIsUploading(false);
       notification.remove(notificationId);
       return;
@@ -125,11 +125,11 @@ const HarvestForm = () => {
       await writeContractAsync(
         {
           functionName: "harvestBatch",
-          args: [form.batchNumber.trim(), Number(form.region), Number(form.variety), metadataCID],
+          args: [form.batchName.trim(), Number(form.region), Number(form.variety), metadataCID],
         },
         {
           onBlockConfirmation: () => {
-            notification.success(`Batch ${form.batchNumber.trim()} was harvested on-chain.`);
+            notification.success(`Batch ${form.batchName.trim()} was harvested on-chain.`);
             resetForm();
             setTimeout(() => {
               router.push("/explore");
@@ -158,12 +158,12 @@ const HarvestForm = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 gap-x-6">
           {/* Row 1, Col 1 */}
           <div className="flex flex-col gap-2 w-full">
-            <span className="text-label">Batch Number</span>
+            <span className="text-label">Batch Name</span>
             <input
               className="input input-bordered w-full text-sm h-10"
               placeholder="e.g. KONA-2026-201"
-              value={form.batchNumber}
-              onChange={e => updateField("batchNumber", e.target.value)}
+              value={form.batchName}
+              onChange={e => updateField("batchName", e.target.value)}
             />
           </div>
 

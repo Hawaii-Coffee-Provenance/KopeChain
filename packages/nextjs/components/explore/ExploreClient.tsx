@@ -51,7 +51,7 @@ const ExploreClient: React.FC<ExploreClientProps> = ({ initialSearchQuery = "" }
 
         return (
           b.batchId.toString().includes(q) ||
-          b.batchNumber.toLowerCase().includes(q) ||
+          b.batchName.toLowerCase().includes(q) ||
           b.farmName.toLowerCase().includes(q) ||
           isInHashes
         );
