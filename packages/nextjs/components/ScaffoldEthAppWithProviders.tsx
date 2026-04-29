@@ -1,17 +1,46 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { RainbowKitProvider, darkTheme, lightTheme } from "@rainbow-me/rainbowkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AppProgressBar as ProgressBar } from "next-nprogress-bar";
 import { Toaster } from "react-hot-toast";
-import { type Config, WagmiProvider } from "wagmi";
+import { type Config, WagmiProvider, useAccountEffect } from "wagmi";
 import Footer from "~~/components/Footer";
 import Header from "~~/components/Header";
 import { BlockieAvatar } from "~~/components/scaffold-eth";
+import { useRoleProtection } from "~~/hooks/useRoleProtection";
 import { useThemeChange } from "~~/hooks/useThemeChange";
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
+  const router = useRouter();
+  const { userRole, isReady, isLoading } = useRoleProtection([]);
+  const [pendingRedirect, setPendingRedirect] = useState(false);
+
+  useAccountEffect({
+    onConnect() {
+      setPendingRedirect(true);
+    },
+    onDisconnect() {
+      setPendingRedirect(false);
+    },
+  });
+
+  useEffect(() => {
+    if (pendingRedirect && isReady && !isLoading) {
+      setPendingRedirect(false);
+
+      if (userRole === "Admin") {
+        router.push("/admin");
+      } else if (userRole && ["Farmer", "Processor", "Roaster", "Distributor"].includes(userRole)) {
+        router.push("/submit");
+      } else {
+        router.push("/explore");
+      }
+    }
+  }, [pendingRedirect, isReady, isLoading, userRole, router]);
+
   return (
     <>
       <div className={`flex flex-col min-h-screen `}>
