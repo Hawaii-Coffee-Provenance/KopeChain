@@ -33,7 +33,7 @@ const BatchRow = memo(({ batch }: BatchRowProps) => {
       <td className="px-4 py-8">
         <Link
           href={`/explore/batch/${batch.batchName}`}
-          className="font-semibold text-sm text-base-content border-b border-transparent hover:text-primary hover:border-primary pb-0.5 transition-colors inline-block"
+          className="font-semibold text-sm text-primary border-b border-transparent hover:border-primary pb-0.5 transition-colors inline-block"
         >
           {batch.batchName}
         </Link>

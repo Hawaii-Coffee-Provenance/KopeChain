@@ -61,7 +61,9 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.91.2",
+    "browser-image-compression": "^2.0.2",
     "framer-motion": "^12.36.0",
+    "heic2any": "^0.0.4",
     "html5-qrcode": "^2.3.8",
     "maplibre-gl": "^5.20.0",
     "qrcode": "^1.5.4",

@@ -328,7 +328,7 @@ contract CoffeeTracker is ERC1155, AccessControl {
 
     function getRoles(address account) public view returns (string[] memory) {
         uint256 count = 0;
-        
+
         if (hasRole(DEFAULT_ADMIN_ROLE, account)) count++;
         if (hasRole(FARMER_ROLE, account)) count++;
         if (hasRole(PROCESSOR_ROLE, account)) count++;

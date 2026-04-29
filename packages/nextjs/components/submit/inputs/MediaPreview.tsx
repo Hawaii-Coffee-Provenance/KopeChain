@@ -35,7 +35,7 @@ const MediaPreview = ({ mediaFiles, onUpdateDescription, onRemoveFile, isDisable
 
             <button
               type="button"
-              className="btn btn-xs btn-square btn-ghost border border-base-300 absolute top-1.5 right-1.5 h-6 w-6 min-h-0 p-0 opacity-0 hover:bg-base-300 group-hover:opacity-100 cursor-pointer hover:scale-110"
+              className="btn btn-xs btn-square btn-ghost border border-base-300 absolute top-1.5 right-1.5 h-6 w-6 min-h-0 p-0 opacity-100 md:opacity-0 hover:bg-base-300 md:group-hover:opacity-100 cursor-pointer hover:scale-110"
               onClick={() => onRemoveFile(index)}
               disabled={isDisabled}
             >
