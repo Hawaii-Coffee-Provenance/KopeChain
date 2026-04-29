@@ -79,13 +79,12 @@ const RoastForm = () => {
     let newMetadataCID = "";
 
     try {
-      const networkName = (targetNetwork as { network?: string }).network ?? targetNetwork.name;
-      const groupId = await getOrCreateGroup(getCoffeeTrackerGroupName(networkName, "batch"));
-      const nftGroupId = await getOrCreateGroup(getCoffeeTrackerGroupName(networkName, "nft"));
+      const groupId = await getOrCreateGroup(getCoffeeTrackerGroupName(targetNetwork, "batch"));
+      const nftGroupId = await getOrCreateGroup(getCoffeeTrackerGroupName(targetNetwork, "nft"));
       const metadata = await fetchMetadata(batchData.metadataCID);
-      const galleryCIDs = await uploadGallery(mediaFiles, form.batchName.trim(), networkName);
+      const galleryCIDs = await uploadGallery(mediaFiles, form.batchName.trim(), targetNetwork);
 
-      await ensureQrCode(metadata, batchData.batchName, networkName);
+      await ensureQrCode(metadata, batchData.batchName, targetNetwork);
 
       // Get existing NFT traits (region, mug, band, steam)
       const region = metadata.attributes.find((a: any) => a.trait_type === "Region")?.value;

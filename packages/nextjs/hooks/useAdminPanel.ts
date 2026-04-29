@@ -17,10 +17,17 @@ export const useContractFunctions = (contractName: ContractName) => {
     setResults(prev => ({ ...prev, [key]: { content, txHash, isError } }));
   };
 
-  const handleWrite = async (key: string, functionName: string, args: any[], successMsg: string) => {
+  const handleWrite = async (
+    key: string,
+    functionName: string,
+    args: any[],
+    successMsg: string,
+    onSuccess?: () => void,
+  ) => {
     try {
       const tx = await writeContractAsync({ functionName, args } as any);
       setResult(key, successMsg, tx);
+      if (onSuccess) onSuccess();
     } catch (e: any) {
       setResult(key, e?.message || "Transaction Failed!", undefined, true);
     }

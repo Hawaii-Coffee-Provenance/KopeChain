@@ -62,12 +62,11 @@ const HarvestForm = () => {
     let metadataCID = "";
 
     try {
-      const networkName = (targetNetwork as { network?: string }).network ?? targetNetwork.name;
-      const groupId = await getOrCreateGroup(getCoffeeTrackerGroupName(networkName, "batch"));
-      const qrGroupId = await getOrCreateGroup(getCoffeeTrackerGroupName(networkName, "qr"));
-      const nftGroupId = await getOrCreateGroup(getCoffeeTrackerGroupName(networkName, "nft"));
+      const groupId = await getOrCreateGroup(getCoffeeTrackerGroupName(targetNetwork, "batch"));
+      const qrGroupId = await getOrCreateGroup(getCoffeeTrackerGroupName(targetNetwork, "qr"));
+      const nftGroupId = await getOrCreateGroup(getCoffeeTrackerGroupName(targetNetwork, "nft"));
       const qrCID = await pinQR(form.batchName.trim(), qrGroupId);
-      const galleryCIDs = await uploadGallery(mediaFiles, form.batchName.trim(), networkName);
+      const galleryCIDs = await uploadGallery(mediaFiles, form.batchName.trim(), targetNetwork);
 
       // Generate NFT
       const { IpfsHash: nftCID, traits } = await pinNFT({
