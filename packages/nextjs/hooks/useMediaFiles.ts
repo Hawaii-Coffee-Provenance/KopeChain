@@ -10,9 +10,9 @@ export const useMediaFiles = () => {
   const addFiles = (files: FileList | null) => {
     if (!files) return;
 
-    const accepted = Array.from(files).filter(f => f.type === "image/png" || f.type === "image/jpeg");
+    const accepted = Array.from(files).filter(f => f.type.startsWith("image/"));
 
-    if (accepted.length !== files.length) notification.error("Only PNG and JPG files are accepted.");
+    if (accepted.length !== files.length) notification.error("Only image files are accepted.");
 
     setMediaFiles(prev => [
       ...prev,

@@ -42,7 +42,7 @@ const MediaUploader = ({ onAddFiles, isDisabled = false }: MediaUploaderProps) =
         <ArrowUpTrayIcon className="h-6 w-6 text-base-content" />
         <div className="text-center">
           <p className="text-sm font-semibold text-base-content m-0">Drop images here</p>
-          <p className="text-xs text-muted m-0 mt-0.5">or click to browse or capture</p>
+          <p className="text-xs text-muted m-0 mt-0.5">or click to browse · JPG, PNG, HEIC, WebP</p>
         </div>
       </div>
     </div>
