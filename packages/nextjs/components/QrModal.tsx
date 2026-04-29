@@ -57,11 +57,9 @@ const QrModal = ({ isOpen, onClose }: Props) => {
           setTimeout(() => {
             onClose();
             try {
-              const trimmedText = decodedText.trim();
-              const url = trimmedText.startsWith("http")
-                ? new URL(trimmedText)
-                : new URL(trimmedText, window.location.origin);
-
+              const url = decodedText.startsWith("http")
+                ? new URL(decodedText)
+                : new URL(decodedText, window.location.origin);
               window.location.href = window.location.origin + url.pathname;
             } catch {
               setError("Unable to parse QR code destination. Please try another code.");

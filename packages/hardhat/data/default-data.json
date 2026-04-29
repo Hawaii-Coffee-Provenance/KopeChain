@@ -1,6 +1,6 @@
 [
   {
-    "batchNumber": "KAU-2026-033",
+    "batchName": "KAU-2026-033",
     "verified": true,
     "harvestData": {
       "region": 1,
@@ -53,7 +53,7 @@
     }
   },
   {
-    "batchNumber": "MAUI-2026-014",
+    "batchName": "MAUI-2026-014",
     "verified": true,
     "harvestData": {
       "region": 4,
@@ -106,7 +106,7 @@
     }
   },
   {
-    "batchNumber": "KAUAI-2026-021",
+    "batchName": "KAUAI-2026-021",
     "verified": true,
     "harvestData": {
       "region": 5,
@@ -159,7 +159,7 @@
     }
   },
   {
-    "batchNumber": "HAMAKUA-2026-009",
+    "batchName": "HAMAKUA-2026-009",
     "verified": false,
     "harvestData": {
       "region": 3,
@@ -212,7 +212,7 @@
     }
   },
   {
-    "batchNumber": "KAU-2026-058",
+    "batchName": "KAU-2026-058",
     "verified": false,
     "harvestData": {
       "region": 1,
@@ -265,7 +265,7 @@
     }
   },
   {
-    "batchNumber": "PUNA-2026-088",
+    "batchName": "PUNA-2026-088",
     "verified": true,
     "harvestData": {
       "region": 2,
@@ -318,7 +318,7 @@
     }
   },
   {
-    "batchNumber": "KONA-2026-201",
+    "batchName": "KONA-2026-201",
     "verified": true,
     "harvestData": {
       "region": 0,
@@ -371,7 +371,7 @@
     }
   },
   {
-    "batchNumber": "MOLOKAI-2026-003",
+    "batchName": "MOLOKAI-2026-003",
     "verified": false,
     "harvestData": {
       "region": 6,
@@ -424,7 +424,7 @@
     }
   },
   {
-    "batchNumber": "HAMAKUA-2026-027",
+    "batchName": "HAMAKUA-2026-027",
     "verified": true,
     "harvestData": {
       "region": 3,
@@ -477,7 +477,7 @@
     }
   },
   {
-    "batchNumber": "KAUAI-2026-044",
+    "batchName": "KAUAI-2026-044",
     "verified": false,
     "harvestData": {
       "region": 5,

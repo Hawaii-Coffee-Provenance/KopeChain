@@ -9,11 +9,10 @@ import { CoffeeBatch } from "~~/types/coffee";
 type BatchTableProps = {
   batches: CoffeeBatch[] | undefined;
   isLoading?: boolean;
-  txHashMap: Record<string, `0x${string}` | undefined>;
   pagination?: PaginationConfig;
 };
 
-const BatchTable = ({ batches, isLoading = false, txHashMap, pagination }: BatchTableProps) => {
+const BatchTable = ({ batches, isLoading = false, pagination }: BatchTableProps) => {
   const rows = useMemo(() => batches ?? [], [batches]);
 
   return (
@@ -22,7 +21,7 @@ const BatchTable = ({ batches, isLoading = false, txHashMap, pagination }: Batch
         <table className="table text-left">
           <thead>
             <tr>
-              {["TX", "ID", "Batch", "Region", "Stage", "Verified", "From", "Minted"].map(col => (
+              {["Batch Name", "ID", "Farm", "Region", "Stage", "From", "Status", "Minted"].map(col => (
                 <th key={col} className="px-4 py-2 text-left text-col-header text-sm whitespace-nowrap bg-primary">
                   {col}
                 </th>
@@ -40,9 +39,7 @@ const BatchTable = ({ batches, isLoading = false, txHashMap, pagination }: Batch
                 </td>
               </tr>
             ) : (
-              rows.map(batch => (
-                <BatchRow key={batch.batchId.toString()} batch={batch} txHash={txHashMap[batch.batchId.toString()]} />
-              ))
+              rows.map(batch => <BatchRow key={batch.batchId.toString()} batch={batch} />)
             )}
           </tbody>
 

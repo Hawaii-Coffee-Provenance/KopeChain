@@ -74,18 +74,18 @@ contract CoffeeTracker is ERC1155, AccessControl {
         address processor;
         address roaster;
         address distributor;
-        string batchNumber;
+        string batchName;
         string metadataCID;
     }
 
     mapping(uint256 => CoffeeBatch) private batches;
-    mapping(string => uint256) public batchNumberToId;
+    mapping(string => uint256) public batchNameToId;
     mapping(address => uint256[]) private userBatches;
     mapping(address => bool) private registeredFarms;
 
     event Harvested(
         uint256 indexed batchId,
-        string batchNumber,
+        string batchName,
         string metadataCID,
         address indexed farmer,
         Region indexed region,
@@ -94,7 +94,7 @@ contract CoffeeTracker is ERC1155, AccessControl {
 
     event Processed(
         uint256 indexed batchId,
-        string batchNumber,
+        string batchName,
         string metadataCID,
         address indexed processor,
         ProcessingMethod processingMethod
@@ -102,18 +102,18 @@ contract CoffeeTracker is ERC1155, AccessControl {
 
     event Roasted(
         uint256 indexed batchId,
-        string batchNumber,
+        string batchName,
         string metadataCID,
         address indexed roaster,
         RoastingMethod roastingMethod,
         RoastLevel roastLevel
     );
 
-    event Distributed(uint256 indexed batchId, string batchNumber, string metadataCID, address indexed distributor);
+    event Distributed(uint256 indexed batchId, string batchName, string metadataCID, address indexed distributor);
 
-    event Verified(uint256 indexed batchId, string batchNumber, string metadataCID, address indexed verifier);
+    event Verified(uint256 indexed batchId, string batchName, string metadataCID, address indexed verifier);
 
-    event MetadataUpdated(uint256 indexed batchId, string batchNumber, string metadataCID);
+    event MetadataUpdated(uint256 indexed batchId, string batchName, string metadataCID);
 
     constructor() ERC1155("") {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
@@ -123,13 +123,21 @@ contract CoffeeTracker is ERC1155, AccessControl {
         _grantRole(DISTRIBUTOR_ROLE, msg.sender);
     }
 
+    modifier onlyRoleOrAdmin(bytes32 role) {
+        require(
+            hasRole(role, msg.sender) || hasRole(DEFAULT_ADMIN_ROLE, msg.sender),
+            "AccessControl: unauthorized account"
+        );
+        _;
+    }
+
     function harvestBatch(
-        string calldata _batchNumber,
+        string calldata _batchName,
         Region _region,
         Variety _variety,
         string calldata _metadataCID
-    ) public onlyRole(FARMER_ROLE) {
-        require(batchNumberToId[_batchNumber] == 0, "This coffee batch number already exists!");
+    ) public onlyRoleOrAdmin(FARMER_ROLE) {
+        require(batchNameToId[_batchName] == 0, "This coffee batch name already exists!");
 
         uint256 _batchId = _batchIdCounter;
 
@@ -146,11 +154,11 @@ contract CoffeeTracker is ERC1155, AccessControl {
             processor: address(0),
             roaster: address(0),
             distributor: address(0),
-            batchNumber: _batchNumber,
+            batchName: _batchName,
             metadataCID: _metadataCID
         });
 
-        batchNumberToId[_batchNumber] = _batchId;
+        batchNameToId[_batchName] = _batchId;
         userBatches[msg.sender].push(_batchId);
 
         if (!registeredFarms[msg.sender]) {
@@ -158,7 +166,7 @@ contract CoffeeTracker is ERC1155, AccessControl {
             _farmCount++;
         }
 
-        emit Harvested(_batchId, _batchNumber, _metadataCID, msg.sender, _region, _variety);
+        emit Harvested(_batchId, _batchName, _metadataCID, msg.sender, _region, _variety);
 
         _batchIdCounter++;
         _transactionCount++;
@@ -170,7 +178,7 @@ contract CoffeeTracker is ERC1155, AccessControl {
         uint256 _batchId,
         ProcessingMethod _processingMethod,
         string calldata _metadataCID
-    ) public onlyRole(PROCESSOR_ROLE) {
+    ) public onlyRoleOrAdmin(PROCESSOR_ROLE) {
         CoffeeBatch storage batch = batches[_batchId];
 
         require(batch.farmer != address(0), "This coffee batch must be harvested!");
@@ -187,7 +195,7 @@ contract CoffeeTracker is ERC1155, AccessControl {
         batch.processingMethod = _processingMethod;
         batch.metadataCID = _metadataCID;
 
-        emit Processed(_batchId, batch.batchNumber, _metadataCID, msg.sender, _processingMethod);
+        emit Processed(_batchId, batch.batchName, _metadataCID, msg.sender, _processingMethod);
 
         _transactionCount++;
     }
@@ -197,7 +205,7 @@ contract CoffeeTracker is ERC1155, AccessControl {
         RoastingMethod _roastingMethod,
         RoastLevel _roastLevel,
         string calldata _metadataCID
-    ) public onlyRole(ROASTER_ROLE) {
+    ) public onlyRoleOrAdmin(ROASTER_ROLE) {
         CoffeeBatch storage batch = batches[_batchId];
 
         require(batch.farmer != address(0), "This coffee batch must be harvested!");
@@ -216,12 +224,12 @@ contract CoffeeTracker is ERC1155, AccessControl {
         batch.roastLevel = _roastLevel;
         batch.metadataCID = _metadataCID;
 
-        emit Roasted(_batchId, batch.batchNumber, _metadataCID, msg.sender, _roastingMethod, _roastLevel);
+        emit Roasted(_batchId, batch.batchName, _metadataCID, msg.sender, _roastingMethod, _roastLevel);
 
         _transactionCount++;
     }
 
-    function distributeBatch(uint256 _batchId, string calldata _metadataCID) public onlyRole(DISTRIBUTOR_ROLE) {
+    function distributeBatch(uint256 _batchId, string calldata _metadataCID) public onlyRoleOrAdmin(DISTRIBUTOR_ROLE) {
         CoffeeBatch storage batch = batches[_batchId];
 
         require(batch.farmer != address(0), "This coffee batch must be harvested!");
@@ -241,7 +249,7 @@ contract CoffeeTracker is ERC1155, AccessControl {
         batch.distributor = msg.sender;
         batch.metadataCID = _metadataCID;
 
-        emit Distributed(_batchId, batch.batchNumber, _metadataCID, msg.sender);
+        emit Distributed(_batchId, batch.batchName, _metadataCID, msg.sender);
 
         _transactionCount++;
     }
@@ -254,7 +262,7 @@ contract CoffeeTracker is ERC1155, AccessControl {
 
         batch.verified = true;
 
-        emit Verified(_batchId, batch.batchNumber, batch.metadataCID, msg.sender);
+        emit Verified(_batchId, batch.batchName, batch.metadataCID, msg.sender);
 
         _transactionCount++;
     }
@@ -264,7 +272,7 @@ contract CoffeeTracker is ERC1155, AccessControl {
         require(batch.farmer != address(0), "Batch does not exist!");
 
         batch.metadataCID = _metadataCID;
-        emit MetadataUpdated(_batchId, batch.batchNumber, _metadataCID);
+        emit MetadataUpdated(_batchId, batch.batchName, _metadataCID);
     }
 
     function getBatch(uint256 _batchId) public view returns (CoffeeBatch memory) {
@@ -273,8 +281,8 @@ contract CoffeeTracker is ERC1155, AccessControl {
         return batches[_batchId];
     }
 
-    function getBatchByNumber(string memory _batchNumber) public view returns (CoffeeBatch memory) {
-        uint256 _batchId = batchNumberToId[_batchNumber];
+    function getBatchByName(string memory _batchName) public view returns (CoffeeBatch memory) {
+        uint256 _batchId = batchNameToId[_batchName];
         require(_batchId != 0, "Batch not found");
         return batches[_batchId];
     }
@@ -295,8 +303,7 @@ contract CoffeeTracker is ERC1155, AccessControl {
         return result;
     }
 
-    function getUserBatches(address user) public view returns (string memory userRole, CoffeeBatch[] memory history) {
-        userRole = getRole(user);
+    function getUserBatches(address user) public view returns (CoffeeBatch[] memory history) {
         uint256[] memory ids = userBatches[user];
         history = new CoffeeBatch[](ids.length);
 
@@ -304,7 +311,7 @@ contract CoffeeTracker is ERC1155, AccessControl {
             history[i] = batches[ids[i]];
         }
 
-        return (userRole, history);
+        return history;
     }
 
     function getBatchCount() public view returns (uint256) {
@@ -319,13 +326,29 @@ contract CoffeeTracker is ERC1155, AccessControl {
         return _farmCount;
     }
 
-    function getRole(address account) public view returns (string memory) {
-        if (hasRole(DEFAULT_ADMIN_ROLE, account)) return "Admin";
-        if (hasRole(FARMER_ROLE, account)) return "Farmer";
-        if (hasRole(PROCESSOR_ROLE, account)) return "Processor";
-        if (hasRole(ROASTER_ROLE, account)) return "Roaster";
-        if (hasRole(DISTRIBUTOR_ROLE, account)) return "Distributor";
-        return "User";
+    function getRoles(address account) public view returns (string[] memory) {
+        uint256 count = 0;
+        
+        if (hasRole(DEFAULT_ADMIN_ROLE, account)) count++;
+        if (hasRole(FARMER_ROLE, account)) count++;
+        if (hasRole(PROCESSOR_ROLE, account)) count++;
+        if (hasRole(ROASTER_ROLE, account)) count++;
+        if (hasRole(DISTRIBUTOR_ROLE, account)) count++;
+
+        if (count == 0) {
+            string[] memory none = new string[](1);
+            none[0] = "User";
+            return none;
+        }
+
+        string[] memory roles = new string[](count);
+        uint256 idx = 0;
+        if (hasRole(DEFAULT_ADMIN_ROLE, account)) roles[idx++] = "Admin";
+        if (hasRole(FARMER_ROLE, account)) roles[idx++] = "Farmer";
+        if (hasRole(PROCESSOR_ROLE, account)) roles[idx++] = "Processor";
+        if (hasRole(ROASTER_ROLE, account)) roles[idx++] = "Roaster";
+        if (hasRole(DISTRIBUTOR_ROLE, account)) roles[idx++] = "Distributor";
+        return roles;
     }
 
     function uri(uint256 _batchId) public view override returns (string memory) {

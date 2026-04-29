@@ -18,7 +18,7 @@ type MapPopupProps = {
 };
 
 const MapPopup = ({ batch, location, stage, onClose }: MapPopupProps) => {
-  const href = `/explore/batch/${batch.batchNumber}`;
+  const href = `/explore/batch/${batch.batchName}`;
 
   return (
     <Popup
@@ -37,7 +37,7 @@ const MapPopup = ({ batch, location, stage, onClose }: MapPopupProps) => {
             <div className="flex items-center justify-between gap-2">
               <Link href={href} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}>
                 <p className="font-serif text-xl font-semibold leading-none text-base-content hover:underline cursor-pointer">
-                  {batch.batchNumber}
+                  {batch.batchName}
                 </p>
               </Link>
               <button
@@ -76,7 +76,7 @@ const MapPopup = ({ batch, location, stage, onClose }: MapPopupProps) => {
 
           <div className="flex items-center gap-1.5">
             <span className={`text-xs font-medium ${batch.verified ? "text-primary" : "text-accent"}`}>
-              {batch.verified ? "Verified" : "Pending"}
+              {batch.verified ? "Verified" : "Unverified"}
             </span>
             <span
               className={`inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium ${STAGE_STYLES[stage]}`}

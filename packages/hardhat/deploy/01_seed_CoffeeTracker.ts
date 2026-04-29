@@ -61,9 +61,9 @@ const seedCoffeeTracker: DeployFunction = async function (hre: HardhatRuntimeEnv
   for (let i = 0; i < TOTAL; i++) {
     const data = DATA[i];
 
-    const existing = await findExistingPin(data.batchNumber);
+    const existing = await findExistingPin(data.batchName);
     if (existing) {
-      console.log(`[${i + 1}/${TOTAL}] ${data.batchNumber} - REUSING CID`);
+      console.log(`[${i + 1}/${TOTAL}] ${data.batchName} - REUSING CID`);
       batchCIDs.push(existing);
       continue;
     }
@@ -85,13 +85,13 @@ const seedCoffeeTracker: DeployFunction = async function (hre: HardhatRuntimeEnv
     const steam = getRandomTrait(STEAM_TRAITS).name;
 
     const [qrBuffer, nftBuffer] = await Promise.all([
-      generateQRBuffer(data.batchNumber),
+      generateQRBuffer(data.batchName),
       generateNftBuffer({ region: regionName, stage, roastLevel: roastLevelName, mug, band, steam }),
     ]);
 
     const [qrCID, nftCID] = await Promise.all([
-      pinFile(qrBuffer, `qr-${data.batchNumber}.png`, "image/png", qrGroupId),
-      pinFile(nftBuffer, `nft-${data.batchNumber}-${stage.toLowerCase()}.png`, "image/png", nftGroupId),
+      pinFile(qrBuffer, `qr-${data.batchName}.png`, "image/png", qrGroupId),
+      pinFile(nftBuffer, `nft-${data.batchName}-${stage.toLowerCase()}.png`, "image/png", nftGroupId),
     ]);
 
     const fullMetadata = buildFullMetadata(data, {
@@ -106,8 +106,8 @@ const seedCoffeeTracker: DeployFunction = async function (hre: HardhatRuntimeEnv
       roastLevel: stage === "Roasted" || stage === "Distributed" ? roastLevelName : undefined,
     });
 
-    const cid = await pinJSON(fullMetadata, `batch-${data.batchNumber}`, data.batchNumber, groupId);
-    console.log(`[${i + 1}/${TOTAL}] ${data.batchNumber} - NEW CID`);
+    const cid = await pinJSON(fullMetadata, `batch-${data.batchName}`, data.batchName, groupId);
+    console.log(`[${i + 1}/${TOTAL}] ${data.batchName} - NEW CID`);
     batchCIDs.push(cid);
   }
 
@@ -115,16 +115,16 @@ const seedCoffeeTracker: DeployFunction = async function (hre: HardhatRuntimeEnv
 
   for (let i = 0; i < TOTAL; i++) {
     const data = DATA[i];
-    const { batchNumber } = data;
+    const { batchName } = data;
     const p = data.processingData;
     const r = data.roastingData;
     const cid = batchCIDs[i];
     const batchId = i + 1;
 
-    console.log(`[${i + 1}/${TOTAL}] ${batchNumber}`);
+    console.log(`[${i + 1}/${TOTAL}] ${batchName}`);
 
     await (
-      await coffeeTracker.harvestBatch(batchNumber, data.harvestData.region, data.harvestData.variety, cid, {
+      await coffeeTracker.harvestBatch(batchName, data.harvestData.region, data.harvestData.variety, cid, {
         gasLimit: 500000,
       })
     ).wait();

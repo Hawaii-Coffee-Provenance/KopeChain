@@ -2,20 +2,20 @@ import type { NextPage } from "next";
 import BatchPageClient from "~~/components/explore/batch/BatchPageClient";
 
 type PageProps = {
-  params: Promise<{ batchNumber: string }>;
+  params: Promise<{ batchName: string }>;
 };
 
 export function generateStaticParams() {
-  return [{ batchNumber: "0" }];
+  return [{ batchName: "0" }];
 }
 
 const BatchPage: NextPage<PageProps> = async (props: PageProps) => {
   const params = await props.params;
-  const batchNumber = params?.batchNumber;
+  const batchName = params?.batchName;
 
-  if (!batchNumber) return null;
+  if (!batchName) return null;
 
-  return <BatchPageClient batchNumber={decodeURIComponent(batchNumber)} />;
+  return <BatchPageClient batchName={decodeURIComponent(batchName)} />;
 };
 
 export default BatchPage;

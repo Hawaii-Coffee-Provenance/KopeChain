@@ -36,6 +36,14 @@ export const RPC_CHAIN_NAMES: Record<number, string> = {
   [chains.celoSepolia.id]: "celo-sepolia",
 };
 
+export const HARDHAT_NETWORK_NAMES: Record<number, string> = {
+  [chains.hardhat.id]: "hardhat",
+  [chains.mainnet.id]: "mainnet",
+  [chains.sepolia.id]: "sepolia",
+  [chains.base.id]: "base",
+  [chains.baseSepolia.id]: "baseSepolia",
+};
+
 export const getAlchemyHttpUrl = (chainId: number) => {
   return scaffoldConfig.alchemyApiKey && RPC_CHAIN_NAMES[chainId]
     ? `https://${RPC_CHAIN_NAMES[chainId]}.g.alchemy.com/v2/${scaffoldConfig.alchemyApiKey}`

@@ -8,7 +8,7 @@ import BatchTable from "~~/components/explore/table/BatchTable";
 import { useBatchPagination } from "~~/hooks/useBatchPagination";
 import { useCoffeeTracker } from "~~/hooks/useCoffeeTracker";
 import { BatchFilterState, CoffeeBatch } from "~~/types/coffee";
-import { getStage, toTableTxHashMap } from "~~/utils/coffee";
+import { getStage } from "~~/utils/coffee";
 
 const DEFAULT_FILTERS: BatchFilterState = { stage: "All", region: "all", sort: "newest" };
 
@@ -17,7 +17,7 @@ type ExploreClientProps = {
 };
 
 const ExploreClient: React.FC<ExploreClientProps> = ({ initialSearchQuery = "" }) => {
-  const { stats, txHashMap, isLoading } = useCoffeeTracker({ includeTxHashes: true });
+  const { stats, isLoading } = useCoffeeTracker();
   const allBatches = useMemo(() => (stats?.allBatches ?? []) as CoffeeBatch[], [stats?.allBatches]);
   const [filters, setFilters] = useState<BatchFilterState>(DEFAULT_FILTERS);
   const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
@@ -43,27 +43,16 @@ const ExploreClient: React.FC<ExploreClientProps> = ({ initialSearchQuery = "" }
       const q = searchQuery.toLowerCase();
 
       list = list.filter(b => {
-        const hashes = txHashMap[b.batchId.toString()];
-
-        const isInHashes = hashes
-          ? Object.values(hashes).some(h => typeof h === "string" && h.toLowerCase().includes(q))
-          : false;
-
         return (
           b.batchId.toString().includes(q) ||
-          b.batchNumber.toLowerCase().includes(q) ||
-          b.farmName.toLowerCase().includes(q) ||
-          isInHashes
+          b.batchName.toLowerCase().includes(q) ||
+          b.farmName.toLowerCase().includes(q)
         );
       });
     }
 
     return filters.sort === "oldest" ? list : list.reverse();
-  }, [allBatches, filters, searchQuery, txHashMap]);
-
-  const tableTxHashMap = useMemo<Record<string, `0x${string}` | undefined>>(() => {
-    return toTableTxHashMap(txHashMap);
-  }, [txHashMap]);
+  }, [allBatches, filters, searchQuery]);
 
   const { paginatedItems, currentPage, totalPages, pageSize, goToPage, setPageSize } = useBatchPagination(batches);
 
@@ -86,7 +75,6 @@ const ExploreClient: React.FC<ExploreClientProps> = ({ initialSearchQuery = "" }
       <BatchTable
         batches={isLoading ? undefined : paginatedItems}
         isLoading={isLoading}
-        txHashMap={tableTxHashMap}
         pagination={
           !isLoading ? { currentPage, totalPages, totalItems: batches.length, pageSize, goToPage } : undefined
         }

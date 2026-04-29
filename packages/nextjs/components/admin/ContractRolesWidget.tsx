@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import CustomTooltip from "~~/components/CustomTooltip";
 import { useContractRoles } from "~~/hooks/useAdminPanel";
 import { AdminContractProps } from "~~/types/admin";
 import { truncateAddress } from "~~/utils/coffee";
@@ -38,13 +39,13 @@ const ContractRolesWidget = ({ contractName }: AdminContractProps) => {
                 className="flex flex-col gap-1 border-b border-base-300 pb-4 last:border-0 last:pb-0 min-w-0"
               >
                 <span className="text-label">{item.label}</span>
-                <div
-                  className={`tooltip tooltip-top cursor-pointer max-w-full flex w-fit ${copied === idx ? "tooltip-open" : ""}`}
-                  data-tip={showCopiedText === idx ? "Copied!" : "Copy Address"}
+                <CustomTooltip
+                  message={showCopiedText === idx ? "Copied!" : "Copy Address"}
+                  open={copied === idx}
                   onClick={() => handleCopy(val, idx)}
                 >
                   <span className="font-sans text-md text-primary">{truncateAddress(val)}</span>
-                </div>
+                </CustomTooltip>
               </div>
             );
           })}

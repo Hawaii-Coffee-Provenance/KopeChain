@@ -14,7 +14,7 @@ export type BatchMetadata = {
     display_type?: string;
   }>;
   properties: {
-    batchNumber: string;
+    batchName: string;
     harvest?: {
       farmName: string;
       region: string;
@@ -63,7 +63,7 @@ export type BatchMetadata = {
 export async function pinJSON(
   content: BatchMetadata,
   name: string,
-  batchNumber: string,
+  batchName: string,
   groupId?: string,
 ): Promise<string> {
   const res = await fetch("https://api.pinata.cloud/pinning/pinJSONToIPFS", {
@@ -76,7 +76,7 @@ export async function pinJSON(
       pinataContent: content,
       pinataMetadata: {
         name,
-        keyvalues: { batchNumber },
+        keyvalues: { batchName },
       },
       pinataOptions: {
         groupId: groupId ?? undefined,
@@ -109,9 +109,9 @@ export async function pinFile(
   return (await res.json()).IpfsHash;
 }
 
-export async function findExistingPin(batchNumber: string): Promise<string | null> {
+export async function findExistingPin(batchName: string): Promise<string | null> {
   const filter = JSON.stringify({
-    batchNumber: { value: batchNumber, op: "eq" },
+    batchName: { value: batchName, op: "eq" },
   });
 
   const res = await fetch(
@@ -140,6 +140,8 @@ export async function getOrCreateGroup(name: string): Promise<string> {
     headers: { Authorization: `Bearer ${PINATA_JWT}` },
   });
 
+  if (!listRes.ok) throw new Error(`Pinata list groups failed (${listRes.status}): ${await listRes.text()}`);
+
   const listData = await listRes.json();
   if (listData.groups && listData.groups.length > 0) {
     return listData.groups[0].id;
@@ -154,7 +156,11 @@ export async function getOrCreateGroup(name: string): Promise<string> {
     body: JSON.stringify({ name }),
   });
 
+  if (!createRes.ok) throw new Error(`Pinata create group failed (${createRes.status}): ${await createRes.text()}`);
+
   const group = await createRes.json();
+  if (!group.id) throw new Error(`Pinata create group returned no ID: ${JSON.stringify(group)}`);
+
   return group.id;
 }
 

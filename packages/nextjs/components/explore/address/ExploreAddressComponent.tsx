@@ -25,7 +25,7 @@ type ActivityItem = {
   from: string;
   to: string;
   value: string;
-  batchNumber?: string;
+  batchName?: string;
 };
 
 type HistoryView = "activity" | "batches";
@@ -85,11 +85,11 @@ const BatchListItem = ({ batch, address }: { batch: CoffeeBatch; address: string
 
   return (
     <Link
-      href={`/explore/batch/${batch.batchNumber}`}
+      href={`/explore/batch/${batch.batchName}`}
       className="flex items-center justify-between gap-3 rounded-2xl border border-base-300 bg-base-200/40 px-4 py-3 transition-colors hover:border-primary/30 hover:bg-base-200/70"
     >
       <div className="min-w-0">
-        <div className="break-words text-sm font-semibold text-base-content">{batch.batchNumber}</div>
+        <div className="break-words text-sm font-semibold text-base-content">{batch.batchName}</div>
         <div className="mt-1 break-words text-xs text-muted">
           {batch.farmName || REGIONS[batch.region] || "Coffee batch"}
         </div>
@@ -179,7 +179,7 @@ const ExploreAddressComponent = ({ address }: ExploreAddressComponentProps) => {
           from: item.transactionData?.from ?? address,
           to: item.transactionData?.to ?? contractAddress,
           value: item.transactionData?.value ? Number(item.transactionData.value) / 1e18 : 0,
-          batchNumber: item.args?.batchNumber,
+          batchName: item.args?.batchName,
         }))
         .map(item => ({
           ...item,
@@ -356,8 +356,8 @@ const ExploreAddressComponent = ({ address }: ExploreAddressComponentProps) => {
                       {activity.map(item => {
                         const txHref =
                           item.txHash && targetNetwork.id ? getBlockExplorerTxLink(targetNetwork.id, item.txHash) : "";
-                        const batchHref = item.batchNumber
-                          ? `/explore/batch/${item.batchNumber}`
+                        const batchHref = item.batchName
+                          ? `/explore/batch/${item.batchName}`
                           : `/explore/address/${address}`;
 
                         return (
@@ -390,7 +390,7 @@ const ExploreAddressComponent = ({ address }: ExploreAddressComponentProps) => {
                                 href={batchHref}
                                 className="border-b border-transparent text-sm text-primary hover:border-primary"
                               >
-                                {item.batchNumber ?? "Open address"}
+                                {item.batchName ?? "Open address"}
                               </Link>
                             </td>
                             <td className="border-b border-base-300 px-4 py-4 align-top font-mono text-sm">
@@ -427,11 +427,7 @@ const ExploreAddressComponent = ({ address }: ExploreAddressComponentProps) => {
           ) : (
             <div className="mt-6 flex flex-col gap-3">
               {displayedBatches.map(batch => (
-                <BatchListItem
-                  key={`${batch.batchId.toString()}-${batch.batchNumber}`}
-                  batch={batch}
-                  address={address}
-                />
+                <BatchListItem key={`${batch.batchId.toString()}-${batch.batchName}`} batch={batch} address={address} />
               ))}
             </div>
           )}

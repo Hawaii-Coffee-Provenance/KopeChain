@@ -214,7 +214,8 @@ export const useCoffeeTracker = ({ includeTxHashes = false }: { includeTxHashes?
 
     const scaBuckets = [80, 82, 84, 86, 88, 90, 92, 94, 96].map(floor => ({
       score: `${floor}`,
-      count: scoredBatches.filter(b => b.scaScore >= floor && b.scaScore < floor + 2).length,
+      count: scoredBatches.filter(b => (floor === 80 ? b.scaScore < 82 : b.scaScore >= floor && b.scaScore < floor + 2))
+        .length,
     }));
 
     const recentBatches = [...batches].sort((a, b) => Number(b.mintTimestamp) - Number(a.mintTimestamp));
@@ -297,11 +298,11 @@ export const useCoffeeTracker = ({ includeTxHashes = false }: { includeTxHashes?
   };
 };
 
-export const useCoffeeBatch = (batchNumber: string) => {
+export const useCoffeeBatch = (batchName: string) => {
   const { data: rawBatch, isLoading: batchLoading } = useScaffoldReadContract({
     contractName: "CoffeeTracker",
-    functionName: "getBatchByNumber",
-    args: [batchNumber],
+    functionName: "getBatchByName",
+    args: [batchName],
   });
 
   const cid = (rawBatch as RawBatch | undefined)?.metadataCID ?? "";
@@ -323,8 +324,24 @@ export const useCoffeeBatch = (batchNumber: string) => {
   return { batch, isLoading: batchLoading || metadataLoading };
 };
 
+export const useRawBatch = (batchName: string) => {
+  const trimmed = batchName.trim();
+  const { data, isLoading, isFetching, isError } = useScaffoldReadContract({
+    contractName: "CoffeeTracker",
+    functionName: "getBatchByName",
+    args: [trimmed],
+    query: { enabled: trimmed.length > 0, retry: false },
+  });
+  return { batchData: data as RawBatch | undefined, isLoading, isFetching, isError };
+};
+
+export const useBatchId = (batchName: string) => {
+  const { batchData, isLoading } = useRawBatch(batchName);
+  return { batchId: batchData?.batchId, isLoading };
+};
+
 export const useUserBatches = (address: string | undefined) => {
-  const { data, isLoading } = useScaffoldReadContract({
+  const { data, isLoading: batchesLoading } = useScaffoldReadContract({
     contractName: "CoffeeTracker",
     functionName: "getUserBatches",
     args: [address ?? zeroAddress],
@@ -332,7 +349,7 @@ export const useUserBatches = (address: string | undefined) => {
 
   const rawHistory = useMemo((): RawBatch[] => {
     if (!data) return [];
-    return ((data as any).history || (data as any)[1] || []) as RawBatch[];
+    return data as unknown as RawBatch[];
   }, [data]);
 
   const uniqueCIDs = useMemo(() => [...new Set(rawHistory.map(b => b.metadataCID).filter(Boolean))], [rawHistory]);
@@ -355,20 +372,23 @@ export const useUserBatches = (address: string | undefined) => {
     });
     return map;
   }, [uniqueCIDs, metadataQueries]);
-  const userRole = useMemo(() => ((data as any)?.userRole || (data as any)?.[0]) as string | undefined, [data]);
+
+  const { userRole, isLoading: roleLoading } = useUserRole(address);
+
   const userBatches = useMemo(
     () => rawHistory.map(raw => mapBatch(raw, metadataMap.get(raw.metadataCID))),
     [rawHistory, metadataMap],
   );
 
-  return { userRole, userBatches, isLoading };
+  return { userRole, userBatches, isLoading: batchesLoading || roleLoading };
 };
 
 export const useUserRole = (address: string | undefined) => {
   const { data, isLoading } = useScaffoldReadContract({
     contractName: "CoffeeTracker",
-    functionName: "getRole",
+    functionName: "getRoles",
     args: [address ?? zeroAddress],
   });
-  return { userRole: data as string | undefined, isLoading };
+  const roles = data as string[] | undefined;
+  return { userRole: roles?.[0], isLoading };
 };

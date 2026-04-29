@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { useDebounceValue } from "usehooks-ts";
 import { zeroAddress } from "viem";
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import { useScaffoldReadContract } from "~~/hooks/scaffold-eth";
+import { useRawBatch } from "~~/hooks/useCoffeeTracker";
 import { BatchData, BatchSelectProps } from "~~/types/forms";
 
 const STAGE_CONFIG = {
@@ -35,17 +35,7 @@ const BatchSelect = ({ value, onSelect, requiredStage, isDisabled }: BatchSelect
   const [debouncedValue] = useDebounceValue(value, 500);
   const isQueryEnabled = debouncedValue?.trim().length > 0;
 
-  const {
-    data: batchData,
-    isLoading,
-    isFetching,
-    isError,
-  } = useScaffoldReadContract({
-    contractName: "CoffeeTracker",
-    functionName: "getBatchByNumber",
-    args: [debouncedValue?.trim() || ""],
-    query: { enabled: isQueryEnabled, retry: false },
-  });
+  const { batchData, isLoading, isFetching, isError } = useRawBatch(debouncedValue || "");
 
   const { type: status, message } = useMemo(() => {
     if (!isQueryEnabled) return { type: "none" as const, message: "" };

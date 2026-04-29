@@ -1,7 +1,7 @@
 import { DistributeFormState, HarvestFormState, ProcessFormState, RoastFormState } from "~~/types/forms";
 
 export const HARVEST_INITIAL_FORM: HarvestFormState = {
-  batchNumber: "",
+  batchName: "",
   farmName: "",
   region: "0",
   variety: "0",
@@ -13,7 +13,7 @@ export const HARVEST_INITIAL_FORM: HarvestFormState = {
 };
 
 export const PROCESS_INITIAL_FORM: ProcessFormState = {
-  batchNumber: "",
+  batchName: "",
   processingMethod: "0",
   moistureContent: "",
   scaScore: "",
@@ -27,7 +27,7 @@ export const PROCESS_INITIAL_FORM: ProcessFormState = {
 };
 
 export const ROAST_INITIAL_FORM: RoastFormState = {
-  batchNumber: "",
+  batchName: "",
   roastingMethod: "0",
   roastLevel: "0",
   cuppingNotes: "",
@@ -40,7 +40,7 @@ export const ROAST_INITIAL_FORM: RoastFormState = {
 };
 
 export const DISTRIBUTE_INITIAL_FORM: DistributeFormState = {
-  batchNumber: "",
+  batchName: "",
   distributionDate: "",
   bagCount: "",
   distributionWeight: "",
