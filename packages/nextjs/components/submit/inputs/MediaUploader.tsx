@@ -19,7 +19,7 @@ const MediaUploader = ({ onAddFiles, isDisabled = false }: MediaUploaderProps) =
       <input
         ref={fileInputRef}
         type="file"
-        accept="image/png,image/jpeg"
+        accept="image/*"
         multiple
         className="hidden"
         onChange={e => onAddFiles(e.target.files)}
@@ -42,7 +42,7 @@ const MediaUploader = ({ onAddFiles, isDisabled = false }: MediaUploaderProps) =
         <ArrowUpTrayIcon className="h-6 w-6 text-base-content" />
         <div className="text-center">
           <p className="text-sm font-semibold text-base-content m-0">Drop images here</p>
-          <p className="text-xs text-muted m-0 mt-0.5">or click to browse · PNG, JPG</p>
+          <p className="text-xs text-muted m-0 mt-0.5">or click to browse or capture</p>
         </div>
       </div>
     </div>
