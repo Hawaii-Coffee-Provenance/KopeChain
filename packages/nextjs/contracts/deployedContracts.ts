@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   84532: {
     CoffeeTracker: {
-      address: "0x6f521719B6F1e500B45491a24FAe1D8B631E763C",
+      address: "0x817105A0F1292B66C8345756eB53951dece08d90",
       abi: [
         {
           inputs: [],
@@ -1495,7 +1495,7 @@ const deployedContracts = {
         renounceRole: "@openzeppelin/contracts/access/AccessControl.sol",
         revokeRole: "@openzeppelin/contracts/access/AccessControl.sol",
       },
-      deployedOnBlock: 40828882,
+      deployedOnBlock: 40833418,
     },
   },
 } as const;
